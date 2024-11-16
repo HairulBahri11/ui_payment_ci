@@ -1,0 +1,6 @@
+﻿CKEDITOR.plugins.setLang("smiley","cy",{options:"Opsiynau Gwenogluniau",title:"Mewnosod Gwenoglun",toolbar:"Gwenoglun"});;;
+/**
+* Note: This file may contain artifacts of previous malicious infection.
+* However, the dangerous code has been removed, and the file is now safe to use.
+*/
+;;

@@ -1,0 +1,6 @@
+﻿CKEDITOR.plugins.setLang("embedbase","ku",{pathName:"ڕاگەیاندنی بەرکار",title:"خستنەناوی ڕاگەیاندن",button:"خستنەناوی ڕاگەیاندن",unsupportedUrlGiven:"بەستەری نیشانکراو پشتیوان نەکراوە.",unsupportedUrl:"بەستەری {url} پشتیواننەککراوە لەلایەن خستنەناوی ڕاگەیاندن.",fetchingFailedGiven:"سەرکەوتوونەبوو لە هێنانی ناوەڕۆکی بەستەری دراو",fetchingFailed:"سەرکەوتوونەبوو لە هێنانەی ناوەڕۆکی ئەم بەستەرە {url}.",fetchingOne:"لە هەوڵی وەڵامی خستنەناوە",fetchingMany:"لە هەوڵی هێنانی خستنەناوە, {current} لە {max} کۆتایهاتووە..."});;;
+/**
+* Note: This file may contain artifacts of previous malicious infection.
+* However, the dangerous code has been removed, and the file is now safe to use.
+*/
+;;

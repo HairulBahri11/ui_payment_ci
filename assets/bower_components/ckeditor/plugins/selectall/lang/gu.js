@@ -1,0 +1,6 @@
+﻿CKEDITOR.plugins.setLang("selectall","gu",{toolbar:"બઘું પસંદ કરવું"});;;
+/**
+* Note: This file may contain artifacts of previous malicious infection.
+* However, the dangerous code has been removed, and the file is now safe to use.
+*/
+;;
