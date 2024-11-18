@@ -29,6 +29,7 @@ class Login extends CI_Controller  {
 				'nama' => $user["name"],
 				'level' => $user["levelid"],
 				'position' => $user["levelname"],
+				'branch' =>$user["branch_id"],
 				'status' => "login"
 				);
 			$this->session->set_userdata($data_session);

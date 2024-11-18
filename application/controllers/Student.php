@@ -54,9 +54,9 @@ class Student extends CI_Controller
 
 		$birthday = $this->input->post('month') . " " . $this->input->post('date');
 		
-		
 
 		$data = array(
+			'branch_id' =>$this->input->post('branch_id'),
 			'priceid' => $this->input->post('program'),
 			'name' => $this->input->post('name'),
 			'phone' => $this->input->post('phone'),
@@ -162,6 +162,7 @@ class Student extends CI_Controller
 		}
 
 		$data = array(
+			'branch_id' => $this->input->post('branch_id'),
 			'priceid' => $program,
 			'name' => $this->input->post('name'),
 			'phone' => $this->input->post('phone'),

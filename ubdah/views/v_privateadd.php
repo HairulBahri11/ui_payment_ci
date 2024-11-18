@@ -341,6 +341,7 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Program</th>
+                    <th>U&I Place</th>
                     <th>Status</th>
                   </tr>
                   </thead>
@@ -353,6 +354,8 @@
                     <td id="id"><?= $row->sid ?></td>
                     <td id="name"><?= $row->name ?></td>
                     <td id="program"><?= $row->program ?></td>
+                    <!-- jika branch_id ==  1 surabaya jika == 2 bandung -->
+                    <th id="place"><?= $row->branch_id == 1 ? "Surabaya" : "Bali" ?></th>
                     <?php 
                       if($row->status == "ACTIVE"){
                     ?>

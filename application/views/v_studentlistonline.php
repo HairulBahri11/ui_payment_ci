@@ -149,10 +149,8 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="box box-primary">
-					<div class="box-header">
-						<!-- <h3 class="box-title">List Prices</h3> -->
-					</div>
-					<br>
+					
+					
 					<!-- /.box-header -->
 					<div class="box-body">
 						<div class="row">
@@ -178,13 +176,25 @@
 									$no = 1;
 									foreach ($listStudent->result() as $row) {
 									?>
-										<tr class="status<?= $row->status ?>" style="<?= $row->is_complete == '1' ? 'color:red' : "" ?>">
+										<tr class="status<?= $row->status ?>">
 											<td><?= $no++ ?></td>
 											<td><?= $row->name ?></td>
 											<td><?= $row->phone ?></td>
 											<td><?= $row->birthday ?></td>
 											<td><?= date('l, d F Y', strtotime($row->entrydate)) ?></td>
-											<td><?= $row->is_complete == '1' ? 'DONE' : "" ?></td>
+											<td>
+												<?php
+												if ($row->is_complete == 1) {
+													$bg = "badge bg-green";
+													$message = "DONE";
+												} else {
+													$bg = "badge bg-danger";
+													$message = "NEED CONFIRM";	
+												}
+												?>
+												<span class="<?= $bg ?>"> <?= $message ?></span>
+												
+										</td>
 											<td>
 												<!--<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showResult" onclick="showModalResult('<?= $row->id ?>', '<?= $row->name ?>', '<?= $row->written ?>', '<?= $row->speaking ?>', '<?= $row->priceid ?>','<?= $row->placement_test_result ?>','<?= $row->kind_of_test ?>')"><?= $row->written == null ? 'Result Test' : 'Edit Result Test' ?></a>-->
 												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showModal" onclick="showModalData('<?= $row->id ?>', '<?= $row->name ?>')">Payment</a>
