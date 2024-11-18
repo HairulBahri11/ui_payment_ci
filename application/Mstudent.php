@@ -22,7 +22,7 @@
 
 	function getAllRegular()
 	{
-		$this->db->select("s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, p.course, p.level, MAX(pd.monthpay) as monthpay");
+		$this->db->select("s.id as sid, s.priceid, s.branch_id, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, p.course, p.level, MAX(pd.monthpay) as monthpay");
 		$this->db->from("student s");
 		$this->db->join("price p", "s.priceid = p.id", "left outer");
 		$this->db->join("paydetail pd", "s.id = pd.studentid", "left outer");
@@ -35,7 +35,7 @@
 
 	function getAllPrivate()
 	{
-		$this->db->select("s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, p.course, p.level");
+		$this->db->select("s.id as sid, s.priceid, s.branch_id, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, p.course, p.level");
 		$this->db->from("student s");
 		$this->db->join("price p", "s.priceid = p.id", "inner");
 		$this->db->where('p.level =', 'Private');

@@ -448,6 +448,7 @@ $url = base_url() . "cetak/printregular/";
 									<th>Name</th>
 									<th>Program</th>
 									<th>Course Fee</th>
+									<th>U&I Place</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -461,6 +462,7 @@ $url = base_url() . "cetak/printregular/";
 										<td id="name"><?= $row['name'] ?></td>
 										<td id="program"><?= $row['program'] ?></td>
 										<td id="course"><?= $row['course'] ?></td>
+										<td id="place"><?= $row['branch_id'] == "1" ? "Surabaya" : "Bali" ?></td>
 									</tr>
 								<?php
 								}

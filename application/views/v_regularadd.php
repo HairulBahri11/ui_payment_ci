@@ -157,7 +157,7 @@ $url = base_url() . "cetak/printregular/";
 	<!-- Main content -->
 	<section class="content">
 		<div class="row">
-			<div class="col-xs-7">
+			<div class="col-xs-6">
 				<!-- <div class="box"> -->
 				<div class="box box-primary">
 					<div class="box-header with-border">
@@ -461,13 +461,14 @@ $url = base_url() . "cetak/printregular/";
 			</div>
 			<!-- /.col -->
 
-			<div class="col-xs-5">
+			<div class="col-xs-6">
 				<!-- <div class="box"> -->
 				<div class="box box-success">
 					<div class="box-header with-border">
 						<h3 class="box-title">Select Student</h3>
 					</div>
 					<div class="box-body">
+						<div class="table-responsive">
 
 						<table id="example2" class="table table-bordered table-striped table-hover">
 							<thead>
@@ -477,6 +478,7 @@ $url = base_url() . "cetak/printregular/";
 									<th>Name</th>
 									<th>Program</th>
 									<th>Course Fee</th>
+									<th>U&I Place</th>
 									<th style="display:none;">Phone</th>
 								</tr>
 							</thead>
@@ -487,7 +489,6 @@ $url = base_url() . "cetak/printregular/";
 								// die;
 								foreach ($allStudent as $row) {
 								?>
-
 									<tr>
 
 										<td id="id"><?= $row['sid'] ?></td>
@@ -495,6 +496,7 @@ $url = base_url() . "cetak/printregular/";
 										<td id="name"><?= $row['name'] ?></td>
 										<td id="program"><?= $row['program'] ?></td>
 										<td id="course"><?= $row['course'] ?></td>
+										<td id="place"><?= $row['branch_id'] == "1" ? "Surabaya" : "Bali" ?></td>
 										<td id="phone" style="display:none;"><?= $row['phone'] ?></td>
 									</tr>
 
@@ -506,7 +508,7 @@ $url = base_url() . "cetak/printregular/";
 							</tbody>
 
 						</table>
-
+						</div>
 					</div>
 					<!-- /.box-body -->
 				</div>

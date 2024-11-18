@@ -157,7 +157,7 @@ $url = base_url() . "cetak/printprivate/";
 	<!-- Main content -->
 	<section class="content">
 		<div class="row">
-			<div class="col-xs-7">
+			<div class="col-xs-6">
 				<!-- <div class="box"> -->
 				<div class="box box-primary">
 					<div class="box-header with-border">
@@ -165,7 +165,7 @@ $url = base_url() . "cetak/printprivate/";
 					</div>
 					<!-- /.box-header
 
-            <!-- /.box-header -->
+            <!--/.box-header -->
 					<!-- form start -->
 					<div class="box-body">
 						<form role="form" id="example3" name="example3" class="form-horizontal" action="<?php echo base_url() ?>payment/addPrivateDb" method="post" enctype="multipart/form-data">
@@ -406,7 +406,7 @@ $url = base_url() . "cetak/printprivate/";
 			</div>
 			<!-- /.col -->
 
-			<div class="col-xs-5">
+			<div class="col-xs-6">
 				<!-- <div class="box"> -->
 				<div class="box box-success">
 					<div class="box-header with-border">
@@ -421,12 +421,14 @@ $url = base_url() . "cetak/printprivate/";
 									<th>ID</th>
 									<th>Name</th>
 									<th>Program</th>
+									<th>U&I Place</th>
 									<th>Status</th>
 									<th style="display:none;">phone</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php
+										
 								foreach ($listStudent->result() as $row) {
 								?>
 									<tr>
@@ -434,7 +436,9 @@ $url = base_url() . "cetak/printprivate/";
 										<td id="id"><?= $row->sid ?></td>
 										<td id="name"><?= $row->name ?></td>
 										<td id="program"><?= $row->program ?></td>
+										
 										<td id="phone" style="display:none;"><?= $row->phone ?></td>
+										<td id="place"><?= $row->branch_id == "1" ? "Surabaya" : "Bali" ?></td>
 										<?php
 										if ($row->status == "ACTIVE") {
 										?>
