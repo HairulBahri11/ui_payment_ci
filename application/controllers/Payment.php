@@ -67,6 +67,7 @@ class Payment extends CI_Controller
 			$row['name'] = $value->name;
 			$row['program'] = $value->program;
 			$row['phone'] = $value->phone;
+			$row['branch_id'] = $value->branch_id;
 			if ($value->condition == "DEFAULT") {
 				$row['course'] = '<span class="badge bg-yellow">Default: Rp ' . number_format($value->course, 0, ".", ".") . '</span>';
 			} elseif ($value->condition == "CHANGE") {
@@ -141,6 +142,8 @@ class Payment extends CI_Controller
 		$data['listPrice'] = $this->mprice->getAllPrice();
 		$data['listVoucher'] = $this->mvoucher->getAllVoucherYes();
 		// $data['listPaydetail'] = $this->mpaydetail->getPaydetailByPaymentId($latestRecord['id']);
+
+
 		$this->load->view('v_header');
 		$this->load->view('v_privateadd', $data);
 		$this->load->view('v_footer');

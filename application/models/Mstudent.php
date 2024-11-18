@@ -5,37 +5,47 @@ class Mstudent extends CI_Model
 	function __construct()
 	{
 		parent::__construct();
+
 	}
 	function getAllStudent()
 	{
 		//select semua data yang ada pada table msProduct $this--->db->select("*");
-		$this->db->select("s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, lpr.id, p.program, lpr.course, lpr.level, lpr.monthpay");
+		$this->db->select("s.id as sid, s.priceid,s.branch_id, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, lpr.id, p.program, lpr.course, lpr.level, lpr.monthpay");
 		$this->db->from("student s");
 		$this->db->join("price p", "s.priceid = p.id", "left outer");
 		$this->db->join("last_payment_regular lpr", "s.id = lpr.id_student", "left outer");
 		$this->db->where("is_complete", "1");
+		if ($this->session->userdata('level') == '3') {
+			$this->db->where('branch_id', $this->session->userdata('branch'));
+		}
 		$this->db->order_by('sid', 'asc');
 		return $this->db->get();
 	}
 
 	function getAllActive()
 	{
-		$this->db->select("s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, p.course, p.level");
+		$this->db->select("s.id as sid, s.priceid,s.branch_id, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, p.course, p.level");
 		$this->db->from("student s");
 		$this->db->join("price p", "s.priceid = p.id", "inner");
 		$this->db->where('s.status =', 'ACTIVE');
 		$this->db->order_by('sid', 'asc');
+		if ($this->session->userdata('level') == '3') {
+			$this->db->where('branch_id', $this->session->userdata('branch'));
+		}
 		return $this->db->get();
 	}
 
 	function getAllRegular()
 	{
-		$this->db->select("s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, p.course, p.level, MAX(pd.monthpay) as monthpay");
+		$this->db->select("s.id as sid, s.priceid, s.branch_id, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, p.course, p.level, MAX(pd.monthpay) as monthpay");
 		$this->db->from("student s");
 		$this->db->join("price p", "s.priceid = p.id", "left outer");
 		$this->db->join("paydetail pd", "s.id = pd.studentid", "left outer");
 		$this->db->where('p.level !=', 'Private');
 		$this->db->where('s.status =', 'ACTIVE');
+		if ($this->session->userdata('level') == '3') {
+			$this->db->where('branch_id', $this->session->userdata('branch'));
+		}
 		$this->db->group_by('s.id');
 		$this->db->order_by('s.id', 'asc');
 		return $this->db->get();
@@ -43,18 +53,24 @@ class Mstudent extends CI_Model
 
 	function getAllPrivate()
 	{
-		$this->db->select("s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, p.course, p.level");
+
+		$this->db->select("s.id as sid, s.priceid, s.branch_id, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, p.course, p.level");
 		$this->db->from("student s");
 		$this->db->join("price p", "s.priceid = p.id", "inner");
 		$this->db->where('p.level =', 'Private');
 		$this->db->where('s.status =', 'ACTIVE');
+		
+
+		if ($this->session->userdata('level') == '3') {
+			$this->db->where('branch_id', $this->session->userdata('branch'));
+		}
 		$this->db->order_by('s.id', 'asc');
 		return $this->db->get();
 	}
 
 	function getStudentById($id)
 	{
-		$this->db->select("s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, s.note");
+		$this->db->select("s.id as sid, s.priceid, s.branch_id, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, s.note");
 		$this->db->from("student s");
 		$this->db->join("price p", "s.priceid = p.id", "inner");
 		$this->db->where('s.id', $id);
@@ -161,6 +177,10 @@ class Mstudent extends CI_Model
 		$this->db->where('is_online =', 1);
 		$this->db->where("is_prospective_done", "0");
 		$this->db->order_by('id', 'asc');
+
+		if($this->session->userdata('level') == '3') {
+			$this->db->where('student.branch_id', $this->session->userdata('branch'));
+		}
 		return $this->db->get();
 	}
 
