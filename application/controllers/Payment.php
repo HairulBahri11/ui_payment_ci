@@ -10,6 +10,8 @@ class Payment extends CI_Controller
 		$this->load->model("mprice");
 		$this->load->model("mvoucher");
 		$this->load->model("mpaydetail");
+		$this->load->model("mtrxakuntansi");
+		$this->load->model("mtrxakuntansidetail");
 		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("user"));
 		}
@@ -196,9 +198,11 @@ class Payment extends CI_Controller
 		$time = date('Y-m-d h:i:s');
 
 		$total = $this->input->post('total');
+		$total_penalty = $this->input->post('total_penalty');
 		$order   = array("Rp ", ".");
 		$replace = "";
 		$total = str_replace($order, $replace, $total);
+		$total_penalty = str_replace($order, $replace, $total_penalty);
 
 		$other_detail = $this->input->post('other_detail');
 
@@ -443,17 +447,123 @@ class Payment extends CI_Controller
 				);
 				$this->mpayment->addPaymentHistory($paymentRegHist);
 			}
-
 			$url = "https://example.com";
-			$response = file_get_contents($url);
-			// echo '<pre>';
-
-			// var_dump($paymentReg);
-			// var_dump($paymentRegDet);
-
-			// $nexturl = "payment/updateregular/".$latestRecord['id'];
-			// redirect(base_url($nexturl));
 		}
+
+		// ambil id akun kas dari masing-masing cabang
+		$akun_kas_id = null;
+		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+			$akun_kas_id = 3;
+		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+			$akun_kas_id = 4;
+
+		//		ambil id akun bank dari masing-masing cabang
+		$akun_bank_id = null;
+		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+			$akun_bank_id = 6;
+		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+			$akun_bank_id = 7;
+
+		//		ambil id akun pendapatan dari masing-masing cabang
+		$akun_pendapatan_id = null;
+		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+			$akun_pendapatan_id = 10;
+		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+			$akun_pendapatan_id = 11;
+
+		//		ambil id akun pendapatan denda dari masing-masing cabang
+		$akun_denda_id = null;
+		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+			$akun_denda_id = 13;
+		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+			$akun_denda_id = 14;
+
+		//jika tanpa penalty
+		if ($total_penalty == null || $total_penalty == 0) {
+			//		simpan transaksi jurnal
+			$data_trx_akuntansi = array(
+				'payment_id' => $latestRecord['id'],
+				'deskripsi' => 'Income from payment id ' . $latestRecord['id'],
+				'tanggal' => $date,
+				'branch_id' => $this->session->userdata('branch'),
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_trx_akuntansi = $this->mtrxakuntansi->addTrxAkuntansi($data_trx_akuntansi);
+
+			//		simpan transaksi ke detail jurnal
+			$data_akun_trx_akuntansi_detail = array(
+				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+				'id_akun' => $this->input->post('method') == 'CASH' ? $akun_kas_id : $akun_bank_id,
+				'jumlah' => $total,
+				'tipe' => 'DEBIT',
+				'keterangan' => 'akun',
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
+
+			$data_lawan_trx_akuntansi_detail = array(
+				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+				'id_akun' => $akun_pendapatan_id,
+				'jumlah' => $total,
+				'tipe' => 'KREDIT',
+				'keterangan' => 'lawan',
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
+		}
+		else{ //jika ada penalty
+			//		simpan transaksi jurnal
+			$data_trx_akuntansi = array(
+				'payment_id' => $latestRecord['id'],
+				'deskripsi' => 'Income from payment id ' . $latestRecord['id'],
+				'tanggal' => $date,
+				'branch_id' => $this->session->userdata('branch'),
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_trx_akuntansi = $this->mtrxakuntansi->addTrxAkuntansi($data_trx_akuntansi);
+
+			//		simpan transaksi ke detail jurnal
+			$data_akun_trx_akuntansi_detail = array(
+				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+				'id_akun' => $this->input->post('method') == 'CASH' ? $akun_kas_id : $akun_bank_id,
+				'jumlah' => $total,
+				'tipe' => 'DEBIT',
+				'keterangan' => 'akun',
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
+
+			//insert total tanpa penalty ke pendapatan
+			$data_lawan_trx_akuntansi_detail = array(
+				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+				'id_akun' => $akun_pendapatan_id,
+				'jumlah' => $total - $total_penalty,
+				'tipe' => 'KREDIT',
+				'keterangan' => 'lawan',
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
+
+			//insert total penalty ke pendapatan denda
+			$data_lawan_trx_akuntansi_detail = array(
+				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+				'id_akun' => $akun_denda_id,
+				'jumlah' => $total_penalty,
+				'tipe' => 'KREDIT',
+				'keterangan' => 'lawan',
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
+		}
+
+
 		$this->send_notif_wa(preg_replace("/[^0-9]/", "", $this->input->post('no_hp')), $latestRecord['id'], 'Regular');
 		// redirect(base_url("payment/addregular"));
 		sleep(2);
@@ -578,6 +688,60 @@ class Payment extends CI_Controller
 			// redirect(base_url($nexturl));
 		}
 
+		// ambil id akun kas dari masing-masing cabang
+		$akun_kas_id = null;
+		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+			$akun_kas_id = 3;
+		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+			$akun_kas_id = 4;
+
+		//		ambil id akun bank dari masing-masing cabang
+		$akun_bank_id = null;
+		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+			$akun_bank_id = 6;
+		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+			$akun_bank_id = 7;
+
+		//		ambil id akun pendapatan dari masing-masing cabang
+		$akun_pendapatan_id = null;
+		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+			$akun_pendapatan_id = 10;
+		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+			$akun_pendapatan_id = 11;
+
+		//		simpan transaksi jurnal
+		$data_trx_akuntansi = array(
+			'payment_id' => $latestRecord['id'],
+			'deskripsi' => 'Income from payment id ' . $latestRecord['id'],
+			'tanggal' => $date,
+			'branch_id' => $this->session->userdata('branch'),
+			'dtm_crt' => date('Y-m-d H:i:s'),
+			'dtm_upd' => date('Y-m-d H:i:s'),
+		);
+		$id_trx_akuntansi = $this->mtrxakuntansi->addTrxAkuntansi($data_trx_akuntansi);
+
+		//		simpan transaksi ke detail jurnal
+		$data_akun_trx_akuntansi_detail = array(
+			'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+			'id_akun' => $this->input->post('method') == 'CASH' ? $akun_kas_id : $akun_bank_id,
+			'jumlah' => $total,
+			'tipe' => 'DEBIT',
+			'keterangan' => 'akun',
+			'dtm_crt' => date('Y-m-d H:i:s'),
+			'dtm_upd' => date('Y-m-d H:i:s'),
+		);
+		$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
+
+		$data_lawan_trx_akuntansi_detail = array(
+			'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+			'id_akun' => $akun_pendapatan_id,
+			'jumlah' => $total,
+			'tipe' => 'KREDIT',
+			'keterangan' => 'lawan',
+			'dtm_crt' => date('Y-m-d H:i:s'),
+			'dtm_upd' => date('Y-m-d H:i:s'),
+		);
+		$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
 
 		$this->send_notif_wa(preg_replace("/[^0-9]/", "", $this->input->post('no_hp')), $latestRecord['id'], 'Private');
 		// redirect(base_url("payment/addprivate"));

@@ -295,6 +295,8 @@ $url = base_url() . "cetak/printregular/";
 							<input type="hidden" class="form-control" id="vid" name="vid" value="">
 							<input type="hidden" class="form-control" id="vamount" name="vamount">
 
+							<input type="hidden" class="form-control" id="amount_penalty" name="amount_penalty">
+
 							<div class="form-group">
 								<label for="registration" class="col-sm-3 control-label"></label>
 								<div class="col-sm-9">
@@ -343,6 +345,8 @@ $url = base_url() . "cetak/printregular/";
 										<input type="text" class="form-control" id="total" name="total" readonly>
 									</div>
 								</div>
+
+								<input type="hidden" class="form-control" id="total_penalty" name="total_penalty">
 
 								<div class="form-group">
 									<label for="method" class="col-sm-3 control-label">Payment Method</label>
@@ -574,6 +578,7 @@ $url = base_url() . "cetak/printregular/";
 	var adjusment = 0;
 	var monthpay = "";
 	var totalpay = 0;
+	var totalpenalty = 0;
 	var paymentcut = 0.00;
 	var selectedcell = 0;
 	var selectedamount = "";
@@ -771,6 +776,12 @@ $url = base_url() . "cetak/printregular/";
 		document.getElementById("total").value = totalpay;
 		document.getElementById("total").value = "Rp " + FormatDuit(document.getElementById("total").value);
 
+		var amount_penaly = document.getElementById("amount_penalty").value.replace(/\./g, '');
+		var amount_penaly = amount_penaly.replace("Rp ", "");
+		totalpenalty = parseInt(totalpenalty) + parseInt(amount_penaly);
+		document.getElementById("total_penalty").value = totalpenalty;
+		document.getElementById("total_penalty").value = "Rp " + FormatDuit(document.getElementById("total_penalty").value);
+
 		$("#dpayment").show(750);
 
 		return false;
@@ -951,6 +962,7 @@ $url = base_url() . "cetak/printregular/";
 							var amount = amount.replace("Rp ", "");
 							document.getElementById("amount").value = parseInt(amount) + parseInt(penalty);
 							document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
+							document.getElementById("amount_penalty").value = parseInt(penalty);
 						}
 
 						$("#monthdiv").show(750);
@@ -969,6 +981,8 @@ $url = base_url() . "cetak/printregular/";
 							var amount = amount.replace("Rp ", "");
 							document.getElementById("amount").value = parseInt(amount) + parseInt(penalty);
 							document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
+
+							document.getElementById("amount_penalty").value = parseInt(penalty);
 						}
 						if (selected_value === "day") {
 							$("#labelhour").hide(750);
