@@ -18,9 +18,10 @@
 
 	function getExpdetailByExpenseId($id)
 	{
-		$this->db->select("*");
+		$this->db->select("expdetail.*, tbl_akun.id_akun, tbl_akun.nama_akun");
 		$this->db->from("expdetail");
-		$this->db->where('expenseid', $id);
+		$this->db->join("tbl_akun", "expdetail.id_akun = tbl_akun.id_akun", "left"); // Adjust 'akun_id' to match your foreign key
+		$this->db->where('expdetail.expenseid', $id);
 		return $this->db->get();
 	}
 
