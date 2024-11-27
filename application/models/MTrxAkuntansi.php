@@ -6,6 +6,21 @@ class MTrxAkuntansi extends CI_Model
 	{
 		parent::__construct();
 	}
+
+	private $table = 'tbl_trx_akuntansi';
+	public function get_all() {
+		$this->db->select('*');
+		$this->db->from('tbl_trx_akuntansi');
+		return $this->db->get()->result();
+	}
+
+		public function get_by_date($date) {
+		$this->db->select('*');
+		$this->db->from('tbl_trx_akuntansi');
+		$this->db->where('tanggal', $date);
+		$this->db->order_by('tanggal', 'asc');
+		return $this->db->get()->result();
+	}
 	function getAllPayment()
 	{
 		//select semua data yang ada pada table msProduct $this--->db->select("*");
