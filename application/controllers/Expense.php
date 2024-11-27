@@ -4,6 +4,9 @@ class Expense extends CI_Controller  {
 		parent::__construct();
 		$this->load->model("mexpense"); 
 		$this->load->model("mexpdetail");   
+		$this->load->model("makun");
+		$this->load->model("mtrxakuntansi");
+		$this->load->model("mtrxakuntansidetail");
 		if($this->session->userdata('status') != "login"){
 			redirect(base_url("user"));
 		}
@@ -22,8 +25,16 @@ class Expense extends CI_Controller  {
 			$this->mexpdetail->deleteExpdetailByExpenseId($uncomplete->id);
 		}
 
+		$id_akun = [];
+		if ($this->session->userdata('branch') == 1) //jika surabaya
+			$id_akun = [3, 6];
+		elseif ($this->session->userdata('branch') == 2) // jika bali
+			$id_akun = [4, 7];
+
+		$data['id_akun'] = $this->makun->getSomeAkun($id_akun);
+
 		$this->load->view('v_header');
-		$this->load->view('v_expenseadd');
+		$this->load->view('v_expenseadd', $data);
 		$this->load->view('v_footer');
 	}
 
@@ -31,7 +42,8 @@ class Expense extends CI_Controller  {
 	{
 		$date = date('Y-m-d');
 		$data = array(
-				'entrydate' => $date
+				'entrydate' => $date,
+				'branch_id' => $this->session->userdata('branch')
 				);
 		$latestRecord = $this->mexpense->addExpense($data);
 
@@ -47,6 +59,7 @@ class Expense extends CI_Controller  {
 		if ($this->input->post('category') == "OTHER") {
 			$data = array(
 					'expenseid' => $latestRecord['id'],
+					'id_akun' => $this->input->post('id_akun'),
 					'category' => $this->input->post('other'),
 					'explanation' => $this->input->post('explanation'),
 					'expdate' => $expdate,
@@ -56,6 +69,7 @@ class Expense extends CI_Controller  {
 		} else {
 			$data = array(
 					'expenseid' => $latestRecord['id'],
+					'id_akun' => $this->input->post('id_akun'),
 					'category' => $this->input->post('category'),
 					'explanation' => $this->input->post('explanation'),
 					'expdate' => $expdate,
@@ -72,6 +86,15 @@ class Expense extends CI_Controller  {
 	{
 		$data['expense'] = $this->mexpense->getExpenseById($id); 
 		$data['listExpdetail'] = $this->mexpdetail->getExpdetailByExpenseId($id);
+
+		$id_akun = [];
+		if ($this->session->userdata('branch') == 1) //jika surabaya
+			$id_akun = [3, 6];
+		elseif ($this->session->userdata('branch') == 2) // jika bali
+			$id_akun = [4, 7];
+
+		$data['id_akun'] = $this->makun->getSomeAkun($id_akun);
+
 		$this->load->view('v_header');
 		$this->load->view('v_expenseedit', $data);
 		$this->load->view('v_footer');
@@ -91,6 +114,7 @@ class Expense extends CI_Controller  {
 		if ($this->input->post('category') == "OTHER") {
 			$data = array(
 					'expenseid' => $id,
+					'id_akun' => $this->input->post('id_akun'),
 					'category' => $this->input->post('other'),
 					'explanation' => $this->input->post('explanation'),
 					'expdate' => $expdate,
@@ -100,6 +124,7 @@ class Expense extends CI_Controller  {
 		} else {
 			$data = array(
 					'expenseid' => $id,
+					'id_akun' => $this->input->post('id_akun'),
 					'category' => $this->input->post('category'),
 					'explanation' => $this->input->post('explanation'),
 					'expdate' => $expdate,
@@ -128,6 +153,45 @@ class Expense extends CI_Controller  {
 				
 		$where['id'] = $id;
 		$this->mexpense->updateExpense($data, $where);
+
+//		insert into tbl_trx_akuntansi and tbl_trx_akuntansi_detail
+		$id_beban = $this->session->userdata('branch') == 1 ? 17 : 18;
+		$trx_akun = array(
+			'expense_id' => $id,
+			'deskripsi' => 'Expense from id ' . $id,
+			'tanggal' => $date,
+			'branch_id' => $this->session->userdata('branch'),
+			'dtm_crt' => date('Y-m-d H:i:s'),
+			'dtm_upd' => date('Y-m-d H:i:s'),
+		);
+		$id_trx_akuntansi = $this->mtrxakuntansi->addTrxAkuntansi($trx_akun);
+
+		$expense_details = $this->mexpdetail->getExpdetailByExpenseId($id)->result();
+
+		foreach ($expense_details as $expense_detail) {
+			//		simpan transaksi ke detail jurnal
+			$data_akun_trx_akuntansi_detail = array(
+				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+				'id_akun' => $expense_detail->id_akun,
+				'jumlah' => $expense_detail->amount,
+				'tipe' => 'KREDIT',
+				'keterangan' => 'akun',
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
+
+			$data_lawan_trx_akuntansi_detail = array(
+				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+				'id_akun' => $id_beban,
+				'jumlah' => $expense_detail->amount,
+				'tipe' => 'DEBIT',
+				'keterangan' => 'lawan',
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
+		}
 
 		redirect(base_url("expense/addexpense"));
 	}
