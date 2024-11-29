@@ -23,7 +23,13 @@ class Payment extends CI_Controller
 	{
 		$listLateStudent = $this->mstudent->getLatePaymentStudent();
 		foreach ($listLateStudent as $student) {
-			$monthpay = date("m", strtotime($student->monthpay));
+			// Cek apakah $student->monthpay memiliki nilai valid sebelum diproses
+			if (!empty($student->monthpay)) {
+				$monthpay = date("m", strtotime($student->monthpay));
+			} else {
+				$monthpay = ''; // Atur default jika $student->monthpay kosong atau null
+			}
+		
 			if (($monthpay < date('m')) || ($student->monthpay == '')) {
 				if ($student->condition == "DEFAULT") {
 					$data = array(
@@ -34,16 +40,18 @@ class Payment extends CI_Controller
 						'penalty' => ($student->adjusment * 10 / 100)
 					);
 				}
-				$where['id'] = $student->id;
-				$this->mstudent->updateStudent($data, $where);
 			} else {
 				$data = array(
 					'penalty' => 0
 				);
-				$where['id'] = $student->id;
-				$this->mstudent->updateStudent($data, $where);
 			}
+		
+			$where['id'] = $student->id;
+			$this->mstudent->updateStudent($data, $where);
 		}
+		
+
+		
 
 		$listUncomplete = $this->mpayment->getUncompletePayment();
 		foreach ($listUncomplete as $uncomplete) {
