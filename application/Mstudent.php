@@ -28,6 +28,9 @@
 		$this->db->join("paydetail pd", "s.id = pd.studentid", "left outer");
 		$this->db->where('p.level !=', 'Private');
 		$this->db->where('s.status =', 'ACTIVE');
+		if($this->session->userdata('userid') != 'superadmin') {
+			$this->db->where('branch_id', $this->session->userdata('branch'));	
+		}
 		$this->db->group_by('s.id');
 		$this->db->order_by('s.id', 'asc');
 		return $this->db->get();
@@ -40,6 +43,9 @@
 		$this->db->join("price p", "s.priceid = p.id", "inner");
 		$this->db->where('p.level =', 'Private');
 		$this->db->where('s.status =', 'ACTIVE');
+		if($this->session->userdata('userid') != 'superadmin') {
+			$this->db->where('branch_id', $this->session->userdata('branch'));	
+		}
 		$this->db->order_by('s.id', 'asc');
 		return $this->db->get();
 	}
