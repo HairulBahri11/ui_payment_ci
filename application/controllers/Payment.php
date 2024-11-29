@@ -10,8 +10,8 @@ class Payment extends CI_Controller
 		$this->load->model("mprice");
 		$this->load->model("mvoucher");
 		$this->load->model("mpaydetail");
-		$this->load->model("mtrxakuntansi");
-		$this->load->model("mtrxakuntansidetail");
+		$this->load->model("MTrxAkuntansi");
+		$this->load->model("MTrxAkuntansiDetail");
 		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("user"));
 		}
@@ -507,7 +507,7 @@ class Payment extends CI_Controller
 				'dtm_crt' => date('Y-m-d H:i:s'),
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
-			$id_trx_akuntansi = $this->mtrxakuntansi->addTrxAkuntansi($data_trx_akuntansi);
+			$id_trx_akuntansi = $this->MTrxAkuntansi->addTrxAkuntansi($data_trx_akuntansi);
 
 			//		simpan transaksi ke detail jurnal
 			$data_akun_trx_akuntansi_detail = array(
@@ -519,7 +519,7 @@ class Payment extends CI_Controller
 				'dtm_crt' => date('Y-m-d H:i:s'),
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
-			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
+			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
 
 			$data_lawan_trx_akuntansi_detail = array(
 				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
@@ -530,7 +530,7 @@ class Payment extends CI_Controller
 				'dtm_crt' => date('Y-m-d H:i:s'),
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
-			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
+			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
 		}
 		else{ //jika ada penalty
 			//		simpan transaksi jurnal
@@ -542,7 +542,7 @@ class Payment extends CI_Controller
 				'dtm_crt' => date('Y-m-d H:i:s'),
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
-			$id_trx_akuntansi = $this->mtrxakuntansi->addTrxAkuntansi($data_trx_akuntansi);
+			$id_trx_akuntansi = $this->MTrxAkuntansi->addTrxAkuntansi($data_trx_akuntansi);
 
 			//		simpan transaksi ke detail jurnal
 			$data_akun_trx_akuntansi_detail = array(
@@ -554,7 +554,7 @@ class Payment extends CI_Controller
 				'dtm_crt' => date('Y-m-d H:i:s'),
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
-			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
+			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
 
 			//insert total tanpa penalty ke pendapatan
 			$data_lawan_trx_akuntansi_detail = array(
@@ -566,7 +566,7 @@ class Payment extends CI_Controller
 				'dtm_crt' => date('Y-m-d H:i:s'),
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
-			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
+			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
 
 			//insert total penalty ke pendapatan denda
 			$data_lawan_trx_akuntansi_detail = array(
@@ -578,7 +578,7 @@ class Payment extends CI_Controller
 				'dtm_crt' => date('Y-m-d H:i:s'),
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
-			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
+			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
 		}
 
 
@@ -746,7 +746,7 @@ class Payment extends CI_Controller
 			'dtm_crt' => date('Y-m-d H:i:s'),
 			'dtm_upd' => date('Y-m-d H:i:s'),
 		);
-		$id_trx_akuntansi = $this->mtrxakuntansi->addTrxAkuntansi($data_trx_akuntansi);
+		$id_trx_akuntansi = $this->MTrxAkuntansi->addTrxAkuntansi($data_trx_akuntansi);
 
 		//		simpan transaksi ke detail jurnal
 		$data_akun_trx_akuntansi_detail = array(
@@ -758,7 +758,7 @@ class Payment extends CI_Controller
 			'dtm_crt' => date('Y-m-d H:i:s'),
 			'dtm_upd' => date('Y-m-d H:i:s'),
 		);
-		$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
+		$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
 
 		$data_lawan_trx_akuntansi_detail = array(
 			'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
@@ -769,7 +769,7 @@ class Payment extends CI_Controller
 			'dtm_crt' => date('Y-m-d H:i:s'),
 			'dtm_upd' => date('Y-m-d H:i:s'),
 		);
-		$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
+		$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
 
 		$this->send_notif_wa(preg_replace("/[^0-9]/", "", $this->input->post('no_hp')), $latestRecord['id'], 'Private');
 		// redirect(base_url("payment/addprivate"));
