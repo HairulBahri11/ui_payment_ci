@@ -29,7 +29,7 @@
 		$this->db->where('p.level !=', 'Private');
 		$this->db->where('s.status =', 'ACTIVE');
 		if($this->session->userdata('userid') != 'superadmin') {
-			$this->db->where('branch_id', $this->session->userdata('branch'));	
+			$this->db->where('s.branch_id', $this->session->userdata('branch'));	
 		}
 		$this->db->group_by('s.id');
 		$this->db->order_by('s.id', 'asc');
@@ -44,7 +44,7 @@
 		$this->db->where('p.level =', 'Private');
 		$this->db->where('s.status =', 'ACTIVE');
 		if($this->session->userdata('userid') != 'superadmin') {
-			$this->db->where('branch_id', $this->session->userdata('branch'));	
+			$this->db->where('s.branch_id', $this->session->userdata('branch'));	
 		}
 		$this->db->order_by('s.id', 'asc');
 		return $this->db->get();
