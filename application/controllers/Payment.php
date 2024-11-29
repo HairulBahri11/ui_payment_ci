@@ -207,6 +207,14 @@ class Payment extends CI_Controller
 		$other_detail = $this->input->post('other_detail');
 
 		$var = $this->input->post('trfdate');
+
+		// check session user login
+		if($this->session->userdata('userid') == 'superadmin'){
+			$data_branch = 1;
+		}else{
+			$data_branch = $this->session->userdata('branch');
+		}
+
 		if ($var != "") {
 			$parts = explode('/', $var);
 			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
@@ -218,7 +226,8 @@ class Payment extends CI_Controller
 				'bank' => $this->input->post('bank'),
 				'total' => $total,
 				'trfdate' => $trfdate,
-				'username' => $this->session->userdata('nama')
+				'username' => $this->session->userdata('nama'),
+				'branch_id' => $data_branch
 			);
 			$latestRecord = $this->mpayment->addPayment($data);
 		} else {
@@ -229,7 +238,8 @@ class Payment extends CI_Controller
 				'number' => $this->input->post('number'),
 				'bank' => $this->input->post('bank'),
 				'total' => $total,
-				'username' => $this->session->userdata('nama')
+				'username' => $this->session->userdata('nama'),
+				'branch_id' => $data_branch
 			);
 			$latestRecord = $this->mpayment->addPayment($data);
 		}
@@ -588,6 +598,14 @@ class Payment extends CI_Controller
 
 
 		$var = $this->input->post('trfdate');
+
+		// check session user login
+		if($this->session->userdata('userid') == 'superadmin'){
+			$data_branch = 1;
+		}else{
+			$data_branch = $this->session->userdata('branch');
+		}
+
 		if ($var != "") {
 			$parts = explode('/', $var);
 			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
@@ -599,7 +617,8 @@ class Payment extends CI_Controller
 				'bank' => $this->input->post('bank'),
 				'total' => $total,
 				'trfdate' => $trfdate,
-				'username' => $this->session->userdata('nama')
+				'username' => $this->session->userdata('nama'),
+				'branch_id' => $data_branch
 			);
 			$latestRecord = $this->mpayment->addPayment($data);
 		} else {
@@ -610,7 +629,8 @@ class Payment extends CI_Controller
 				'number' => $this->input->post('number'),
 				'bank' => $this->input->post('bank'),
 				'total' => $total,
-				'username' => $this->session->userdata('nama')
+				'username' => $this->session->userdata('nama'),
+				'branch_id' => $data_branch
 			);
 			$latestRecord = $this->mpayment->addPayment($data);
 		}
