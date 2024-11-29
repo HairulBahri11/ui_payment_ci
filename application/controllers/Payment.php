@@ -10,8 +10,8 @@ class Payment extends CI_Controller
 		$this->load->model("mprice");
 		$this->load->model("mvoucher");
 		$this->load->model("mpaydetail");
-		$this->load->model("mtrxakuntansi");
-		$this->load->model("mtrxakuntansidetail");
+		$this->load->model("MTrxAkuntansi");
+		$this->load->model("MTrxAkuntansiDetail");
 		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("user"));
 		}
