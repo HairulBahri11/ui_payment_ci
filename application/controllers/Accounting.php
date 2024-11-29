@@ -81,8 +81,8 @@ class Accounting extends CI_Controller
 		$id_akun_pendapatan = $branch_id == 1 ? 10 : 11;
 		$id_akun_pendapatan_denda = $branch_id == 1 ? 13 : 14;
 
-		$data['pendapatan'] = $this->getDetailAkuntansi($id_akun_pendapatan, $year_month, '', $branch_id);
-		$data['pendapatan_denda'] = $this->getDetailAkuntansi($id_akun_pendapatan_denda, $year_month, '', $branch_id);
+		$data['pendapatan'] = $this->getDetailAkuntansi($id_akun_pendapatan, $year_month, $branch_id, '');
+		$data['pendapatan_denda'] = $this->getDetailAkuntansi($id_akun_pendapatan_denda, $year_month, $branch_id, '');
 
 		$this->db->select('ed.id, ed.expenseid, ed.id_akun, ed.category, ed.expdate, ed.amount, ed.explanation');
 		$this->db->from('expdetail ed');
@@ -97,7 +97,7 @@ class Accounting extends CI_Controller
 		$this->load->view('v_footer');
 	}
 
-	public function getDetailAkuntansi($idAkun, $date, $desc = "", $branch_id)
+	public function getDetailAkuntansi($idAkun, $date, $branch_id, $desc = '')
 	{
 		$this->db->select('COALESCE(SUM(jumlah), 0) as jml');
 		$this->db->from('tbl_trx_akuntansi_detail as d');
