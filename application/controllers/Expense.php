@@ -4,9 +4,9 @@ class Expense extends CI_Controller  {
 		parent::__construct();
 		$this->load->model("mexpense"); 
 		$this->load->model("mexpdetail");   
-		$this->load->model("makun");
-		$this->load->model("mtrxakuntansi");
-		$this->load->model("mtrxakuntansidetail");
+		$this->load->model("MAkun");
+		$this->load->model("MTrxAkuntansi");
+		$this->load->model("MTrxAkuntansiDetail");
 		if($this->session->userdata('status') != "login"){
 			redirect(base_url("user"));
 		}
@@ -31,7 +31,7 @@ class Expense extends CI_Controller  {
 		elseif ($this->session->userdata('branch') == 2) // jika bali
 			$id_akun = [4, 7];
 
-		$data['id_akun'] = $this->makun->getSomeAkun($id_akun);
+		$data['id_akun'] = $this->MAkun->getSomeAkun($id_akun);
 
 		$this->load->view('v_header');
 		$this->load->view('v_expenseadd', $data);
@@ -93,7 +93,7 @@ class Expense extends CI_Controller  {
 		elseif ($this->session->userdata('branch') == 2) // jika bali
 			$id_akun = [4, 7];
 
-		$data['id_akun'] = $this->makun->getSomeAkun($id_akun);
+		$data['id_akun'] = $this->MAkun->getSomeAkun($id_akun);
 
 		$this->load->view('v_header');
 		$this->load->view('v_expenseedit', $data);
@@ -164,7 +164,7 @@ class Expense extends CI_Controller  {
 			'dtm_crt' => date('Y-m-d H:i:s'),
 			'dtm_upd' => date('Y-m-d H:i:s'),
 		);
-		$id_trx_akuntansi = $this->mtrxakuntansi->addTrxAkuntansi($trx_akun);
+		$id_trx_akuntansi = $this->MTrxAkuntansi->addTrxAkuntansi($trx_akun);
 
 		$expense_details = $this->mexpdetail->getExpdetailByExpenseId($id)->result();
 
@@ -179,7 +179,7 @@ class Expense extends CI_Controller  {
 				'dtm_crt' => date('Y-m-d H:i:s'),
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
-			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
+			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
 
 			$data_lawan_trx_akuntansi_detail = array(
 				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
@@ -190,7 +190,7 @@ class Expense extends CI_Controller  {
 				'dtm_crt' => date('Y-m-d H:i:s'),
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
-			$id_akun_trx_akuntansi_detail = $this->mtrxakuntansidetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
+			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
 		}
 
 		redirect(base_url("expense/addexpense"));
