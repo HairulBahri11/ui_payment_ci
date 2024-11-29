@@ -1210,12 +1210,19 @@ protected function _UTF8toUTF16($s)
 
 protected function _escape($s)
 {
-	// Escape special characters
-	if(strpos($s,'(')!==false || strpos($s,')')!==false || strpos($s,'\\')!==false || strpos($s,"\r")!==false)
-		return str_replace(array('\\','(',')',"\r"), array('\\\\','\\(','\\)','\\r'), $s);
-	else
-		return $s;
+    // Pastikan $s bukan null sebelum melakukan strpos
+    if (!is_string($s) || $s === '') {
+        return $s; // Kembalikan apa adanya jika $s null atau bukan string
+    }
+
+    // Escape special characters
+    if (strpos($s, '(') !== false || strpos($s, ')') !== false || strpos($s, '\\') !== false || strpos($s, "\r") !== false) {
+        return str_replace(array('\\', '(', ')', "\r"), array('\\\\', '\\(', '\\)', '\\r'), $s);
+    } else {
+        return $s;
+    }
 }
+
 
 protected function _textstring($s)
 {
