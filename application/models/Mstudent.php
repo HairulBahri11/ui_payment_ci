@@ -15,8 +15,8 @@ class Mstudent extends CI_Model
 		$this->db->join("price p", "s.priceid = p.id", "left outer");
 		$this->db->join("last_payment_regular lpr", "s.id = lpr.id_student", "left outer");
 		$this->db->where("is_complete", "1");
-		if ($this->session->userdata('level') == '3') {
-			$this->db->where('branch_id', $this->session->userdata('branch'));
+		if ($this->session->userdata('userid') != 'superadmin') {
+			$this->db->where('s.branch_id', $this->session->userdata('branch'));
 		}
 		$this->db->order_by('sid', 'asc');
 		return $this->db->get();
@@ -29,8 +29,8 @@ class Mstudent extends CI_Model
 		$this->db->join("price p", "s.priceid = p.id", "inner");
 		$this->db->where('s.status =', 'ACTIVE');
 		$this->db->order_by('sid', 'asc');
-		if ($this->session->userdata('level') == '3') {
-			$this->db->where('branch_id', $this->session->userdata('branch'));
+		if ($this->session->userdata('userid') != 'superadmin') {
+			$this->db->where('s.branch_id', $this->session->userdata('branch'));
 		}
 		return $this->db->get();
 	}
@@ -43,8 +43,8 @@ class Mstudent extends CI_Model
 		$this->db->join("paydetail pd", "s.id = pd.studentid", "left outer");
 		$this->db->where('p.level !=', 'Private');
 		$this->db->where('s.status =', 'ACTIVE');
-		if ($this->session->userdata('level') == '3') {
-			$this->db->where('branch_id', $this->session->userdata('branch'));
+		if ($this->session->userdata('userid') != 'superadmin') {
+			$this->db->where('s.branch_id', $this->session->userdata('branch'));
 		}
 		$this->db->group_by('s.id');
 		$this->db->order_by('s.id', 'asc');
@@ -61,8 +61,8 @@ class Mstudent extends CI_Model
 		$this->db->where('s.status =', 'ACTIVE');
 		
 
-		if ($this->session->userdata('level') == '3') {
-			$this->db->where('branch_id', $this->session->userdata('branch'));
+		if ($this->session->userdata('userid') != 'superadmin') {
+			$this->db->where('s.branch_id', $this->session->userdata('branch'));
 		}
 		$this->db->order_by('s.id', 'asc');
 		return $this->db->get();
