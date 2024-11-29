@@ -1,27 +1,12 @@
 <?php
 //File products_model.php
-class MTrxAkuntansi extends CI_Model
+class MAkun extends CI_Model
 {
 	function __construct()
 	{
 		parent::__construct();
 	}
-
-	private $table = 'tbl_trx_akuntansi';
-	public function get_all() {
-		$this->db->select('*');
-		$this->db->from('tbl_trx_akuntansi');
-		return $this->db->get()->result();
-	}
-
-		public function get_by_date($date) {
-		$this->db->select('*');
-		$this->db->from('tbl_trx_akuntansi');
-		$this->db->where('tanggal', $date);
-		$this->db->order_by('tanggal', 'asc');
-		return $this->db->get()->result();
-	}
-	function getAllPayment()
+	function getAllAkun()
 	{
 		//select semua data yang ada pada table msProduct $this--->db->select("*");
 		$this->db->select("*");
@@ -35,6 +20,14 @@ class MTrxAkuntansi extends CI_Model
 		$this->db->from("payment");
 		$this->db->where('id', $id);
 		return $this->db->get();
+	}
+
+	function getSomeAkun($selectedId)
+	{
+		$this->db->select("*");
+		$this->db->from("tbl_akun");
+		$this->db->where_in('id_akun', $selectedId);
+		return $this->db->get()->result();
 	}
 
 	function addTrxAkuntansi($data)

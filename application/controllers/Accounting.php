@@ -1,5 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-class Payment extends CI_Controller
+class Accounting extends CI_Controller
 {
 
 	function __construct()
@@ -17,8 +17,114 @@ class Payment extends CI_Controller
 		}
 	}
 
-	public function index() {}
+	// In Accounting Controller
+	public function journal()
+	{
+		// Remove authentication check or adjust as per your project
 
+		$user_id = $this->session->userdata('user_id');
+		$branch_id = $this->session->userdata('branch');
+
+		$date = date('Y-m-d');
+		$date = $this->input->post('date') ? $this->input->post('date') : $date;
+
+		$this->db->where('tanggal', $date);
+		$this->db->order_by('tanggal', 'asc');
+
+		// Location-based filtering for non-admin users
+//		if ($user->role != 1) {
+			$this->db->where('branch_id', $branch_id);
+//		}
+
+		$results = $this->mtrxakuntansi->get_all();
+
+		$data = [];
+		foreach ($results as $key => $value) {
+			$data[$key] = array(
+				'id_trx_akun' => $value->id_trx_akun,
+				'deskripsi' => $value->deskripsi,
+				'tanggal' => $value->tanggal
+			);
+			$data[$key]['detail'] = $this->get_detail_kas($value->id_trx_akun);
+		}
+		$this->load->view('v_header');
+		$this->load->view('accounting/journal_list', ['data' => $data, 'date' => $date]);
+		$this->load->view('v_footer');
+	}
+
+// In the same controller or a separate method
+	private function get_detail_kas($id)
+	{
+		return $this->db->select('tbl_trx_akuntansi_detail.*, tbl_akun.*')
+			->from('tbl_trx_akuntansi')
+			->join('tbl_trx_akuntansi_detail', 'tbl_trx_akuntansi.id_trx_akun = tbl_trx_akuntansi_detail.id_trx_akun')
+			->join('tbl_akun', 'tbl_akun.id_akun = tbl_trx_akuntansi_detail.id_akun')
+			->where('tbl_trx_akuntansi.id_trx_akun', $id)
+			->order_by('tbl_trx_akuntansi_detail.keterangan', 'asc')
+			->get()
+			->result();
+	}
+
+	public function profit_loss()
+	{
+		// Remove authentication check or adjust as per your project
+
+		$user_id = $this->session->userdata('user_id');
+		$branch_id = $this->session->userdata('branch');
+
+		$month = date('m');
+		$year = date('Y');
+		$month = $this->input->post('month') ? $this->input->post('month') : $month;
+		$year = $this->input->post('year') ? $this->input->post('year') : $year;
+		$year_month = $year . '-' . $month;
+
+		$id_akun_pendapatan = $branch_id == 1 ? 10 : 11;
+		$id_akun_pendapatan_denda = $branch_id == 1 ? 13 : 14;
+
+		$data['pendapatan'] = $this->getDetailAkuntansi($id_akun_pendapatan, $year_month, '', $branch_id);
+		$data['pendapatan_denda'] = $this->getDetailAkuntansi($id_akun_pendapatan_denda, $year_month, '', $branch_id);
+
+		$this->db->select('ed.id, ed.expenseid, ed.id_akun, ed.category, ed.expdate, ed.amount, ed.explanation');
+		$this->db->from('expdetail ed');
+		$this->db->join('expense e', 'ed.expenseid = e.id');
+		$this->db->where('e.branch_id', $branch_id);
+		$this->db->like('ed.expdate', $year_month, 'after');
+
+		$data['detail_pengeluaran'] =$this->db->get()->result();
+
+		$this->load->view('v_header');
+		$this->load->view('accounting/profit_loss', ['data' => $data, 'month' => $month, 'year' => $year]);
+		$this->load->view('v_footer');
+	}
+
+	public function getDetailAkuntansi($idAkun, $date, $desc = "", $branch_id)
+	{
+		$this->db->select('COALESCE(SUM(jumlah), 0) as jml');
+		$this->db->from('tbl_trx_akuntansi_detail as d');
+		$this->db->join('tbl_trx_akuntansi as a', 'd.id_trx_akun = a.id_trx_akun');
+		$this->db->where('branch_id', $branch_id);
+
+		if (!empty($desc)) {
+			$this->db->like('deskripsi', $desc);
+		}
+
+		$this->db->like('tanggal', $date);
+
+		if (is_array($idAkun)) {
+			$this->db->group_start();
+			foreach ($idAkun as $value) {
+				$this->db->or_where('id_akun', $value);
+			}
+			$this->db->group_end();
+		} else {
+			$this->db->where('id_akun', $idAkun);
+		}
+
+		$query = $this->db->get();
+		$result = $query->row();
+
+		return $result->jml;
+	}
 	public function addRegular()
 	{
 		$listLateStudent = $this->mstudent->getLatePaymentStudent();
@@ -207,14 +313,6 @@ class Payment extends CI_Controller
 		$other_detail = $this->input->post('other_detail');
 
 		$var = $this->input->post('trfdate');
-
-		// check session user login
-		if($this->session->userdata('userid') == 'superadmin'){
-			$data_branch = 1;
-		}else{
-			$data_branch = $this->session->userdata('branch');
-		}
-
 		if ($var != "") {
 			$parts = explode('/', $var);
 			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
@@ -226,8 +324,7 @@ class Payment extends CI_Controller
 				'bank' => $this->input->post('bank'),
 				'total' => $total,
 				'trfdate' => $trfdate,
-				'username' => $this->session->userdata('nama'),
-				'branch_id' => $data_branch
+				'username' => $this->session->userdata('nama')
 			);
 			$latestRecord = $this->mpayment->addPayment($data);
 		} else {
@@ -238,8 +335,7 @@ class Payment extends CI_Controller
 				'number' => $this->input->post('number'),
 				'bank' => $this->input->post('bank'),
 				'total' => $total,
-				'username' => $this->session->userdata('nama'),
-				'branch_id' => $data_branch
+				'username' => $this->session->userdata('nama')
 			);
 			$latestRecord = $this->mpayment->addPayment($data);
 		}
@@ -598,14 +694,6 @@ class Payment extends CI_Controller
 
 
 		$var = $this->input->post('trfdate');
-
-		// check session user login
-		if($this->session->userdata('userid') == 'superadmin'){
-			$data_branch = 1;
-		}else{
-			$data_branch = $this->session->userdata('branch');
-		}
-
 		if ($var != "") {
 			$parts = explode('/', $var);
 			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
@@ -617,8 +705,7 @@ class Payment extends CI_Controller
 				'bank' => $this->input->post('bank'),
 				'total' => $total,
 				'trfdate' => $trfdate,
-				'username' => $this->session->userdata('nama'),
-				'branch_id' => $data_branch
+				'username' => $this->session->userdata('nama')
 			);
 			$latestRecord = $this->mpayment->addPayment($data);
 		} else {
@@ -629,8 +716,7 @@ class Payment extends CI_Controller
 				'number' => $this->input->post('number'),
 				'bank' => $this->input->post('bank'),
 				'total' => $total,
-				'username' => $this->session->userdata('nama'),
-				'branch_id' => $data_branch
+				'username' => $this->session->userdata('nama')
 			);
 			$latestRecord = $this->mpayment->addPayment($data);
 		}

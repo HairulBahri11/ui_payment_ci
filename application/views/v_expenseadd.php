@@ -170,6 +170,22 @@
 							</div>
 
 							<div class="form-group">
+								<label for="category" class="col-sm-3 control-label">Source</label>
+								<div class="col-sm-9">
+									<select class="form-control select2" style="width: 100%;" name="id_akun" id="id_akun" required>
+										<option selected="selected" disabled="disabled" value="">-- Choose Source --</option>
+										<?php
+										foreach ($id_akun as $akun):
+										?>
+										<option value="<?= $akun->id_akun ?>"><?= $akun->no_akun . ' - ' . $akun->nama_akun ?></option>
+										<?php
+										endforeach;
+										?>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
 								<label for="category" class="col-sm-3 control-label">Category</label>
 								<div class="col-sm-9">
 									<select class="form-control select2" style="width: 100%;" name="category" id="category" onchange="changeCategory()" required>
@@ -219,6 +235,7 @@
 											<thead>
 												<tr>
 													<th>Date</th>
+													<th>Source</th>
 													<th>Category</th>
 													<th>Explanation</th>
 													<th>Amount</th>
