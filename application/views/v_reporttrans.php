@@ -238,7 +238,8 @@
 													$paydate = $parts[2] . '/' . $parts[1];
 													$paydetail = $this->mpaydetail->getPaymentByPaymentId($row->id);
 													$prv = $row->explanation;
-													$prv = (is_null($prv)) ? '' : $prv; 
+													$prv = (is_null($prv)) ? '' : $prv;
+													// null
 													$exPrv = explode(' ', $prv);
 													$query = $this->db->query("SELECT COUNT(*) as countpy
 																				FROM paydetail
