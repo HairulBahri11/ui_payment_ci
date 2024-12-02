@@ -13,6 +13,7 @@
 			<th>No Nota</th>
 			<th>Name</th>
 			<th>Payment Method</th>
+			<th>Bank</th>
 			<th>Date/TC</th>
 			<th>Level</th>
 			<th>Month</th>
@@ -123,8 +124,12 @@
 							<?php } ?>
 						</td>
 						<td>
+							<?= $value->bank == null ? '-' : $value->bank ?>
+						</td>
+						<td>
 							<?= $value->method == 'BANK TRANSFER' ? $value->trfdate : $value->number ?>
 						</td>
+						
 						<td>
 							<?= $resultDetail[0]->program ?>
 						</td>
@@ -154,21 +159,21 @@
 							?>
 						</td>
 						<td>
-							<?= number_format($resultDetail[0]->regist, 0, ".", ".") ?>
+							<?= number_format($resultDetail[0]->regist ?? 0, 0, ".", ".") ?>
 						</td>
-						<td><?= number_format($resultDetail[0]->course, 0, ".", ".") ?>
-						</td>
-						<td>
-							<?= number_format($resultDetail[0]->book, 0, ".", ".") ?>
+						<td><?= number_format($resultDetail[0]->course ?? 0, 0, ".", ".") ?>
 						</td>
 						<td>
-							<?= number_format($resultDetail[0]->booklet, 0, ".", ".") ?>
+							<?= number_format($resultDetail[0]->book ?? 0, 0, ".", ".") ?>
+						</td>
+						<td>
+							<?= number_format($resultDetail[0]->booklet ?? 0, 0, ".", ".") ?>
 						</td>
 
 
 						</td>
 						<td>
-							<?= number_format($resultDetail[0]->exercise, 0, ".", ".") ?>
+							<?= number_format($resultDetail[0]->exercise ?? 0, 0, ".", ".") ?>
 						</td>
 
 
@@ -179,7 +184,7 @@
 
 
 						<td>
-							<?= number_format($resultDetail[0]->other, 0, ".", ".") ?>
+							<?= number_format($resultDetail[0]->other ?? 0, 0, ".", ".") ?>
 						</td>
 						<td style="background-color: greenyellow;" rowspan="<?= $countDetail ?>">
 							Rp <?= number_format($value->total, 0, ".", ".") ?>
@@ -240,8 +245,12 @@
 								<?php } ?>
 							</td>
 							<td>
+							<?= $value->bank == null ? '-' : $value->bank ?>
+						</td>
+							<td>
 								<?= $value->method == 'BANK TRANSFER' ? $value->trfdate : $value->number ?>
 							</td>
+							
 							<td>
 								<?= $valueDetail->program ?>
 							</td>
@@ -272,19 +281,20 @@
 								?>
 							</td>
 							<td>
-								<?= number_format($valueDetail->regist, 0, ".", ".") ?>
+								<?= number_format($valueDetail->regist ?? 0, 0, ".", ".") ?>
+
 							</td>
-							<td><?= number_format($valueDetail->course, 0, ".", ".") ?></td>
+							<td><?= number_format($valueDetail->course ?? 0, 0, ".", ".") ?></td>
 
 							<td>
-								<?= number_format($valueDetail->book, 0, ".", ".") ?>
+								<?= number_format($valueDetail->book ?? 0, 0, ".", ".") ?>
 							</td>
 
 							<td>
-								<?= number_format($valueDetail->booklet, 0, ".", ".") ?>
+								<?= number_format($valueDetail->booklet ?? 0, 0, ".", ".") ?>
 							</td>
 							<td>
-								<?= number_format($resultDetail[0]->exercise, 0, ".", ".") ?>
+								<?= number_format($resultDetail[0]->exercise ?? 0, 0, ".", ".") ?>
 							</td>
 							<!-- <td>
         <?php //echo number_format($resultDetail[0]->point_book, 0, ".", ".") 
@@ -293,7 +303,7 @@
 
 
 							<td>
-								<?= number_format($resultDetail[0]->other, 0, ".", ".") ?>
+								<?= number_format($resultDetail[0]->other ?? 0, 0, ".", ".") ?>
 							</td>
 						</tr>
 					<?php
@@ -357,8 +367,12 @@
 								<?php } ?>
 							</td>
 							<td>
+							<?= $value->bank == null ? '-' : $value->bank ?>
+						</td>
+							<td>
 								<?= $value->method == 'BANK TRANSFER' ? $value->trfdate : $value->number ?>
 							</td>
+							
 							<td>
 								<?= $valueDetail->program ?>
 							</td>
@@ -389,18 +403,19 @@
 								?>
 							</td>
 							<td>
-								<?= number_format($valueDetail->regist, 0, ".", ".") ?>
+								<?= number_format($valueDetail->regist ?? 0, 0, ".", ".") ?>
+
 							</td>
-							<td> <?= number_format($valueDetail->course, 0, ".", ".") ?></td>
+							<td> <?= number_format($valueDetail->course ?? 0, 0, ".", ".") ?></td>
 							<td>
-								<?= number_format($valueDetail->book, 0, ".", ".") ?>
+								<?= number_format($valueDetail->book ?? 0, 0, ".", ".") ?>
 							</td>
 							<td>
 
-								<?= number_format($valueDetail->booklet, 0, ".", ".") ?>
+								<?= number_format($valueDetail->booklet ?? 0, 0, ".", ".") ?>
 							</td>
 							<td>
-								<?= number_format($resultDetail[0]->exercise, 0, ".", ".") ?>
+								<?= number_format($resultDetail[0]->exercise ?? 0, 0, ".", ".") ?>
 							</td>
 							<!-- <td>
         <?php // echo number_format($valueDetail->agenda, 0, ".", ".") 
@@ -413,10 +428,10 @@
 
 
 							<td>
-								<?= number_format($resultDetail[0]->other, 0, ".", ".") ?>
+								<?= number_format($resultDetail[0]->other ?? 0, 0, ".", ".") ?>
 							</td>
 							<td style="background-color: greenyellow;">
-								Rp <?= number_format($value->total, 0, ".", ".") ?>
+								Rp <?= number_format($value->total ?? 0, 0, ".", ".") ?>
 							</td>
 						</tr>
 			<?php

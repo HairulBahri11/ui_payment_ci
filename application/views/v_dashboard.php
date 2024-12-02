@@ -47,7 +47,7 @@
 					<ul class="treeview-menu">
 						<li class="active"><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
 						<li><a href="<?= base_url() ?>payment/addregular"><i class="fa fa-circle-o"></i> <span>Regular Payment</span></a></li>
-						<!-- <li><a href="<?= base_url() ?>payment/addother"><i class="fa fa-circle-o"></i> <span>Other Payment</span></a></li> -->
+
 						<li><a href="<?= base_url() ?>expense/addexpense"><i class="fa fa-circle-o"></i> <span>Expense</span></a></li>
 					</ul>
 				</li>
@@ -126,6 +126,25 @@
 					<li class="<?= $this->uri->segment(3) == 'removePenaltyBill' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/removePenaltyBill"><i class="fa fa-circle-o"></i> <span>Remove Penalty</span></a></li>
 				</ul>
 			</li>
+
+			<?php
+			if (($this->session->userdata('level')) == 1 || $this->session->userdata('level') == 2) {
+				?>
+				<li class="treeview">
+				<a href="#">
+					<i class="fa fa-tag"></i> <span>Accounting</span>
+					<span class="pull-right-container">
+						<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+				<ul class="treeview-menu">
+					<li class=""><a href="<?= base_url() ?>accounting/jurnal"><i class="fa fa-circle-o"></i> <span>Journal</span></a></li>
+					<li class=""><a href="<?= base_url() ?>accounting/profit_loss"><i class="fa fa-circle-o"></i> <span>Profit & Loss</span></a></li>
+					
+				</ul>
+			</li>
+				
+			<?php } ?>
 		</ul>
 	</section>
 	<!-- /.sidebar -->
