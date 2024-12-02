@@ -56,7 +56,7 @@ $url = base_url() . "cetak/printregular/";
 					<ul class="treeview-menu">
 						<li><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
 						<li class="active"><a href="<?= base_url() ?>payment/addregular"><i class="fa fa-circle-o"></i> <span>Regular Payment</span></a></li>
-						<
+						
 						<li><a href="<?= base_url() ?>expense/addexpense"><i class="fa fa-circle-o"></i> <span>Expense</span></a></li>
 					</ul>
 				</li>
