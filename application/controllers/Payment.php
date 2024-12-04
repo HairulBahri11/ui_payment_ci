@@ -560,7 +560,7 @@ class Payment extends CI_Controller
 			$data_lawan_trx_akuntansi_detail = array(
 				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
 				'id_akun' => $akun_pendapatan_id,
-				'jumlah' => $total - $total_penalty,
+				'jumlah' => floatval($total) - floatval($total_penalty),
 				'tipe' => 'KREDIT',
 				'keterangan' => 'lawan',
 				'dtm_crt' => date('Y-m-d H:i:s'),
