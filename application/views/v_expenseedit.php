@@ -190,6 +190,28 @@
 									</div>
 								</div>
 
+								<?php
+								if($user_branch_id == NULL):
+									?>
+									<div class="form-group">
+										<label for="category" class="col-sm-3 control-label">Branch</label>
+										<div class="col-sm-9">
+											<select class="form-control select2" style="width: 100%;" name="branch_id" id="branch_id" required>
+												<option selected="selected" disabled="disabled" value="">-- Choose Branch --</option>
+												<?php
+												foreach ($branches as $branch):
+													?>
+													<option value="<?= $branch->id ?>"><?= $branch->location ?></option>
+												<?php
+												endforeach;
+												?>
+											</select>
+										</div>
+									</div>
+								<?php
+								endif;
+								?>
+
 								<div class="form-group">
 									<label for="category" class="col-sm-3 control-label">Source</label>
 									<div class="col-sm-9">
@@ -299,6 +321,8 @@
 									<label for="total" class="col-sm-3 control-label">Total Amount</label>
 									<div class="col-sm-9">
 										<input type="text" class="form-control" id="total" name="total" readonly>
+										<input type="hidden" class="form-control" id="branch_id_submit" name="branch_id_submit">
+
 									</div>
 								</div>
 
@@ -363,6 +387,10 @@ foreach ($listExpdetail->result() as $row) {
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$("#branch_id").change(function(){
+			$("#branch_id_submit").val($(this).val());
+		});
+
 		$("#amount").maskMoney({
 			prefix: 'Rp ',
 			thousands: '.',
