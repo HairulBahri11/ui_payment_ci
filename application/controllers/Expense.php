@@ -30,6 +30,15 @@ class Expense extends CI_Controller  {
 			$id_akun = [3, 6];
 		elseif ($this->session->userdata('branch') == 2) // jika bali
 			$id_akun = [4, 7];
+		elseif ($this->session->userdata('branch') == NULL) // jika bali
+			$id_akun = [3, 6, 4, 7];
+
+		$this->db->select('*');
+		$this->db->from('branch');
+
+		$data['branches'] =$this->db->get()->result();
+
+		$data['user_branch_id'] =$this->session->userdata('branch');
 
 		$data['id_akun'] = $this->MAkun->getSomeAkun($id_akun);
 
@@ -92,6 +101,15 @@ class Expense extends CI_Controller  {
 			$id_akun = [3, 6];
 		elseif ($this->session->userdata('branch') == 2) // jika bali
 			$id_akun = [4, 7];
+		elseif ($this->session->userdata('branch') == NULL) // jika bali
+			$id_akun = [3, 6, 4, 7];
+
+		$this->db->select('*');
+		$this->db->from('branch');
+
+		$data['branches'] =$this->db->get()->result();
+
+		$data['user_branch_id'] =$this->session->userdata('branch');
 
 		$data['id_akun'] = $this->MAkun->getSomeAkun($id_akun);
 
@@ -145,22 +163,33 @@ class Expense extends CI_Controller  {
 		$order   = array("Rp ", ".");
 		$replace = "";
 		$total = str_replace($order, $replace, $total);
+
+		$this->input->post('total');
 		
 		$data = array(
 				'entrydate' => $date,
-				'total' => $total
+				'total' => $total,
+				'branch_id' => $this->session->userdata('branch') != NULL ? $this->session->userdata('branch') : $this->input->post('branch_id')
 				);
 				
 		$where['id'] = $id;
 		$this->mexpense->updateExpense($data, $where);
 
 //		insert into tbl_trx_akuntansi and tbl_trx_akuntansi_detail
-		$id_beban = $this->session->userdata('branch') == 1 ? 17 : 18;
+		$id_beban = 0;
+		if ($this->session->userdata('branch') == 1)
+			$id_beban = 17;
+		elseif ($this->session->userdata('branch') == 2)
+			$id_beban = 18;
+		elseif ($this->session->userdata('branch') == NULL)
+			echo 'asdfsf' . $this->input->post('branch_id');
+			$id_beban = $this->input->post('branch_id_submit') == 1 ? 17 : 18;
+
 		$trx_akun = array(
 			'expense_id' => $id,
 			'deskripsi' => 'Expense from id ' . $id,
 			'tanggal' => $date,
-			'branch_id' => $this->session->userdata('branch'),
+			'branch_id' => $this->session->userdata('branch') != NULL ? $this->session->userdata('branch') : $this->input->post('branch_id'),
 			'dtm_crt' => date('Y-m-d H:i:s'),
 			'dtm_upd' => date('Y-m-d H:i:s'),
 		);
