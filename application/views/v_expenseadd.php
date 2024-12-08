@@ -187,6 +187,28 @@
 								</div>
 							</div>
 
+							<?php
+							if($user_branch_id == NULL):
+							?>
+								<div class="form-group">
+									<label for="category" class="col-sm-3 control-label">Branch</label>
+									<div class="col-sm-9">
+										<select class="form-control select2" style="width: 100%;" name="branch_id" id="branch_id" required>
+											<option selected="selected" disabled="disabled" value="">-- Choose Branch --</option>
+											<?php
+											foreach ($branches as $branch):
+												?>
+												<option value="<?= $branch->id ?>"><?= $branch->location ?></option>
+											<?php
+											endforeach;
+											?>
+										</select>
+									</div>
+								</div>
+							<?php
+							endif;
+							?>
+
 							<div class="form-group">
 								<label for="category" class="col-sm-3 control-label">Source</label>
 								<div class="col-sm-9">
