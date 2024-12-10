@@ -32,9 +32,9 @@ class Accounting extends CI_Controller
 		$this->db->order_by('tanggal', 'asc');
 
 		// Location-based filtering for non-admin users
-//		if ($user->role != 1) {
+		if ($branch_id != null) {
 			$this->db->where('branch_id', $branch_id);
-//		}
+		}
 
 		$results = $this->MTrxAkuntansi->get_all();
 
@@ -78,8 +78,17 @@ class Accounting extends CI_Controller
 		$year = $this->input->post('year') ? $this->input->post('year') : $year;
 		$year_month = $year . '-' . $month;
 
-		$id_akun_pendapatan = $branch_id == 1 ? 10 : 11;
-		$id_akun_pendapatan_denda = $branch_id == 1 ? 13 : 14;
+		$id_akun_pendapatan = $branch_id = null;
+		$id_akun_pendapatan_denda = $branch_id = null;
+//		if superadmin
+		if ($branch_id == null) {
+			$id_akun_pendapatan = array(10,11);
+			$id_akun_pendapatan_denda = array(13,14);
+		}
+		else{
+			$id_akun_pendapatan = $branch_id == 1 ? 10 : 11;
+			$id_akun_pendapatan_denda = $branch_id == 1 ? 13 : 14;
+		}
 
 		$data['pendapatan'] = $this->getDetailAkuntansi($id_akun_pendapatan, $year_month, $branch_id, '');
 		$data['pendapatan_denda'] = $this->getDetailAkuntansi($id_akun_pendapatan_denda, $year_month, $branch_id, '');
@@ -87,7 +96,9 @@ class Accounting extends CI_Controller
 		$this->db->select('ed.id, ed.expenseid, ed.id_akun, ed.category, ed.expdate, ed.amount, ed.explanation');
 		$this->db->from('expdetail ed');
 		$this->db->join('expense e', 'ed.expenseid = e.id');
-		$this->db->where('e.branch_id', $branch_id);
+		if ($branch_id != null) {
+			$this->db->where('e.branch_id', $branch_id);
+		}
 		$this->db->like('ed.expdate', $year_month, 'after');
 
 		$data['detail_pengeluaran'] =$this->db->get()->result();
