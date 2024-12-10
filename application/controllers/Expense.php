@@ -52,7 +52,7 @@ class Expense extends CI_Controller  {
 		$date = date('Y-m-d');
 		$data = array(
 				'entrydate' => $date,
-				'branch_id' => $this->session->userdata('branch')
+				'branch_id' => $this->session->userdata('branch') != null ?  $this->session->userdata('branch') : $this->input->post('branch_id'),
 				);
 		$latestRecord = $this->mexpense->addExpense($data);
 
@@ -169,11 +169,13 @@ class Expense extends CI_Controller  {
 		$data = array(
 				'entrydate' => $date,
 				'total' => $total,
-				'branch_id' => $this->session->userdata('branch') != NULL ? $this->session->userdata('branch') : $this->input->post('branch_id')
 				);
 				
 		$where['id'] = $id;
 		$this->mexpense->updateExpense($data, $where);
+
+		$expense = $this->mexpense->getExpenseById($id)->result();
+
 
 //		insert into tbl_trx_akuntansi and tbl_trx_akuntansi_detail
 		$id_beban = 0;
@@ -183,13 +185,13 @@ class Expense extends CI_Controller  {
 			$id_beban = 18;
 		elseif ($this->session->userdata('branch') == NULL)
 			echo 'asdfsf' . $this->input->post('branch_id');
-			$id_beban = $this->input->post('branch_id_submit') == 1 ? 17 : 18;
+			$id_beban = $expense[0]->branch_id == 1 ? 17 : 18;
 
 		$trx_akun = array(
 			'expense_id' => $id,
 			'deskripsi' => 'Expense from id ' . $id,
 			'tanggal' => $date,
-			'branch_id' => $this->session->userdata('branch') != NULL ? $this->session->userdata('branch') : $this->input->post('branch_id'),
+			'branch_id' => $this->session->userdata('branch') != NULL ? $this->session->userdata('branch') : $expense[0]->branch_id,
 			'dtm_crt' => date('Y-m-d H:i:s'),
 			'dtm_upd' => date('Y-m-d H:i:s'),
 		);

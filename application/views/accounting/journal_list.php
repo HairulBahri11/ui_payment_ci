@@ -147,9 +147,9 @@
 					<?php echo form_open('accounting/journal', ['method' => 'post', 'class' => 'form-inline']); ?>
 					<input type="date" name="date" class="form-control" required value="<?= $date ?>">
 					<button class="btn btn-success">Search</button>
-					<a href="<?= base_url('accounting/createJournal') ?>" class="btn btn-primary">
-						<i class="fa fa-plus"></i> Add Entry
-					</a>
+<!--					<a href="--><?php //= base_url('accounting/createJournal') ?><!--" class="btn btn-primary">-->
+<!--						<i class="fa fa-plus"></i> Add Entry-->
+<!--					</a>-->
 					<?php echo form_close(); ?>
 				</div>
 			</div>
