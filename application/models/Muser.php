@@ -38,6 +38,7 @@
 
 	function updateUser($data, $where)
 	{
+
 		$this->db->where($where);
         $this->db->update('user', $data);
 	}
@@ -46,6 +47,15 @@
 	{
 		$this->db->where('id', $id);
         $this->db->delete('user');
+	}
+
+	function updateProfile($data, $where)
+	{
+		$this->db->from('user');
+		$this->db->where($where);
+		$result =  $this->db->update('user', $data);
+
+		return $result;
 	}
 }
 
