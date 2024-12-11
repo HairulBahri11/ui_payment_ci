@@ -47,6 +47,14 @@
 		$this->db->where('id', $id);
         $this->db->delete('user');
 	}
+	
+
+	function usernya($userid){
+		$this->db->select('*');
+		$this->db->from('user');
+		$this->db->where('userid', $userid);
+		return $this->db->get()->row_array(); // Meng
+	}
 }
 
 ?>
