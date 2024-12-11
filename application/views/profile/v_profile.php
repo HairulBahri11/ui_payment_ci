@@ -186,7 +186,7 @@
 							<div class="form-group">
 								<label for="name" class="col-sm-3 control-label">Username</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="username" placeholder="Enter Name" name="username" value="<?= $this->session->userdata('userid') ?>" required>
+									<input type="text" class="form-control" id="username" placeholder="Enter Name" name="username" value="<?= $this->session->userdata('userid') ?>" readonly required>
 								</div>
 							</div>
 
