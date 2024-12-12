@@ -31,10 +31,11 @@
 		return $this->db->get();
 	}
 
-	function addUser($data)
+	public function addUser($data)
 	{
 		$this->db->insert('user', $data);
 	}
+
 
 	function updateUser($data, $where)
 	{

@@ -23,13 +23,16 @@
 		return $this->db->get();
 	}
 
-	function getUserById($id)
+	public function getUserById($id)
 	{
-		$this->db->select("*");
-		$this->db->from("user");
-		$this->db->where('id', $id);
-		return $this->db->get();
+
+    $this->db->select("*");
+    $this->db->from("user");
+    $this->db->where('userid', $id);
+    return $this->db->get();
+
 	}
+
 
 	function addUser($data)
 	{
@@ -39,8 +42,11 @@
 	function updateUser($data, $where)
 	{
 
+		$this->db->from('user');
 		$this->db->where($where);
-        $this->db->update('user', $data);
+        $result = $this->db->update('user', $data);
+
+		return $result;
 	}
 
 	function deleteUser($id)
@@ -55,6 +61,14 @@
 		$this->db->where($where);
 		$result =  $this->db->update('user', $data);
 
+		return $result;
+	}
+
+	function activateUser($data, $where)
+	{
+		$this->db->from('user');
+		$this->db->where($where);
+		$result = $this->db->update('user', $data);
 		return $result;
 	}
 }
