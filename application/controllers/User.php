@@ -11,7 +11,7 @@ class User extends CI_Controller  {
 
 	public function index()
 	{
-		$data['listUser'] = $this->muser->getAllUser(); 
+		$data['listEmployee'] = $this->muser->getAllUser(); 
 		$this->load->view('v_header');
 		$this->load->view('v_userlist', $data); 
 		$this->load->view('v_footer');
@@ -26,21 +26,35 @@ class User extends CI_Controller  {
 
 	public function addUserDb()
 	{
+		$levelid = '';
+		if($this->input->post('position') == 'Admin'){
+			$levelid = 2;
+		}else{
+			$levelid = 3;
+		}
 		$data = array(
 				'userid' => $this->input->post('userid'),
-				'password' => $this->input->post('password'),
+				'password' => password_hash($this->input->post('password'), PASSWORD_BCRYPT),
 				'name' => $this->input->post('name'),
-				'levelid' => $this->input->post('levelid')
+				'levelid' => $levelid,
+				'levelname' => $this->input->post('position'),
+				'branch_id' => $this->input->post('branch_id'),
 				);
-		$this->muser->addUser($data);
-
+		$proses =  $this->db->insert('user', $data);
+		if($proses){
+			$this->session->set_flashdata('alert','Employee added successfully.');
+		}else{
+			$this->session->set_flashdata('alert','Employee added failed.');
+		}
 		redirect(base_url("user"));
+
+		
 	}
 
 	public function updateUser($id)
 	{
-		$data['user'] = $this->muser->getUserById($id);
 		
+		$data['user'] = $this->muser->getUserById($id);
 		$this->load->view('v_header');
 		$this->load->view('v_useredit', $data);
 		$this->load->view('v_footer');
@@ -48,17 +62,32 @@ class User extends CI_Controller  {
 
 	public function updateUserDb()
 	{
-		$id = $this->input->post('id');
+		$id = $this->input->post('username');
+
+		if($this->input->post('position') == 'Admin'){
+			$levelid = 2;
+		}else{
+			$levelid = 3;
+		}
 
 		$data = array(
-				'userid' => $this->input->post('userid'),
-				'password' => $this->input->post('password'),
+				'userid' => $this->input->post('username'),
 				'name' => $this->input->post('name'),
-				'levelid' => $this->input->post('levelid'),
+				'levelid' => $levelid,
+				'levelname' => $this->input->post('position'),
+				'branch_id' => $this->input->post('branch_id'),
 				);
-		$where['id'] = $id;
+		if($this->input->post('password') != '') {
+			$data['password'] = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
+		}
+		$where['userid'] = $id;
 
-		$this->muser->updateUser($data, $where);
+		$proses = $this->muser->updateUser($data, $where);
+		if($proses){
+			$this->session->set_flashdata('alert','User updated successfully.');
+		}else{
+			$this->session->set_flashdata('alert','User updated failed.');
+		}
 
 		redirect(base_url("user"));
 	}
@@ -67,6 +96,22 @@ class User extends CI_Controller  {
 	{
 		$this->muser->deleteUser($id); 
 		redirect(base_url("user"));
+	}
+
+	public function activateUser($id)
+	{
+		 $data = array(
+				'status' => 'nonactive',
+				);
+		 $where['userid'] = $id;
+		 $update = $this->muser->activateUser($data , $where);
+		 if( $update ){
+			$this->session->set_flashdata('alert','User nonactivated successfully.');
+		 }else{
+			$this->session->set_flashdata('alert','User nonactivated failed.');
+		 }
+		 redirect(base_url("user"));
+
 	}
 
 	public function profile() {

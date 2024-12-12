@@ -82,6 +82,17 @@
 					<li><a href="<?= base_url() ?>report/showtrans"><i class="fa fa-circle-o"></i> <span>Transaction</span></a></li>
 				</ul>
 			</li>
+			<?php
+			if (($this->session->userdata('level')) == 1) {
+				?>
+				<li >
+				<a href="<?php echo base_url() ?>user" >
+					<i class="fa fa-user"></i> <span>Employee</span>
+				</a>
+			</li>	
+			<?php
+			}
+			?>
 
 			<li>
 				<a href="<?php echo base_url() ?>student">
