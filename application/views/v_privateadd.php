@@ -321,6 +321,12 @@ $url = base_url() . "cetak/printprivate/";
 
 							<!-- <form role="form" id="example3" name="example" class="form-horizontal" action="<?php echo base_url() ?>payment/addRegularDb" method="post" enctype="multipart/form-data"> -->
 							<div id="dpayment" style="display: none">
+							<div class="form-group">
+									<label for="date" class="col-sm-3 control-label">Date</label>
+									<div class="col-sm-9">
+										<input type="date" class="form-control" id="date" name="date" required>
+									</div>
+								</div>
 								<div class="form-group">
 									<label for="no_hp" class="col-sm-3 control-label">No Handphone</label>
 									<div class="col-sm-9">
