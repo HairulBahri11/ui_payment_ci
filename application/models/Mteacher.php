@@ -45,4 +45,12 @@ class Mteacher extends CI_Model
 		$this->db->where('id', $id);
 		$this->db->delete('teacher');
 	}
+
+	function activateUser($data, $where)
+	{
+		$this->db->from('teacher');
+		$this->db->where($where);
+		$result = $this->db->update('teacher', $data);
+		return $result;
+	}
 }
