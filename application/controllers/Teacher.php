@@ -149,6 +149,8 @@ class Teacher extends CI_Controller
 		}
 	}
 
+	// not used
+
 	public function destroy($id)
 	{
 	    $teacher = $this->db->get_where('teacher', array('id' => $id));
@@ -161,5 +163,21 @@ class Teacher extends CI_Controller
 	    
 		$this->mteacher->destroy($id);
 		redirect(base_url("teacher"));
+	}
+
+	public function activateUser($id)
+	{
+		 $data = array(
+				'status' => 'nonactive',
+				);
+		 $where['id'] = $id;
+		 $update = $this->mteacher->activateUser($data , $where);
+		 if( $update ){
+			$this->session->set_flashdata('alert','Teacher nonactivated successfully.');
+		 }else{
+			$this->session->set_flashdata('alert','Teacher nonactivated failed.');
+		 }
+		 redirect(base_url("Teacher"));
+
 	}
 }

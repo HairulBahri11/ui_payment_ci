@@ -176,6 +176,7 @@
 										<th>ID</th>
 										<th>Name</th>
 										<th>Username</th>
+										<th>Status</th>
 										<th class="notPrintable">Action</th>
 									</tr>
 								</thead>
@@ -188,8 +189,17 @@
 											<td><?= $row->name ?></td>
 											<td><?= $row->username ?></td>
 											<td>
+												<?php
+												if ($row->status == 'active') {
+													echo '<span class="label label-success">Active</span>';
+												} else {
+													echo '<span class="label label-danger">Inactive</span>';
+												}
+												?>
+											</td>
+											<td>
 												<a href="<?= base_url() ?>teacher/edit/<?= $row->id ?>" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-												<a href="<?= base_url() ?>teacher/destroy/<?= $row->id ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+												<a href="<?= base_url() ?>teacher/activateUser/<?= $row->id ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
 											</td>
 										</tr>
 									<?php } ?>
