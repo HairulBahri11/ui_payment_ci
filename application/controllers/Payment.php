@@ -202,7 +202,8 @@ class Payment extends CI_Controller
 	public function addRegularDb()
 	{
 		date_default_timezone_set("Asia/Jakarta");
-		$date = date('Y-m-d');
+		// $date = date('Y-m-d');
+		$date = $this->input->post("date");
 		$time = date('Y-m-d h:i:s');
 
 		$total = $this->input->post('total');
@@ -596,7 +597,8 @@ class Payment extends CI_Controller
 		$no_hp = $this->input->post('no_hp');
 		// echo $no_hp;
 		date_default_timezone_set("Asia/Jakarta");
-		$date = date('Y-m-d');
+		// $date = date('Y-m-d');
+		$date = $this->input->post("date");
 		$time = date('Y-m-d h:i:s');
 
 		$total = $this->input->post('total');
