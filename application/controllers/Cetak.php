@@ -57,14 +57,14 @@ class Cetak extends CI_Controller
 
 	public function printprivate($id = 1)
 	{
-		$data['pay'] = $this->db->query("select id,username,method,number,bank,total,DATE_FORMAT(paydate,'%b %y')paydate,date_format(paytime,'%d/%m/%Y %h:%i:%s')paytime,date_format(trfdate,'%d/%m')trfdate from payment where id = $id")->row(0);
+		$data['pay'] = $this->db->query("select id,username,method,number,bank,total,DATE_FORMAT(paydate,'%d %b %y')paydate,date_format(paytime,'%d/%m/%Y %h:%i:%s')paytime,date_format(trfdate,'%d/%m')trfdate from payment where id = $id")->row(0);
 		$data['id'] = $id;
 		$this->load->view('cetak/printprivate', $data);
 	}
 
 	public function printregular($id = 1)
 	{
-		$data['pay'] = $this->db->query("select id,username,method,number,bank,total,DATE_FORMAT(paydate,'%b %y')paydate,date_format(paytime,'%d/%m/%Y %h:%i:%s')paytime,date_format(trfdate,'%d/%m')trfdate from payment where id = $id")->row(0);
+		$data['pay'] = $this->db->query("select id,username,method,number,bank,total,DATE_FORMAT(paydate,'%d %b %y')paydate,date_format(paytime,'%d/%m/%Y %h:%i:%s')paytime,date_format(trfdate,'%d/%m')trfdate from payment where id = $id")->row(0);
 		$data['id'] = $id;
 		$this->load->view('cetak/printreguler', $data);
 	}
@@ -78,14 +78,14 @@ class Cetak extends CI_Controller
 
 	public function printregular_parent($id = 1)
 	{
-		$data['pay'] = $this->db->query("select id,username,method,number,bank,total,DATE_FORMAT(paydate,'%b %y')paydate,date_format(paytime,'%d/%m/%Y %h:%i:%s')paytime,date_format(trfdate,'%d/%m')trfdate from payment where id = $id")->row(0);
+		$data['pay'] = $this->db->query("select id,username,method,number,bank,total,DATE_FORMAT(paydate,'%d %b %y')paydate,date_format(paytime,'%d/%m/%Y %h:%i:%s')paytime,date_format(trfdate,'%d/%m')trfdate from payment where id = $id")->row(0);
 		$data['id'] = $id;
 		$this->load->view('cetak/printreguler-parent', $data);
 	}
 
 	public function printprivate_parent($id = 1)
 	{
-		$data['pay'] = $this->db->query("select id,username,method,number,bank,total,DATE_FORMAT(paydate,'%b %y')paydate,date_format(paytime,'%d/%m/%Y %h:%i:%s')paytime,date_format(trfdate,'%d/%m')trfdate from payment where id = $id")->row(0);
+		$data['pay'] = $this->db->query("select id,username,method,number,bank,total,DATE_FORMAT(paydate,'%d %b %y')paydate,date_format(paytime,'%d/%m/%Y %h:%i:%s')paytime,date_format(trfdate,'%d/%m')trfdate from payment where id = $id")->row(0);
 		$data['id'] = $id;
 		$this->load->view('cetak/printprivate-parent', $data);
 	}
