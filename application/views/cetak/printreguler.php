@@ -44,7 +44,7 @@ $pdf->Cell($width, 5, '031-58204040/58207070', 0, 0, 'C', false);
 $pdf->ln($ln);
 $pdf->Cell($width, 5, str_pad("", $width + 20, "-"), 0, 0, 'C', false);
 $pdf->ln($ln);
-$pdf->Cell($width, 5, $pay->paytime, 0, 0, 'C', false);
+$pdf->Cell($width, 5, $pay->paydate, 0, 0, 'C', false);
 $pdf->ln($ln);
 $pdf->Cell($width, 5, $pay->username, 0, 0, 'C', false);
 $pdf->ln($ln);
