@@ -223,8 +223,7 @@
 				<!-- small box -->
 				<div class="small-box bg-yellow">
 					<div class="inner">
-						<h3><sup style="font-size: 20px">Rp </sup><?php echo number_format($totalExp, 0, ".", "."); ?></h3>
-
+						<h3><sup style="font-size: 20px">Rp </sup><?php echo number_format($totalExp != null ? $totalExp : 0, 0, ".", "."); ?></h3>
 						<p>Total Expense Costs (<?php echo date('Y'); ?>)</p>
 					</div>
 					<div class="icon">
