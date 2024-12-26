@@ -457,7 +457,7 @@ class Report extends CI_Controller
 
 		// $base_url = base_url();
 		// Base URL untuk API
-		$baseUrl = "http://127.0.0.1:8000/api/";
+		$baseUrl = "https://ui-backoffice.primtechdev.com/api/";
 		$url = $baseUrl . "e-receipt/" . $transactionId . '/' . $phoneNumber . '?program=' . $program;
 
 		// Inisialisasi CURL dengan CodeIgniter
