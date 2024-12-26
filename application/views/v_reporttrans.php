@@ -664,6 +664,9 @@ if (isset($listTransaction)) {
 			// Mengisi input program dan phone dalam modal yang terbuka
 			modal.find('.form-control.phone_number').val(phone);
 			modal.find('input[id^="getProgram"]').val(program);
+			// Menyimpan nilai program di atribut data pada modal
+			modal.data('program', program); 
+			
 		});
 
 		$(document).on('click', '.send-receipt', function() {
@@ -671,7 +674,9 @@ if (isset($listTransaction)) {
 			var phoneNumber = $('#phone_number_' + transactionId).val(); // Ambil nomor telepon
 
 			// Ambil nilai program dari data modal
-			var program = $(this).closest('.modal').data('program');
+			// var program = $(this).closest('.modal').data('program');
+			var modal = $(this).closest('.modal');
+			var program = modal.data('program');
 
 			// Redirect ke URL dengan nomor telepon sebagai parameter
 			window.location.href = '<?= base_url() ?>report/eReceipt/' + transactionId + '/' + program + '?phone_number=' + encodeURIComponent(phoneNumber);
