@@ -10,6 +10,8 @@ class Report extends CI_Controller
 		$this->load->model("mpaydetail");
 		$this->load->model("mstudent");
 		$this->load->model("mreport");
+		$this->load->model("MTrxAkuntansi");
+		$this->load->model("MTrxAkuntansiDetail");
 		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("user"));
 		}
@@ -372,6 +374,25 @@ class Report extends CI_Controller
 
 	public function deletePaymentDb($paymentid)
 	{
+
+		// First get the accounting transaction IDs before deleting
+		$accounting_trx = $this->db->get_where('tbl_trx_akuntansi', ['payment_id' => $paymentid])->result();
+
+		// Store the IDs to delete details later
+		$trx_ids = array_map(function($trx) {
+			return $trx->id_trx_akun;
+		}, $accounting_trx);
+
+		// Delete from accounting detail table first (foreign key consideration)
+		if (!empty($trx_ids)) {
+			$this->db->where_in('id_trx_akun', $trx_ids);
+			$this->db->delete('tbl_trx_akuntansi_detail');
+		}
+
+		// Delete from main accounting table
+		$this->db->where('payment_id', $paymentid);
+		$this->db->delete('tbl_trx_akuntansi');
+
 		$data = array(
 			'method' => "CANCEL",
 			'number' => "",
