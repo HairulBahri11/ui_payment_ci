@@ -173,7 +173,7 @@ class Mstudent extends CI_Model
 		$this->db->join("day as daytwo", "student.day2 = daytwo.id", "left");
 		$this->db->join("parent_students", "student.id = parent_students.student_id", "left");
 		$this->db->join("parents", "parents.id = parent_students.parent_id", "left");
-		$this->db->where('status =', 'ACTIVE');
+		$this->db->where('student.status =', 'ACTIVE');
 		$this->db->where('is_online =', 1);
 		$this->db->where("is_prospective_done", "0");
 		$this->db->order_by('id', 'asc');
