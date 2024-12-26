@@ -219,9 +219,16 @@ class Payment extends CI_Controller
 
 		// check session user login
 		if($this->session->userdata('userid') == 'superadmin'){
-			$data_branch = 1;
+			$data_branch =  $this->input->post('branch_id');
 		}else{
 			$data_branch = $this->session->userdata('branch');
+		}
+
+		$cek_branch = '';
+		if($this->input->post('branch_id') == '') {
+			$cek_branch = $this->session->userdata('branch');
+		}elseif($this->input->post('branch_id') != '') {
+			$cek_branch = $this->input->post('branch_id');
 		}
 
 		if ($var != "") {
@@ -469,32 +476,34 @@ class Payment extends CI_Controller
 			$url = "https://example.com";
 		}
 
+		
+
 		// ambil id akun kas dari masing-masing cabang
 		$akun_kas_id = null;
-		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+		if ($cek_branch == '1') //jika cabang = Surabaya
 			$akun_kas_id = 3;
-		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+		elseif ($cek_branch == '2') //jika cabang = Bali
 			$akun_kas_id = 4;
 
 		//		ambil id akun bank dari masing-masing cabang
 		$akun_bank_id = null;
-		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+		if ($cek_branch == '1') //jika cabang = Surabaya
 			$akun_bank_id = 6;
-		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+		elseif ($cek_branch == '2') //jika cabang = Bali
 			$akun_bank_id = 7;
 
 		//		ambil id akun pendapatan dari masing-masing cabang
 		$akun_pendapatan_id = null;
-		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+		if ($cek_branch == '1') //jika cabang = Surabaya
 			$akun_pendapatan_id = 10;
-		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+		elseif ($cek_branch == '2') //jika cabang = Bali
 			$akun_pendapatan_id = 11;
 
 		//		ambil id akun pendapatan denda dari masing-masing cabang
 		$akun_denda_id = null;
-		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+		if ($cek_branch == '1') //jika cabang = Surabaya
 			$akun_denda_id = 13;
-		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+		elseif ($cek_branch == '2') //jika cabang = Bali
 			$akun_denda_id = 14;
 
 		//jika tanpa penalty
@@ -504,7 +513,7 @@ class Payment extends CI_Controller
 				'payment_id' => $latestRecord['id'],
 				'deskripsi' => 'Income from payment id ' . $latestRecord['id'],
 				'tanggal' => $date,
-				'branch_id' => $this->session->userdata('branch'),
+				'branch_id' => $cek_branch,
 				'dtm_crt' => date('Y-m-d H:i:s'),
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
@@ -539,7 +548,7 @@ class Payment extends CI_Controller
 				'payment_id' => $latestRecord['id'],
 				'deskripsi' => 'Income from payment id ' . $latestRecord['id'],
 				'tanggal' => $date,
-				'branch_id' => $this->session->userdata('branch'),
+				'branch_id' => $cek_branch,
 				'dtm_crt' => date('Y-m-d H:i:s'),
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
@@ -611,9 +620,16 @@ class Payment extends CI_Controller
 
 		// check session user login
 		if($this->session->userdata('userid') == 'superadmin'){
-			$data_branch = 1;
+			$data_branch =  $this->input->post('branch_id');
 		}else{
 			$data_branch = $this->session->userdata('branch');
+		}
+
+		$cek_branch = '';
+		if($this->input->post('branch_id') == '') {
+			$cek_branch = $this->session->userdata('branch');
+		}elseif($this->input->post('branch_id') != '') {
+			$cek_branch = $this->input->post('branch_id');
 		}
 
 		if ($var != "") {
@@ -720,23 +736,23 @@ class Payment extends CI_Controller
 
 		// ambil id akun kas dari masing-masing cabang
 		$akun_kas_id = null;
-		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+		if ($cek_branch == '1') //jika cabang = Surabaya
 			$akun_kas_id = 3;
-		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+		elseif ($cek_branch == '2') //jika cabang = Bali
 			$akun_kas_id = 4;
 
 		//		ambil id akun bank dari masing-masing cabang
 		$akun_bank_id = null;
-		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+		if ($cek_branch == '1') //jika cabang = Surabaya
 			$akun_bank_id = 6;
-		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+		elseif ($cek_branch == '2') //jika cabang = Bali
 			$akun_bank_id = 7;
 
 		//		ambil id akun pendapatan dari masing-masing cabang
 		$akun_pendapatan_id = null;
-		if ($this->session->userdata('branch') == '1') //jika cabang = Surabaya
+		if ($cek_branch == '1') //jika cabang = Surabaya
 			$akun_pendapatan_id = 10;
-		elseif ($this->session->userdata('branch') == '2') //jika cabang = Bali
+		elseif ($cek_branch == '2') //jika cabang = Bali
 			$akun_pendapatan_id = 11;
 
 		//		simpan transaksi jurnal
@@ -744,7 +760,7 @@ class Payment extends CI_Controller
 			'payment_id' => $latestRecord['id'],
 			'deskripsi' => 'Income from payment id ' . $latestRecord['id'],
 			'tanggal' => $date,
-			'branch_id' => $this->session->userdata('branch'),
+			'branch_id' => $cek_branch,
 			'dtm_crt' => date('Y-m-d H:i:s'),
 			'dtm_upd' => date('Y-m-d H:i:s'),
 		);
