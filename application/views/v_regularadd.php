@@ -361,6 +361,22 @@ $url = base_url() . "cetak/printregular/";
 
 							<!-- <form role="form" id="example3" name="example" class="form-horizontal" action="<?php echo base_url() ?>payment/addRegularDb" method="post" enctype="multipart/form-data"> -->
 							<div id="dpayment" style="display: none">
+							<?php
+							if($this->session->userdata('level') == 1):
+							?>
+								<div class="form-group">
+									<label for="category" class="col-sm-3 control-label">Branch</label>
+									<div class="col-sm-9">
+										<select class="form-control select2" style="width: 100%;" name="branch_id" id="branch_id" required>
+											<option selected="selected" disabled="disabled" value="">-- Choose Branch --</option>
+											<option value="1">Surabaya</option>
+											<option value="2">Bali</option>
+										</select>
+									</div>
+								</div>
+							<?php
+							endif;
+							?>
 							<div class="form-group">
 									<label for="date" class="col-sm-3 control-label">Date</label>
 									<div class="col-sm-9">
