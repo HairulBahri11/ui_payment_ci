@@ -208,7 +208,7 @@
 				<!-- small box -->
 				<div class="small-box bg-green">
 					<div class="inner">
-						<h3><sup style="font-size: 20px">Rp </sup><?php echo number_format($totalPay, 0, ".", "."); ?></h3>
+						<h3><sup style="font-size: 20px">Rp </sup><?php echo number_format($totalPay != null ? $totalPay : 0, 0, ".", "."); ?></h3>
 
 						<p>Total Income (<?php echo date('Y'); ?>)</p>
 					</div>
