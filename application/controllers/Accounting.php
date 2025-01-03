@@ -78,20 +78,28 @@ class Accounting extends CI_Controller
 		$year = $this->input->post('year') ? $this->input->post('year') : $year;
 		$year_month = $year . '-' . $month;
 
-		$id_akun_pendapatan = $branch_id = null;
-		$id_akun_pendapatan_denda = $branch_id = null;
-//		if superadmin
-		if ($branch_id == null) {
+		// Fixed variable assignments
+		$id_akun_pendapatan = null;
+		$id_akun_pendapatan_denda = null;
+
+		// Set account IDs based on branch
+		if ($branch_id === null) {
 			$id_akun_pendapatan = array(10,11);
 			$id_akun_pendapatan_denda = array(13,14);
-		}
-		else{
+		} else {
 			$id_akun_pendapatan = $branch_id == 1 ? 10 : 11;
 			$id_akun_pendapatan_denda = $branch_id == 1 ? 13 : 14;
 		}
 
+		// Add debug logging
+		log_message('debug', "Branch ID: " . $branch_id);
+		log_message('debug', "Year-Month: " . $year_month);
+		log_message('debug', "Revenue Account IDs: " . print_r($id_akun_pendapatan, true));
+		log_message('debug', "Penalty Account IDs: " . print_r($id_akun_pendapatan_denda, true));
+
 		$data['pendapatan'] = $this->getDetailAkuntansi($id_akun_pendapatan, $year_month, $branch_id, '');
 		$data['pendapatan_denda'] = $this->getDetailAkuntansi($id_akun_pendapatan_denda, $year_month, $branch_id, '');
+
 
 		$this->db->select('ed.id, ed.expenseid, ed.id_akun, ed.category, ed.expdate, ed.amount, ed.explanation');
 		$this->db->from('expdetail ed');
@@ -113,13 +121,16 @@ class Accounting extends CI_Controller
 		$this->db->select('COALESCE(SUM(jumlah), 0) as jml');
 		$this->db->from('tbl_trx_akuntansi_detail as d');
 		$this->db->join('tbl_trx_akuntansi as a', 'd.id_trx_akun = a.id_trx_akun');
-		$this->db->where('branch_id', $branch_id);
+
+		if ($branch_id !== null) {
+			$this->db->where('branch_id', $branch_id);
+		}
 
 		if (!empty($desc)) {
 			$this->db->like('deskripsi', $desc);
 		}
 
-		$this->db->like('tanggal', $date);
+		$this->db->like('tanggal', "$date", 'after');
 
 		if (is_array($idAkun)) {
 			$this->db->group_start();
