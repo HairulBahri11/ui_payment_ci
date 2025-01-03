@@ -951,44 +951,36 @@ $url = base_url() . "cetak/printregular/";
 						month = parseInt(mon);
 					}
 
-					var year = (new Date()).getFullYear();
+					// var year = (new Date()).getFullYear();
+					var years = (new Date()).getFullYear();
+var yearArray = [years - 1, years]; // Tahun 2024 dan 2025
 
-					month = month + 1;
-					if (month < 10) {
-						month = "0" + month;
-					} else if (month > 12) {
-						month = 1;
-						month = "0" + month;
-						year = year; // ini yang di rubah thanks
-					} else {
-						month = "" + month;
-					}
+var monthpay = document.getElementById('monthpay');
+var length = monthpay.options.length;
 
-					var monthpay = document.getElementById('monthpay');
-					var length = monthpay.options.length;
-					for (i = length - 1; i >= 0; i--) {
-						monthpay.remove(i);
-					}
-					var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-					for (i = 1; i <= 12; i++) {
-						var option = document.createElement("option");
-						if (i < 10) {
-							option.value = "0" + i + "-" + year;
-							option.text = "0" + i + "-" + year;
-							var mo = months[i - 1];
-							option.text = mo + " " + year;
-						} else {
-							option.value = "" + i + "-" + year;
-							option.text = "" + i + "-" + year;
-							var mo = months[i - 1];
-							option.text = mo + " " + year;
-						}
+// Hapus semua opsi sebelumnya
+for (i = length - 1; i >= 0; i--) {
+    monthpay.remove(i);
+}
 
-						monthpay.add(option, monthpay[i - 1]);
-					}
+// Nama-nama bulan
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-					var monthyear = month.concat("-", year);
-					document.getElementById('monthpay').value = monthyear;
+// Loop untuk setiap tahun dan bulan
+for (var y = 0; y < yearArray.length; y++) {
+    var year = yearArray[y];
+    for (var i = 0; i < 12; i++) {
+        var option = document.createElement("option");
+        var monthValue = (i + 1 < 10 ? "0" : "") + (i + 1); // Format bulan jadi 01, 02, dst.
+        option.value = monthValue + "-" + year;
+        option.text = months[i] + " " + year;
+        monthpay.add(option);
+    }
+}
+
+// Set nilai default (opsional)
+document.getElementById('monthpay').value = "01-" + years; // Set ke Januari tahun saat ini
+
 
 					$("#perioddiv").show(750);
 					$("#penaltydiv").show(750);
