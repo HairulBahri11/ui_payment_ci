@@ -578,7 +578,7 @@ if (isset($listTransaction)) {
 
 
 					<div class="modal-footer">
-						<a href="<?= base_url() ?>report/printtrans/<?= $payid ?>/<?= $program ?>" target="_blank"><button type="button" class="btn btn-secondary">Reprint</button></a>
+						<a href="<?= base_url() ?>report/printTrans/<?= $payid ?>/<?= $program ?>" target="_blank"><button type="button" class="btn btn-secondary">Reprint</button></a>
 						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 					</div>
 				</div>
