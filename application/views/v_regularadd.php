@@ -275,6 +275,7 @@ $url = base_url() . "cetak/printregular/";
 									<select class="form-control select2" style="width: 100%;" name="monthpay" id="monthpay">
 
 									</select>
+									<!-- <input type="text" class="form-control" id="monthpay" name="monthpay" readonly> -->
 								</div>
 							</div>
 
@@ -940,46 +941,99 @@ $url = base_url() . "cetak/printregular/";
 					<?php
 					}
 					?>
+					// console.log(penalty, condition, adjusment, monthpay);
+					
+					// var monthpay = "01-12-2024";
 
-					var monthPay = '';
-					var month = 0;
-					if (monthpay != "") {
-						var res = monthpay.split("-");
-						month = parseInt(res[1]);
-					} else {
-						var mon = (new Date()).getMonth();
-						month = parseInt(mon);
-					}
+					// get last monthpay from database 
+					// ajax to get last monthpay
 
-					// var year = (new Date()).getFullYear();
-					var years = (new Date()).getFullYear();
-var yearArray = [years - 1, years]; // Tahun 2024 dan 2025
+// Ubah `monthpay` ke format baru (Desember 2024)
+var parts = monthpay.split("-"); // Pisahkan string berdasarkan "-"
+var bulan = parseInt(parts[1]); // Ambil bulan
+var tahun = parseInt(parts[0]); // Ambil tahun
 
-var monthpay = document.getElementById('monthpay');
-var length = monthpay.options.length;
+// Array nama bulan dalam bahasa inggris
 
-// Hapus semua opsi sebelumnya
-for (i = length - 1; i >= 0; i--) {
-    monthpay.remove(i);
-}
+var namaBulan = [
+	"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+];
 
-// Nama-nama bulan
-var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+// Format bulan sekarang
+var formattedDate = namaBulan[bulan - 1] + " " + tahun;
+console.log("Last Payment:", formattedDate); // Output: Desember 2024
 
-// Loop untuk setiap tahun dan bulan
-for (var y = 0; y < yearArray.length; y++) {
-    var year = yearArray[y];
-    for (var i = 0; i < 12; i++) {
-        var option = document.createElement("option");
-        var monthValue = (i + 1 < 10 ? "0" : "") + (i + 1); // Format bulan jadi 01, 02, dst.
-        option.value = monthValue + "-" + year;
-        option.text = months[i] + " " + year;
-        monthpay.add(option);
-    }
-}
+// Tambahkan 1 bulan ke `monthpay`
+var nextMonth = new Date(tahun, bulan, 1); // Bulan `bulan` otomatis dihitung 0-11
+nextMonth.setMonth(nextMonth.getMonth()); // Tambah 1 bulan
 
-// Set nilai default (opsional)
-document.getElementById('monthpay').value = "01-" + years; // Set ke Januari tahun saat ini
+// Format ulang menjadi DD-MM-YYYY
+var day = "01"; // Tetap tanggal 01
+var newMonth = String(nextMonth.getMonth() + 1).padStart(2, '0'); // Bulan (ditambah 1 dan zero-padded)
+var newYear = nextMonth.getFullYear();// Tahun baru
+
+// ubah newMonth menjadi nama bulan
+var monthName = namaBulan[newMonth - 1];
+
+// Set nilai baru ke `monthpay`
+monthpay = `${monthName} ${newYear}`;
+var value_option = `${newMonth}-${newYear}`;
+console.log("Next Month:", monthpay); // Output: 01-01-2025
+
+// document.getElementById('monthpay').value = monthpay;
+// saya ingin menambahkan nilai monthpay ke select option
+
+var select = document.getElementById('monthpay');
+var option = document.createElement('option');
+option.value = value_option;
+option.text = monthpay;
+select.add(option);
+// addoption
+
+					
+					
+					
+					
+
+// 					var monthPay = '';
+// 					var month = 0;
+// 					if (monthpay != "") {
+// 						var res = monthpay.split("-");
+// 						month = parseInt(res[1]);
+// 					} else {
+// 						var mon = (new Date()).getMonth();
+// 						month = parseInt(mon);
+// 					}
+
+// 					// var year = (new Date()).getFullYear();
+// 					var years = (new Date()).getFullYear();
+// var yearArray = [years - 1, years]; // Tahun 2024 dan 2025
+
+// var monthpay = document.getElementById('monthpay');
+// var length = monthpay.options.length;
+
+// // Hapus semua opsi sebelumnya
+// for (i = length - 1; i >= 0; i--) {
+//     monthpay.remove(i);
+// }
+
+// // Nama-nama bulan
+// var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+// // Loop untuk setiap tahun dan bulan
+// for (var y = 0; y < yearArray.length; y++) {
+//     var year = yearArray[y];
+//     for (var i = 0; i < 12; i++) {
+//         var option = document.createElement("option");
+//         var monthValue = (i + 1 < 10 ? "0" : "") + (i + 1); // Format bulan jadi 01, 02, dst.
+//         option.value = monthValue + "-" + year;
+//         option.text = months[i] + " " + year;
+//         monthpay.add(option);
+//     }
+// }
+
+// // Set nilai default (opsional)
+// document.getElementById('monthpay').value = "01-" + years; // Set ke Januari tahun saat ini
 
 
 					$("#perioddiv").show(750);
