@@ -984,6 +984,8 @@ console.log("Next Month:", monthpay); // Output: 01-01-2025
 // saya ingin menambahkan nilai monthpay ke select option
 
 var select = document.getElementById('monthpay');
+// Hapus semua opsi sebelumnya
+select.innerHTML = ""; // Menghapus semua opsi di elemen <select>
 var option = document.createElement('option');
 option.value = value_option;
 option.text = monthpay;
