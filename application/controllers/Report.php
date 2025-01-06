@@ -353,7 +353,7 @@ class Report extends CI_Controller
 
 	public function printTrans($id, $program)
 	{
-		if (strpos($program, "Private") == true) {
+		if ($program == "Private") {
 			//redirect(base_url("escpos/example/reprintprivate.php?id=".$id));
 			redirect(base_url("cetak/printprivate/" . $id));
 		} else {
