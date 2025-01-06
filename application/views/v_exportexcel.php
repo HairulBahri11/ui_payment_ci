@@ -139,7 +139,7 @@
 								// menampilkan bulan pembayaran, jika bayar untuk lebih dari satu bulan maka akan muncul semua bulan yang dibayar
 								if (!empty($resultMonthPay)) {
 									foreach ($resultMonthPay as $key => $row) {
-										$month = $row->monthpay != null ? date('M', strtotime($row->monthpay)) : '';
+										$month = $row->monthpay != null ? date('MY', strtotime($row->monthpay)) : '';
 										// echo $row->monthpay . ",";
 										if (date('m', strtotime($var)) <= date('m', strtotime($row->monthpay))) {
 											// gak terlambat = paydate  <= monthpay 
@@ -261,7 +261,7 @@
 									// menampilkan bulan pembayaran, jika bayar untuk lebih dari satu bulan maka akan muncul semua bulan yang dibayar
 									if (!empty($resultMonthPay)) {
 										foreach ($resultMonthPay as $key => $row) {
-											$month = $row->monthpay != null ? date('M', strtotime($row->monthpay)) : '';
+											$month = $row->monthpay != null ? date('MY', strtotime($row->monthpay)) : '';
 											// echo $row->monthpay . ",";
 											if (date('m', strtotime($var)) <= date('m', strtotime($row->monthpay))) {
 												// gak terlambat = paydate  <= monthpay 
@@ -383,7 +383,7 @@
 									// menampilkan bulan pembayaran, jika bayar untuk lebih dari satu bulan maka akan muncul semua bulan yang dibayar
 									if (!empty($resultMonthPay)) {
 										foreach ($resultMonthPay as $key => $row) {
-											$month = $row->monthpay != null ? date('M', strtotime($row->monthpay)) : '';
+											$month = $row->monthpay != null ? date('MY', strtotime($row->monthpay)) : '';
 											// echo $row->monthpay . ",";
 											if (date('m', strtotime($var)) <= date('m', strtotime($row->monthpay))) {
 												// gak terlambat = paydate  <= monthpay 
