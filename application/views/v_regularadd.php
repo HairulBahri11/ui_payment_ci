@@ -941,12 +941,16 @@ $url = base_url() . "cetak/printregular/";
 					<?php
 					}
 					?>
-					// Ubah `monthpay` ke format baru
 // Ubah `monthpay` ke format baru
-// var monthpay = "2024-12"; // Contoh nilai awal "YYYY-MM"
+// var monthpay = "2022-12"; // Contoh nilai awal "YYYY-MM"
 var parts = monthpay.split("-"); // Pisahkan string berdasarkan "-"
-var bulan = parseInt(parts[1]); // Ambil bulan
-var tahun = parseInt(parts[0]); // Ambil tahun
+var lastBulan = parseInt(parts[1]); // Ambil bulan dari last payment
+var lastTahun = parseInt(parts[0]); // Ambil tahun dari last payment
+
+// Ambil bulan dan tahun sekarang
+var now = new Date();
+var currentBulan = now.getMonth() + 1; // Bulan saat ini (0-11, +1 untuk 1-12)
+var currentTahun = now.getFullYear(); // Tahun saat ini
 
 // Array nama bulan dalam bahasa Inggris
 var namaBulan = [
@@ -957,12 +961,29 @@ var namaBulan = [
 // Elemen <select> dengan ID 'monthpay'
 var select = document.getElementById('monthpay');
 
-// Fungsi untuk menghitung 12 bulan berikutnya, dimulai dari 1 bulan setelah `last payment`
+// Logika untuk menentukan titik awal
+var startBulan, startTahun;
+
+if (lastTahun < currentTahun - 1 || (lastTahun === currentTahun - 1 && lastBulan < currentBulan)) {
+  // Jika tahun terakhir lebih dari 1 tahun sebelum tahun sekarang
+  startBulan = currentBulan; // Mulai dari bulan ini
+  startTahun = currentTahun;
+} else {
+  // Jika tahun terakhir masih relevan
+  startBulan = lastBulan + 1; // Mulai dari bulan berikutnya
+  startTahun = lastTahun;
+  if (startBulan > 12) {
+    startBulan = 1; // Reset ke Januari jika bulan > 12
+    startTahun++; // Tambah tahun
+  }
+}
+
+// Fungsi untuk menghitung 12 bulan berikutnya dan menambahkannya ke <select>
 function generateNextMonths(bulan, tahun) {
   // Hapus semua opsi sebelumnya
   select.innerHTML = ""; // Reset elemen <select>
 
-  for (let i = 1; i <= 12; i++) { // Mulai dari 1 bulan berikutnya
+  for (let i = 0; i < 12; i++) {
     // Hitung bulan dan tahun
     let currentMonth = bulan + i; // Tambah i ke bulan
     let currentYear = tahun;
@@ -988,7 +1009,61 @@ function generateNextMonths(bulan, tahun) {
 }
 
 // Panggil fungsi untuk menambahkan 12 bulan berikutnya
-generateNextMonths(bulan, tahun);
+generateNextMonths(startBulan, startTahun);
+
+
+
+					// Ubah `monthpay` ke format baru
+// Ubah `monthpay` ke format baru
+// var monthpay = "2024-12"; // Contoh nilai awal "YYYY-MM"
+// var parts = monthpay.split("-"); // Pisahkan string berdasarkan "-"
+// var bulan = parseInt(parts[1]); // Ambil bulan
+// var tahun = parseInt(parts[0]); // Ambil tahun
+
+// // Array nama bulan dalam bahasa Inggris
+// var namaBulan = [
+//   "January", "February", "March", "April", "May", "June",
+//   "July", "August", "September", "October", "November", "December"
+// ];
+
+// // Elemen <select> dengan ID 'monthpay'
+// var select = document.getElementById('monthpay');
+
+// // Fungsi untuk menghitung 12 bulan berikutnya, dimulai dari 1 bulan setelah `last payment`
+// function generateNextMonths(bulan, tahun) {
+//   // Hapus semua opsi sebelumnya
+//   select.innerHTML = ""; // Reset elemen <select>
+// //   hitung range tahun dari tahun ini
+// $range_year = $tahun
+//   for (let i = 1; i <= 12; i++) { // Mulai dari 1 bulan berikutnya
+//     // Hitung bulan dan tahun
+//     let currentMonth = bulan + i; // Tambah i ke bulan
+//     let currentYear = tahun;
+
+//     if (currentMonth > 12) {
+//       currentMonth -= 12; // Reset ke Januari jika bulan > 12
+//       currentYear++; // Tambahkan tahun
+//     }
+
+//     // Format nama bulan dan tahun
+//     let monthName = namaBulan[currentMonth - 1]; // Nama bulan
+//     let monthpay = `${monthName} ${currentYear}`;
+//     let value_option = `${String(currentMonth).padStart(2, '0')}-${currentYear}`; // Format MM-YYYY
+
+//     // Buat elemen <option>
+//     let option = document.createElement('option');
+//     option.value = value_option;
+//     option.text = monthpay;
+
+//     // Tambahkan opsi ke elemen <select>
+//     select.add(option);
+//   }
+
+
+// }
+
+// // Panggil fungsi untuk menambahkan 12 bulan berikutnya
+// generateNextMonths(bulan, tahun);
 
 
 
