@@ -199,7 +199,8 @@
 											</td>
 											<td>
 												<a href="<?= base_url() ?>teacher/edit/<?= $row->id ?>" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-												<a href="<?= base_url() ?>teacher/activateUser/<?= $row->id ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+												<a href="<?= base_url() ?>teacher/activateUser/<?= $row->id ?>/<?= $row->status ?>"class="btn btn-warning btn-xs" onclick="return confirm('Are you sure you want to activate or deactivate this teacher?');">
+												<i class="fa fa-check"></i></a>
 											</td>
 										</tr>
 									<?php } ?>

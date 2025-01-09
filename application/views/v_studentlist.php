@@ -188,6 +188,23 @@
 						</div>
 					</div>
 					<br>
+					<!-- ambil data dari flash dengan nama alert -->
+					
+					<?php if ($this->session->flashdata('alert')): ?>
+		<div class="alert alert-success" timeout="100">
+			<?php echo $this->session->flashdata('alert'); ?>
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		</div>
+	<?php endif; ?>
+
+	<script>
+		setTimeout(() => {
+    const alert = document.querySelector('.alert');
+    if (alert) {
+        alert.style.display = 'none';
+    }
+}, 2000); // 3000ms = 3 seconds
+</script>
 					<!-- /.box-header -->
 					<div class="box-body">
 						<div class="table-responsive">
@@ -272,10 +289,13 @@
 											?>
 											<td>
 												<a href="<?= base_url() ?>student/updateStudent/<?= $row->sid ?>" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i></a>
-												<a data-toggle="modal" data-target="#delModal" onclick="showModalData('<?= $row->sid ?>','<?= $row->name ?>')" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+												<!-- <a data-toggle="modal" data-target="#delModal" onclick="showModalData('<?= $row->sid ?>','<?= $row->name ?>')" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a> -->
 												<!-- <a data-toggle="modal" data-target="#delModal<?php echo $row->sid; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a> -->
 												<!-- <a data-toggle="modal" data-target="#showModal<?php echo $row->sid; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a> -->
 												<a href="<?= base_url('student/detailPayment/') ?><?= $row->sid; ?>/<?= $row->name; ?>" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
+												<a href="<?= base_url() ?>student/activateStudent/<?= $row->sid ?>/<?= $row->status ?>"class="btn btn-warning btn-xs" onclick="return confirm('Are you sure you want to activate or deactivate this student?');">
+													<i class="fa fa-check"></i></a>
+
 											</td>
 										</tr>
 									<?php
