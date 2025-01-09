@@ -178,7 +178,14 @@
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 		</div>
 	<?php endif; ?>
-
+	<script>
+		setTimeout(() => {
+    const alert = document.querySelector('.alert');
+    if (alert) {
+        alert.style.display = 'none';
+    }
+}, 2000); // 3000ms = 3 seconds
+	</script>
     </section>
 
     <!-- Main content -->

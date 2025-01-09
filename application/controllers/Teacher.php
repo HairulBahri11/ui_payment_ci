@@ -165,18 +165,27 @@ class Teacher extends CI_Controller
 		redirect(base_url("teacher"));
 	}
 
-	public function activateUser($id)
+	public function activateUser($id , $status)
 	{
-		 $data = array(
-				'status' => 'nonactive',
-				);
-		 $where['id'] = $id;
-		 $update = $this->mteacher->activateUser($data , $where);
-		 if( $update ){
-			$this->session->set_flashdata('alert','Teacher nonactivated successfully.');
+		if($status == 'active'){
+			$setStatus = 'nonactive';
+			$message = 'deactivated successfully';
+		}elseif($status == 'nonactive'){
+			$setStatus = 'active';
+			$message = 'activated successfully';
+		}else{
+			$setStatus = 'NO clue';
+		}
+
+		$this->db->where('id', $id);
+		 $proses =$this->db->update('teacher', array('status' => $setStatus));
+		 if($proses){
+			 $msg = $message;
 		 }else{
-			$this->session->set_flashdata('alert','Teacher nonactivated failed.');
+			 $msg = 'failed';
 		 }
+
+		$this->session->set_flashdata('alert', $msg);
 		 redirect(base_url("Teacher"));
 
 	}
