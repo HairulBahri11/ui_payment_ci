@@ -709,4 +709,27 @@ class Student extends CI_Controller
 		$this->db->update('student', array('is_prospective_done' => '1'));
 		redirect(base_url('student/studentOnline'));
 	}
+
+	public function activateStudent($id , $status){
+		if($status == 'ACTIVE'){
+			$setStatus = 'INACTIVE';
+			$message = 'deactivated successfully';
+		}elseif($status == 'INACTIVE'){
+			$setStatus = 'ACTIVE';
+			$message = 'activated successfully';
+		}else{
+			$setStatus = 'NO clue';
+		}
+
+		$this->db->where('id', $id);
+		 $proses =$this->db->update('student', array('status' => $setStatus));
+		 if($proses){
+			 $msg = $message;
+		 }else{
+			 $msg = 'failed';
+		 }
+
+		$this->session->set_flashdata('alert', $msg);
+		redirect(base_url('student'));
+	}
 }
