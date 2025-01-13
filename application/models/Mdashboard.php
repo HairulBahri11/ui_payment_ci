@@ -9,6 +9,17 @@
 		$result = $query->row_array();
 		return $result;
 
+// 		$this->db->select('COALESCE(SUM(pd.amount), 0) as totalpay');
+// $this->db->from('payment as p');
+// $this->db->join('paydetail as pd', 'p.id = pd.paymentid');
+// $this->db->where('YEAR(p.paydate) = YEAR(NOW())'); // Koreksi di sini
+// $query = $this->db->get(); // Pastikan untuk memanggil get()
+// $result = $query->row_array();
+// return $result;
+
+
+
+
 		// select sum(total),MONTHNAME(paydate) from payment group by MONTH(paydate)
 	}
 

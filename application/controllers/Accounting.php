@@ -98,6 +98,14 @@ class Accounting extends CI_Controller
 		log_message('debug', "Penalty Account IDs: " . print_r($id_akun_pendapatan_denda, true));
 
 		$data['pendapatan'] = $this->getDetailAkuntansi($id_akun_pendapatan, $year_month, $branch_id, '');
+
+		$data['group_income'] = $this->getDataIncome($id_akun_pendapatan, $year_month, $branch_id, '');
+		
+		// Membungkus var_dump dengan <pre> agar terlihat rapi
+// echo '<pre style="background-color: #f4f4f4; color: #333; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; line-height: 1.5; overflow: auto;">';
+// var_dump($data['group_income']['BANK TRANSFER']);
+// echo '</pre>';
+// die();
 		$data['pendapatan_denda'] = $this->getDetailAkuntansi($id_akun_pendapatan_denda, $year_month, $branch_id, '');
 
 
@@ -116,11 +124,114 @@ class Accounting extends CI_Controller
 		$this->load->view('v_footer');
 	}
 
+// 	public function getDetailAkuntansi($idAkun, $date, $branch_id, $desc = '')
+// 	{
+// 		$this->db->select('p.method,SUM(pd.amount) as totalnya');
+// $this->db->from('tbl_trx_akuntansi_detail as d');
+// $this->db->join('tbl_trx_akuntansi as a', 'd.id_trx_akun = a.id_trx_akun');
+// $this->db->join('payment as p', 'a.payment_id = p.id');
+// $this->db->join('paydetail as pd', 'p.id = pd.paymentid');
+
+
+// if ($branch_id !== null) {
+//     $this->db->where('branch_id', $branch_id);
+// }
+
+// if (!empty($desc)) {
+//     $this->db->like('deskripsi', $desc);
+// }
+
+// $this->db->like('tanggal', "$date", 'after');
+
+// if (is_array($idAkun)) {
+//     $this->db->group_start();
+//     foreach ($idAkun as $value) {
+//         $this->db->or_where('id_akun', $value);
+//     }
+//     $this->db->group_end();
+// } else {
+//     $this->db->where('id_akun', $idAkun);
+// }
+
+// // Tambahkan GROUP BY untuk payment_id
+// $this->db->group_by('p.method');
+
+// $query = $this->db->get();
+// $result = $query->result(); // Menggunakan result() untuk mengambil semua baris
+
+// return $result;
+
+// 	}
+
+
+function getDataIncome($id_akun, $date, $branch_id, $desc = '')
+{
+	$result = []; // Variabel untuk menampung hasil
+	$this->db->select('p.method, pd.amount, pd.category , p.id');
+	$this->db->from('tbl_trx_akuntansi_detail as d');
+	$this->db->join('tbl_trx_akuntansi as a', 'd.id_trx_akun = a.id_trx_akun');
+	$this->db->join('payment as p', 'a.payment_id = p.id');
+	$this->db->join('paydetail as pd', 'p.id = pd.paymentid');
+	$this->db->like('tanggal', "$date", 'after');
+	
+	if ($branch_id !== null) {
+		$this->db->where('branch_id', $branch_id);
+	}
+
+	if (!empty($desc)) {
+		$this->db->like('deskripsi', $desc);
+	}
+
+	if (is_array($id_akun)) {
+		$this->db->group_start();
+		foreach ($id_akun as $value) {
+			$this->db->or_where('d.id_akun', $value);
+		}
+		$this->db->group_end();
+	} else {
+		$this->db->where('d.id_akun', $id_akun);
+	}
+
+	$query = $this->db->get();
+	$data = $query->result();
+
+	
+
+
+	foreach ($data as $item) {
+		// Gabungkan method tertentu menjadi 'Card'
+		$method = in_array($item->method, ["DEBIT", "CREDIT", "SWITCHING CARD"]) ? "CARD" : $item->method;
+		$category = $item->category; // Ambil category
+	
+		// Inisialisasi array jika belum ada
+		if (!isset($result[$method])) {
+			$result[$method] = [];
+		}
+		if (!isset($result[$method][$category])) {
+			$result[$method][$category] = 0; // Inisialisasi total dengan 0
+		}
+	
+		// Tambahkan amount ke total yang sesuai
+		$result[$method][$category] += $item->amount;
+	}
+
+
+
+
+	return $result;
+
+
+}
+
 	public function getDetailAkuntansi($idAkun, $date, $branch_id, $desc = '')
 	{
-		$this->db->select('COALESCE(SUM(jumlah), 0) as jml');
+		$this->db->select('COALESCE(SUM(d.jumlah), 0) as jml');
 		$this->db->from('tbl_trx_akuntansi_detail as d');
 		$this->db->join('tbl_trx_akuntansi as a', 'd.id_trx_akun = a.id_trx_akun');
+		$this->db->join('payment as p', 'a.payment_id = p.id');
+
+// 		$this->db->join('payment as p', 'a.payment_id = p.id');
+// $this->db->join('paydetail as pd', 'p.id = pd.paymentid');
 
 		if ($branch_id !== null) {
 			$this->db->where('branch_id', $branch_id);
