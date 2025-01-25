@@ -242,7 +242,7 @@
 
 
 <!-- page script -->
- <script>
+ <!-- <script>
 //    get data from checkbox
 $(document).ready(function(){
     $("#btnSend").click(function(){
@@ -258,7 +258,7 @@ $(document).ready(function(){
         //    kirimkan datanya ke controller 
         console.log(listId);
         // Redirect ke URL dengan nomor telepon sebagai parameter
-			window.location.href = '<?= base_url() ?>Accounting/sendBroadCastWa/'+ encodeURIComponent(JSON.stringify(listId));
+			window.location.href = '<?= base_url() ?>Accounting/broadcast/'+ encodeURIComponent(JSON.stringify(listId));
         } else {
             alert("Silakan pilih siswa");
         }
@@ -285,4 +285,53 @@ $(document).ready(function(){
     }
 
 });
+ </script> -->
+
+ <script>
+    $(document).ready(function () {
+    $("#btnSend").click(function () {
+        var listId = [];
+        $('input[name="listId[]"]:checked').each(function () {
+            var studentId = $(this).val();
+            var studentData = findStudentData(studentId); // Fungsi untuk mencari data siswa
+            listId.push(studentData);
+        });
+
+        if (listId.length > 0) {
+            // Kirimkan datanya ke controller menggunakan AJAX
+            $.ajax({
+                url: "<?= base_url() ?>Accounting/broadcast",
+                type: "POST",
+                data: { listId: JSON.stringify(listId) },
+                success: function (response) {
+                    console.log("Broadcast berhasil:", response);
+                    alert("Successfully sent broadcast messages");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Terjadi kesalahan:", error);
+                }
+            });
+        } else {
+            alert("Silakan pilih siswa");
+        }
+    });
+
+    // Fungsi untuk mencari data siswa berdasarkan id
+    function findStudentData(id) {
+        var listStudent = <?php echo json_encode($listStudent); ?>;
+        var student = listStudent.find(function (student) {
+            return student.id == id;
+        });
+        var updatedPhone = $('input[name="phone_' + id + '"]').val();
+        var studentMonthPay = new Date(student.monthpay).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        
+        return {
+            id: student.id,
+            name: student.name,
+            phone: updatedPhone, // Perbarui phone dengan input terbaru
+            lastpaydate: studentMonthPay,
+        };
+    }
+});
+
  </script>
