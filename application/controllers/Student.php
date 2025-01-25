@@ -732,4 +732,16 @@ class Student extends CI_Controller
 		$this->session->set_flashdata('alert', $msg);
 		redirect(base_url('student'));
 	}
+
+	public function latepayment(){
+		$data['listStudent'] = $this->mstudent->getStudentLatePayment();
+// 		echo '<pre style="background-color: #f4f4f4; color: #333; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; line-height: 1.5; overflow: auto;">';
+// var_dump($data['listStudent']);
+// echo '</pre>';
+// die();
+
+$this->load->view('v_header');
+$this->load->view('v_latepayment', $data);
+$this->load->view('v_footer');
+	}
 }
