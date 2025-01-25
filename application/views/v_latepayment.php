@@ -258,7 +258,7 @@ $(document).ready(function(){
         //    kirimkan datanya ke controller 
         console.log(listId);
         // Redirect ke URL dengan nomor telepon sebagai parameter
-			window.location.href = '<?= base_url() ?>Accounting/sendBroadCastWa/'+ encodeURIComponent(JSON.stringify(listId));
+			window.location.href = '<?= base_url() ?>Accounting/broadcast/'+ encodeURIComponent(JSON.stringify(listId));
         } else {
             alert("Silakan pilih siswa");
         }

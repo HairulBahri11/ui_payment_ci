@@ -1421,21 +1421,7 @@ function getDataIncome($id_akun, $date, $branch_id, $desc = '')
 		curl_close($ch);
 	}
 
-	function broadcast($data){
-
-		// Membungkus var_dump dengan <pre> agar terlihat rapi
-	echo '<pre style="background-color: #f4f4f4; color: #333; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; line-height: 1.5; overflow: auto;">';
-	var_dump(urldecode($data));
-	echo '</pre>';
-	die();
-
-
-}
-
-function sendBroadCastWa($data){
-    $url = "https://ui-backoffice.primtechdev.com/api/broadcast";
-    $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo"; // Token Anda
-	// Decode jika diperlukan
+	public function broadcast($data){
 	if (!empty($data)) {
 		$decodedData = json_decode($data, true);
 	} else {
@@ -1443,12 +1429,23 @@ function sendBroadCastWa($data){
 		$decodedData = [];
 	}
 
+	$proses_broadcast = $this->sendBroadCastWA($decodedData);
+	return $proses_broadcast;
+
+
+}
+
+public function sendBroadCastWa($data){
+    $url = "https://ui-backoffice.primtechdev.com/api/broadcast";
+    $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo"; // Token Anda
+	
+
 
     $ch = curl_init();
 
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_POST, true); // Mengirim POST request
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($decodedData)); // Data dikirim dalam format JSON
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); // Data dikirim dalam format JSON
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         "Authorization: Bearer $token",
         "Content-Type: application/json"
