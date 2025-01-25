@@ -1425,7 +1425,7 @@ function getDataIncome($id_akun, $date, $branch_id, $desc = '')
 
 		// Membungkus var_dump dengan <pre> agar terlihat rapi
 	echo '<pre style="background-color: #f4f4f4; color: #333; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; line-height: 1.5; overflow: auto;">';
-	var_dump($data);
+	var_dump(urldecode($data));
 	echo '</pre>';
 	die();
 
