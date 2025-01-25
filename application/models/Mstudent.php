@@ -197,4 +197,27 @@ class Mstudent extends CI_Model
 	{
 		$this->db->insert('mutasi_siswa', $data);
 	}
+
+	function getStudentLatePayment(){
+		$query = $this->db->query("
+    SELECT s.id, s.name, p.program, s.status, s.phone, pd.category,
+           pd.id AS id_detail_pd,  
+           MAX(pd.monthpay) AS monthpay, 
+           p.level
+    FROM student s
+    LEFT OUTER JOIN price p ON s.priceid = p.id
+    LEFT OUTER JOIN paydetail pd ON s.id = pd.studentid
+    WHERE s.status = 'ACTIVE'
+      AND pd.category = 'COURSE'
+	  AND p.level <> 'Private'
+	  AND s.course_time IS NOT NULL
+    GROUP BY s.id  
+    HAVING (MONTH(monthpay) != MONTH(CURDATE()) OR monthpay != NULL)
+       AND (YEAR(monthpay) != YEAR(CURDATE()) OR monthpay != NULL)
+    ORDER BY `monthpay` ASC
+");
+
+return $query->result();
+	
+	}
 }
