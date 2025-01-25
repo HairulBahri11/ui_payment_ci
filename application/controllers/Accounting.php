@@ -1431,31 +1431,61 @@ function getDataIncome($id_akun, $date, $branch_id, $desc = '')
 
 
 }
+
 function sendBroadCastWa($data){
-	$datadecode = urldecode($data);
-$url = "https://ui-backoffice.primtechdev.com/api/broadcast/$datadecode";
-$token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo";
+    $url = "https://ui-backoffice.primtechdev.com/api/broadcast";
+    $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo"; // Token Anda
 
-$ch = curl_init();
+    // Decode jika diperlukan
+    $decodedData = json_decode($data, true); 
 
-curl_setopt($ch, CURLOPT_URL, $url);
+    $ch = curl_init();
 
-$headers = [
-	"Authorization: Bearer $token",
-	"Content-Type: application/json"
-];
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, true); // Mengirim POST request
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($decodedData)); // Data dikirim dalam format JSON
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer $token",
+        "Content-Type: application/json"
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
 
-$response = curl_exec($ch);
+    if (curl_errno($ch)) {
+        echo 'Error: ' . curl_error($ch);
+    } else {
+        echo $response;
+    }
 
-if (curl_errno($ch)) {
-	echo 'Error: ' . curl_error($ch);
-} else {
-	echo $response;
+    curl_close($ch);
 }
 
-curl_close($ch);
-}
+// function sendBroadCastWa($data){
+// 	$datadecode = urldecode($data);
+// $url = "https://ui-backoffice.primtechdev.com/api/broadcast/$data";
+// $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo";
+
+// $ch = curl_init();
+
+// curl_setopt($ch, CURLOPT_URL, $url);
+
+// $headers = [
+// 	"Authorization: Bearer $token",
+// 	"Content-Type: application/json"
+// ];
+// curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+// $response = curl_exec($ch);
+
+// if (curl_errno($ch)) {
+// 	echo 'Error: ' . curl_error($ch);
+// } else {
+// 	echo $response;
+// }
+
+// curl_close($ch);
+// }
 }
