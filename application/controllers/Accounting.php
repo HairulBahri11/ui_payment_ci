@@ -1421,19 +1421,23 @@ function getDataIncome($id_akun, $date, $branch_id, $desc = '')
 		curl_close($ch);
 	}
 
-	public function broadcast($data){
-	if (!empty($data)) {
-		$decodedData = json_decode($data, true);
-	} else {
-		// Jika data null atau kosong, atur decodedData sebagai array kosong atau nilai default lainnya
-		$decodedData = [];
-	}
+	public function broadcast()
+{
+    // Ambil data dari request body
+    $data = $this->input->post('listId'); // Mendapatkan data JSON dari POST
+    if ($data) {
+        $decodedData = json_decode($data, true);
+    } else {
+        $decodedData = [];
+    }
 
-	$proses_broadcast = $this->sendBroadCastWA($decodedData);
-	return $proses_broadcast;
+    // Proses data (misal: kirimkan WA broadcast)
+    $response = $this->sendBroadCastWa($decodedData);
 
-
+    // Return response ke frontend
+    echo json_encode(['status' => 'success', 'data' => $response]);
 }
+
 
 public function sendBroadCastWa($data){
     $url = "https://ui-backoffice.primtechdev.com/api/broadcast";
