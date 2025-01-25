@@ -1421,7 +1421,7 @@ function getDataIncome($id_akun, $date, $branch_id, $desc = '')
 		curl_close($ch);
 	}
 
-	function broadcast($data){
+	public function broadcast($data){
 	if (!empty($data)) {
 		$decodedData = json_decode($data, true);
 	} else {
@@ -1435,7 +1435,7 @@ function getDataIncome($id_akun, $date, $branch_id, $desc = '')
 
 }
 
-function sendBroadCastWa($data){
+public function sendBroadCastWa($data){
     $url = "https://ui-backoffice.primtechdev.com/api/broadcast";
     $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo"; // Token Anda
 	
