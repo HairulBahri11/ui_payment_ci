@@ -1431,6 +1431,9 @@ function getDataIncome($id_akun, $date, $branch_id, $desc = '')
         $decodedData = [];
     }
 
+	var_dump($decodedData);
+	die();
+
     // Proses data (misal: kirimkan WA broadcast)
     $response = $this->sendBroadCastWa($decodedData);
 
