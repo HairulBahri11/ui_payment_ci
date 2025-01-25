@@ -225,8 +225,8 @@
 												
 										</td>
 											<td>
-												<!--<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showResult" onclick="showModalResult('<?= $row->id ?>', '<?= $row->name ?>', '<?= $row->written ?>', '<?= $row->speaking ?>', '<?= $row->priceid ?>','<?= $row->placement_test_result ?>','<?= $row->kind_of_test ?>')"><?= $row->written == null ? 'Result Test' : 'Edit Result Test' ?></a>-->
-												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showModal" onclick="showModalData('<?= $row->id ?>', '<?= $row->name ?>')">Payment</a>
+												<!--<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showResult" onclick="showModalResult('<?= $row->id ?>', '<?= $row->name ?>', '<?= $row->written ?>', '<?= $row->speaking ?>', '<?= $row->priceid ?>','<?= $row->placement_test_result ?>','<?= $row->kind_of_test ?>', '<?= $row->branch_id ?>')"><?= $row->written == null ? 'Result Test' : 'Edit Result Test' ?></a>-->
+												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showModal" onclick="showModalData('<?= $row->id ?>', '<?= $row->name ?>', '<?= $row->branch_id ?>')">Payment</a>
 
 												<a href="<?= base_url() . 'student/updateProspective/' . $row->id ?>" class="btn btn-danger">Delete</a>
 											</td>
@@ -264,7 +264,7 @@
 				<div class="modal-body">
 					<p id="textModal"></p>
 					<input type="hidden" name="idstudent" id="idModal" style="color:#000">
-
+					<input type="hidden" name="branch_id" id="branch_id">
 					<div class="form-group">
 						<label for="category" class="col-sm-3 control-label">Category</label>
 						<div class="col-sm-9">
@@ -646,6 +646,7 @@
 					<div class="row">
 						<p id="textModal"></p>
 						<input type="hidden" name="idstudent" id="idModalResult" style="color:#000">
+						<input type="hidden" name="branch_id" id="branch_id_result">
 
 						<div class="col-sm-4">
 							<label for="category" class="control-label">Category</label>
@@ -1514,14 +1515,16 @@
 		alert('Add registration successful.');
 	});
 
-	function showModalData(id, name) {
+	function showModalData(id, name, branch_id) {
 		$('.modal-title').html('Update student ' + name);
 		$('#idModal').val(id);
+		$('#branch_id').val(branch_id);
 	}
 
-	function showModalResult(id, name, written, speaking, priceid, placement, kind) {
+	function showModalResult(id, name, written, speaking, priceid, placement, kind, branch_id) {
 		$('.modal-title').html('Result Student Test ' + name);
 		$('#idModalResult').val(id);
+		$('#branch_id_result').val(branch_id);
 		$('#written').val(written);
 		$('#speaking').val(speaking);
 		$('#placement_test_result').val(placement);
