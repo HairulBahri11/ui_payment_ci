@@ -305,6 +305,7 @@ $(document).ready(function(){
                 data: { listId: JSON.stringify(listId) },
                 success: function (response) {
                     console.log("Broadcast berhasil:", response);
+                    alert("Successfully sent broadcast messages");
                 },
                 error: function (xhr, status, error) {
                     console.error("Terjadi kesalahan:", error);
