@@ -305,6 +305,7 @@ $(document).ready(function(){
                 data: { listId: JSON.stringify(listId) },
                 success: function (response) {
                     console.log("Broadcast berhasil:", response);
+                    alert("Successfully sent broadcast messages");
                 },
                 error: function (xhr, status, error) {
                     console.error("Terjadi kesalahan:", error);
@@ -322,11 +323,13 @@ $(document).ready(function(){
             return student.id == id;
         });
         var updatedPhone = $('input[name="phone_' + id + '"]').val();
+        var studentMonthPay = new Date(student.monthpay).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        
         return {
             id: student.id,
             name: student.name,
             phone: updatedPhone, // Perbarui phone dengan input terbaru
-            lastpaydate: student.monthpay,
+            lastpaydate: studentMonthPay,
         };
     }
 });
