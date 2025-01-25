@@ -306,6 +306,7 @@ $(document).ready(function(){
                 success: function (response) {
                     console.log("Broadcast berhasil:", response);
                     alert("Successfully sent broadcast messages");
+                    window.location.reload();
                 },
                 error: function (xhr, status, error) {
                     console.error("Terjadi kesalahan:", error);
