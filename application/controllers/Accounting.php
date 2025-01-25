@@ -1435,9 +1435,14 @@ function getDataIncome($id_akun, $date, $branch_id, $desc = '')
 function sendBroadCastWa($data){
     $url = "https://ui-backoffice.primtechdev.com/api/broadcast";
     $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo"; // Token Anda
+	// Decode jika diperlukan
+	if (!empty($data)) {
+		$decodedData = json_decode($data, true);
+	} else {
+		// Jika data null atau kosong, atur decodedData sebagai array kosong atau nilai default lainnya
+		$decodedData = [];
+	}
 
-    // Decode jika diperlukan
-    $decodedData = json_decode($data, true); 
 
     $ch = curl_init();
 
