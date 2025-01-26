@@ -164,7 +164,16 @@ class Mstudent extends CI_Model
 
 	function getOnlineStudent()
 	{
-		$this->db->select("student.*, staff.name as staff_name, price.program as result, dayone.day as dayone, daytwo.day as daytwo, teacher.name as teacher_name, parents.name as parent_name, parents.no_hp as parent_phone");
+				$this->db->select("
+			student.*,
+			staff.name as staff_name,
+			price.program as result,
+			dayone.day as dayone,
+			daytwo.day as daytwo,
+			teacher.name as teacher_name,
+			GROUP_CONCAT(parents.name SEPARATOR ', ') as parent_names,
+			GROUP_CONCAT(parents.no_hp SEPARATOR ', ') as parent_phones
+		");
 		$this->db->from("student");
 		$this->db->join("teacher", "student.id_teacher = teacher.id", "left");
 		$this->db->join("staff", "student.id_staff = staff.id", "left");
@@ -176,12 +185,15 @@ class Mstudent extends CI_Model
 		$this->db->where('student.status =', 'ACTIVE');
 		$this->db->where('is_online =', 1);
 		$this->db->where("is_prospective_done", "0");
-		$this->db->order_by('id', 'asc');
+		$this->db->group_by("student.id");
+		$this->db->order_by('student.id', 'asc');
 
-		if($this->session->userdata('level') == '3') {
+		if ($this->session->userdata('level') == '3') {
 			$this->db->where('student.branch_id', $this->session->userdata('branch'));
 		}
+
 		return $this->db->get();
+
 	}
 
 
