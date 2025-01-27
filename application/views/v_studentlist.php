@@ -183,9 +183,9 @@
 						<div class="pull-right">
 							<a href="<?= base_url() ?>student/addStudent"><button class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true">&nbsp;</i>&nbsp;Add New Student</button></a>
 						</div>
-						<div class="pull-left">
+						<!-- <div class="pull-left">
 							<button class="btn btn-primary" id="showstudentall">ALL</button>&nbsp;<button class="btn btn-success" id="hideInactive">Student Active</button>&nbsp;<button class="btn btn-danger" id="hideActive">Student Inactive</button>
-						</div>
+						</div> -->
 					</div>
 					<br>
 					<!-- ambil data dari flash dengan nama alert -->
@@ -218,9 +218,9 @@
 										<!--  <th>Last Payment</th> -->
 										<th>Program</th>
 										<!--<th>Course Fee</th>-->
-										<th>Note</th>
+										<!-- <th>Note</th> -->
 										<th>Status</th>
-										<th class="notPrintable">Action</th>
+										<th class="notPrintable" width="10%">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -228,7 +228,9 @@
 									
 									
 									foreach ($listStudent->result() as $row) {
+										
 									?>
+
 										<tr class="status<?= $row->status ?>">
 											<td><?= $row->sid ?></td>
 											<td><?= $row->name ?></td>
@@ -252,7 +254,7 @@
 											}
 											?>
 											
-											<td><?= $row->note ?></td>
+											<!-- <td><?= $row->note ?></td> -->
 											
 											
 											<?php
@@ -277,7 +279,7 @@
 											<?php
 											if ($row->status == "ACTIVE") {
 											?>
-												<td><span class="badge bg-green"><?= $row->status ?></span></td>
+												<td><span class="badge bg-yellow"><?= $row->status ?></span></td>
 											<?php
 											} elseif ($row->status == "INACTIVE") {
 											?>
@@ -293,8 +295,26 @@
 												<!-- <a data-toggle="modal" data-target="#delModal<?php echo $row->sid; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a> -->
 												<!-- <a data-toggle="modal" data-target="#showModal<?php echo $row->sid; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a> -->
 												<a href="<?= base_url('student/detailPayment/') ?><?= $row->sid; ?>/<?= $row->name; ?>" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
-												<a href="<?= base_url() ?>student/activateStudent/<?= $row->sid ?>/<?= $row->status ?>"class="btn btn-warning btn-xs" onclick="return confirm('Are you sure you want to activate or deactivate this student?');">
-													<i class="fa fa-check"></i></a>
+											
+												<?php if($row->status == "ACTIVE") { ?>
+													<a data-toggle="modal" 
+													data-target="#delModal" 
+													data-id="<?= $row->sid ?>" 
+													data-name="<?= $row->name ?>" 
+													data-program="<?= $row->program ?>" 
+													data-id_teacher="<?= $row->id_teacher ?>" 
+													data-status="<?= $row->status ?>" 
+													href="#" 
+													class="btn btn-danger btn-xs openModal">
+														<i class="fa fa-check"></i>
+													</a>
+												<?php } else { ?>
+													<a href="<?= base_url() ?>student/activateStudent/<?= $row->sid ?>/<?= $row->status ?>" 
+													class="btn btn-warning btn-xs" 
+													onclick="return confirm('Are you sure you want to activate or deactivate this student?');">
+														<i class="fa fa-check"></i>
+													</a>
+												<?php } ?>
 
 											</td>
 										</tr>
@@ -320,37 +340,114 @@
 </div>
 <!-- /.content-wrapper -->
 
-<div class="modal modal-danger fade" id="delModal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<form action="<?= base_url() ?>student/deleteStudentDb" method="post">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">Delete Student</h4>
-				</div>
-				<div class="modal-body">
-					<p id="textModal"></p>
-					<input type="hidden" name="idstudent" id="idModal" style="color:#000">
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-					<button type="submit" class="btn btn-outline">Delete</button>
-					<!-- <a href=""><button type="button" class="btn btn-outline">Delete</button></a> -->
-				</div>
-			</form>
-		</div>
-		<!-- /.modal-content -->
-	</div>
-	<!-- /.modal-dialog -->
+<div class="modal modal fade" id="delModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="deleteStudentForm" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalTitle"></h4>
+                </div>
+                <div class="modal-body">
+                    <p id="textModal"></p>
+                    <input type="hidden" name="idstudent" id="idModal" style="color:#000">
+                    <input type="hidden" name="program" id="programNya" class="form-control">
+                    <input type="hidden" name="id_teacher" id="id_teacherNya" class="form-control">
+					<input type="hidden" name="name" id="name" class="form-control">
+					<div class="form-group mt-3">
+    <label for="choose_alasan">Why did she/he leave from U&I English Course?</label>
+    <select name="review_id" id="choose_alasan" class="form-control">
+        <?php 
+        // Query database
+        $data_query = $this->db->get('category_review')->result();
+
+        // Cek apakah ada data
+        if (!empty($data_query)) {
+            foreach ($data_query as $key => $value) {
+                ?>
+                <option value="<?= $value->id ?>"><?= $value->category_name ?></option>
+                <?php
+            }
+        } else {
+            echo '<option value="">No data available</option>';
+        }
+        ?>
+    </select>
+</div>
+					<div class="form-group">
+						<label for="date">Date Inactive</label>
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="date" class="form-control pull-right" id="date" name="date">
+						</div>
+					</div>
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 <!-- /.modal -->
 
-<script type="text/javascript">
-	function showModalData(id, name) {
-		$('#textModal').html('Are you sure to delete student ' + name + '?');
-		$('#idModal').val(id);
-	}
+<!-- <script type="text/javascript">
+    function showModalData(id, name, program, id_teacher, status) {
+        // Set nilai untuk input form
+		// Tampilkan modal
+		$('#delModal').modal('show');
+        $('#idModal').val(id);
+        $('#programNya').val(program);
+        $('#id_teacherNya').val(id_teacher);
+		$('#nameNya').val(name);
+
+		console.log(status, name, id_teacher, program, id);
+		
+
+        // Update form action URL
+        const formAction = `<?= base_url() ?>student/activateStudent/${id}/${status}`;
+        $('#deleteStudentForm').attr('action', formAction);
+
+        // Set teks di modal jika diperlukan
+        $('#textModal').html(`Are you sure to activate or deactivate student: ${name}?`);
+    
+    }
+</script> -->
+
+<script>
+$(document).ready(function () {
+    // Ketika tombol dengan class .openModal diklik
+    $('.openModal').on('click', function () {
+        // Ambil data dari atribut data-*
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+        const program = $(this).data('program');
+        const id_teacher = $(this).data('id_teacher');
+        const status = $(this).data('status');
+
+        // Debug data ke konsol
+        console.log({ id, name, program, id_teacher, status });
+
+        // Isi form di dalam modal
+        $('#idModal').val(id);
+        $('#programNya').val(program);
+        $('#id_teacherNya').val(id_teacher);
+        $('#name').val(name);
+
+        // Perbarui form action URL di dalam modal
+        const formAction = `<?= base_url() ?>student/activateStudent/${id}/${status}`;
+        $('#deleteStudentForm').attr('action', formAction);
+
+        // Tampilkan teks konfirmasi di modal
+        $('#myModalTitle').html(`Are you sure to deactivate student: ${name}?`);
+    });
+});
 </script>
 
 <?php
