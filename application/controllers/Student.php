@@ -20,7 +20,7 @@ class Student extends CI_Controller
 	{
 		// echo "<pre>";
 		// print_r($this->mstudent->getAllStudent()->result());
-		$getStudent = $this->db->query("SELECT s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, s.note, p.id, p.program, p.course, p.level  FROM student s INNER JOIN price p ON s.priceid = p.id  ORDER BY `sid` ASC");
+		$getStudent = $this->db->query("SELECT s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, s.note, p.id, p.program, p.course, p.level , s.id_teacher, s.course_time, s.day1, s.day2  FROM student s INNER JOIN price p ON s.priceid = p.id  ORDER BY `sid` ASC");
 		// print_r($asd->result());
 		$data['listStudent'] = $getStudent;
 		$data['listStudentPayment'] = $this->mstudent->getStudentPayment();
@@ -711,6 +711,7 @@ class Student extends CI_Controller
 	}
 
 	public function activateStudent($id , $status){
+
 		if($status == 'ACTIVE'){
 			$setStatus = 'INACTIVE';
 			$message = 'deactivated successfully';
@@ -721,11 +722,50 @@ class Student extends CI_Controller
 			$setStatus = 'NO clue';
 		}
 
-		$this->db->where('id', $id);
+		 $this->db->where('id', $id);
 		 $proses =$this->db->update('student', array('status' => $setStatus));
-		 if($proses){
-			 $msg = $message;
-		 }else{
+		 if ($proses) {
+			$msg = $message;
+		
+			// Ambil data dari form
+			$program = $this->input->post('program');
+			// $name = $this->input->post('name');
+			$review_id = $this->input->post('review_id');
+			$id_teacher = $this->input->post('id_teacher');
+			$date_inactive = $this->input->post('date');
+			$created_at = date('Y-m-d H:i:s');
+
+		
+			// Cek apakah program tidak null
+			if ($program != null) {
+				// Persiapkan data untuk disimpan ke database
+				$data = [
+					'student_id' => $id,
+					'program' => $program,
+					// 'name' => $name,
+					'review_id' => $review_id,
+					'teacher_id' => $id_teacher ? $id_teacher : 0,
+					'date_inactive' => $date_inactive,
+					'created_at' => $created_at
+				];
+		
+				// Simpan data ke tabel student_review
+				$this->db->insert('student_review', $data);
+		
+				// Cek apakah data berhasil disimpan
+				if ($this->db->affected_rows() > 0) {
+					// Berikan respon sukses
+					$msg = "Data successfully saved to database.";
+				} else {
+					// Berikan respon jika gagal
+					$msg = "Failed to save data. Please try again.";
+				}
+			} else {
+				$msg = "Activate successfully";
+			}
+		}
+		
+		 else{
 			 $msg = 'failed';
 		 }
 
@@ -743,5 +783,13 @@ class Student extends CI_Controller
 $this->load->view('v_header');
 $this->load->view('v_latepayment', $data);
 $this->load->view('v_footer');
+	}
+
+	public function student_review(){
+		$data['listStudentReview'] = $this->mstudent->getStudentReview();
+
+		$this->load->view('v_header');
+		$this->load->view('v_student_review', $data);
+		$this->load->view('v_footer');
 	}
 }
