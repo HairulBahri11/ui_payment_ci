@@ -1,6 +1,3 @@
-<!-- Left side column. contains the logo and sidebar -->
-
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
@@ -1472,7 +1469,4 @@
 
 	var monthyear = month.concat("-", year);
 	document.getElementById('monthpay').value = monthyear;
-</script>
-</script>
-</script>
 </script>
