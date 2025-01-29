@@ -1473,3 +1473,6 @@
 	var monthyear = month.concat("-", year);
 	document.getElementById('monthpay').value = monthyear;
 </script>
+</script>
+</script>
+</script>
