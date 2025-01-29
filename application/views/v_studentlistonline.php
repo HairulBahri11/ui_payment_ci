@@ -1,163 +1,5 @@
 <!-- Left side column. contains the logo and sidebar -->
-<aside class="main-sidebar">
-	<!-- sidebar: style can be found in sidebar.less -->
-	<section class="sidebar">
-		<!-- search form -->
-		<form action="#" method="get" class="sidebar-form">
-			<div class="input-group">
-				<img src="<?php echo base_url() ?>assets/dist/img/ui4.jpg" width="210">
-			</div>
-		</form>
-		<!-- Sidebar user panel -->
-		<div class="user-panel">
-			<div class="pull-left image">
-				<img src="<?php echo base_url() ?>assets/dist/img/avatar5.png" class="img-circle" alt="User Image">
-			</div>
-			<div class="pull-left info">
-				<p><?= $this->session->userdata('nama') ?></p>
-				<a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-			</div>
-		</div>
-		<!-- /.search form -->
-		<!-- sidebar menu: : style can be found in sidebar.less -->
-		<ul class="sidebar-menu" data-widget="tree">
-			<li class="header">MAIN NAVIGATION</li>
-			<li>
-				<a href="<?php echo base_url() ?>dashboard">
-					<i class="fa fa-dashboard"></i> <span>Dashboard</span>
-				</a>
-			</li>
 
-			<?php
-			if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 3)) {
-			?>
-				<li>
-					<a href="<?php echo base_url() ?>student/register">
-						<i class="fa fa-edit"></i> <span>Register</span>
-					</a>
-				</li>
-
-				<li class="treeview">
-					<a href="#">
-						<i class="fa fa-money"></i> <span>Payment</span>
-						<span class="pull-right-container">
-							<i class="fa fa-angle-left pull-right"></i>
-						</span>
-					</a>
-					<ul class="treeview-menu">
-						<li><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
-						<li><a href="<?= base_url() ?>payment/addregular"><i class="fa fa-circle-o"></i> <span>Regular Payment</span></a></li>
-						
-						<li><a href="<?= base_url() ?>expense/addexpense"><i class="fa fa-circle-o"></i> <span>Expense</span></a></li>
-					</ul>
-				</li>
-			<?php
-			}
-			?>
-
-			<li class="treeview">
-				<a href="#">
-					<i class="fa fa-file-text-o"></i> <span>Report</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<?php
-					if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 2)) {
-					?>
-						<li><a href="<?= base_url() ?>report/showexpense"><i class="fa fa-circle-o"></i> <span>Expense Report</span></a></li>
-					<?php
-					}
-					?>
-					<li><a href="<?= base_url() ?>report/showlate"><i class="fa fa-circle-o"></i> <span>Late Payments</span></a></li>
-					<?php
-					if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 2)) {
-					?>
-						<li><a href="<?= base_url() ?>report/showgeneral"><i class="fa fa-circle-o"></i> <span>General</span></a></li>
-						<li><a href="<?= base_url() ?>report/showdetail"><i class="fa fa-circle-o"></i> <span>Detail</span></a></li>
-					<?php
-					}
-					?>
-					<li><a href="<?= base_url() ?>report/showtrans"><i class="fa fa-circle-o"></i> <span>Transaction</span></a></li>
-				</ul>
-			</li>
-			<?php
-			if (($this->session->userdata('level')) == 1) {
-				?>
-				<li >
-				<a href="<?php echo base_url() ?>user" >
-					<i class="fa fa-user"></i> <span>Employee</span>
-				</a>
-			</li>	
-			<?php
-			}
-			?>
-
-			<li>
-				<a href="<?php echo base_url() ?>student">
-					<i class="fa fa-user"></i> <span>Student</span>
-				</a>
-			</li>
-
-			<li class="active">
-				<a href="<?php echo base_url() ?>student/studentOnline">
-					<i class="fa fa-users"></i> <span>Prospective Student</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>teacher">
-					<i class="fa fa-users"></i> <span>Teacher</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>voucher">
-					<i class="fa fa-credit-card"></i> <span>Voucher</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>price">
-					<i class="fa fa-dollar"></i> <span>Price</span>
-				</a>
-			</li>
-			<li class="treeview <?= $this->uri->segment(1) == 'billing' ? 'active' : '' ?>">
-				<a href="#">
-					<i class="fa fa-money"></i> <span>Payment Bills</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<li class="<?= $this->uri->segment(2) == 'data' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/data"><i class="fa fa-circle-o"></i> <span>Billing Data</span></a></li>
-					<li class="<?= $this->uri->segment(2) == 'addRegularBill' || $this->uri->segment(2) == 'studentByClass' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/addRegularBill"><i class="fa fa-circle-o"></i> <span>Regular Billing Payment</span></a></li>
-					<li class="<?= $this->uri->segment(3) == 'removePenaltyBill' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/removePenaltyBill"><i class="fa fa-circle-o"></i> <span>Remove Penalty</span></a></li>
-				</ul>
-			</li>
-			<?php
-			if (($this->session->userdata('level')) == 1 || $this->session->userdata('level') == 2) {
-				?>
-				<li class="treeview">
-				<a href="#">
-					<i class="fa fa-tag"></i> <span>Accounting</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<li class=""><a href="<?= base_url() ?>accounting/journal"><i class="fa fa-circle-o"></i> <span>Journal</span></a></li>
-					<li class=""><a href="<?= base_url() ?>accounting/profit_loss"><i class="fa fa-circle-o"></i> <span>Profit & Loss</span></a></li>
-					
-				</ul>
-			</li>
-				
-			<?php } ?>
-		</ul>
-	</section>
-	<!-- /.sidebar -->
-</aside>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -178,8 +20,8 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="box box-primary">
-					
-					
+
+
 					<!-- /.box-header -->
 					<div class="box-body">
 						<div class="row">
@@ -218,12 +60,12 @@
 													$message = "DONE";
 												} else {
 													$bg = "badge bg-danger";
-													$message = "NEED CONFIRM";	
+													$message = "NEED CONFIRM";
 												}
 												?>
 												<span class="<?= $bg ?>"> <?= $message ?></span>
-												
-										</td>
+
+											</td>
 											<td>
 												<!--<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showResult" onclick="showModalResult('<?= $row->id ?>', '<?= $row->name ?>', '<?= $row->written ?>', '<?= $row->speaking ?>', '<?= $row->priceid ?>','<?= $row->placement_test_result ?>','<?= $row->kind_of_test ?>')"><?= $row->written == null ? 'Result Test' : 'Edit Result Test' ?></a>-->
 												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showModal" onclick="showModalData('<?= $row->id ?>', '<?= $row->name ?>')">Payment</a>
@@ -362,7 +204,7 @@
 								<input type="hidden" class="form-control" id="priceattnhidden">
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label for="discount" class="col-sm-3 control-label">Discount</label>
 							<div class="col-sm-9">
@@ -441,7 +283,7 @@
 								<input type="hidden" class="form-control" id="discount" value='0'>
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label for="registration" class="col-sm-3 control-label">Month Pay</label>
 							<div class="col-sm-9">
@@ -450,7 +292,7 @@
 								</select>
 							</div>
 						</div>
-						
+
 						<!--<div class="form-group">
 							<label for="registration" class="col-sm-3 control-label">Amount</label>
 							<div class="col-sm-9">
@@ -458,7 +300,7 @@
 							</div>
 						</div>-->
 
-							
+
 						<input type="hidden" class="form-control" id="vamount" name="vamount">
 					</div>
 
@@ -594,8 +436,8 @@
 								<input type="text" class="form-control" id="cash" name="cash">
 							</div>
 						</div>
-						
-						
+
+
 
 						<input type="hidden" class="form-control" id="cashback" name="cashback" readonly value="0">
 
@@ -767,7 +609,7 @@
 			decimal: ',',
 			precision: 0
 		});
-		
+
 		//2023-12-28
 		//$("#amount_private").maskMoney({
 		//	prefix: 'Rp ',
@@ -775,8 +617,8 @@
 		//	decimal: ',',
 		//	precision: 0
 		//});
-		
-		
+
+
 		$("#priceattn").maskMoney({
 			prefix: 'Rp ',
 			thousands: '.',
@@ -804,27 +646,27 @@
 
 		document.getElementById("amount").value = 0;
 		document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-		
+
 		//document.getElementById("amount_private").value = 0;
 		//document.getElementById("amount_private").value = "Rp " + FormatDuit(document.getElementById("amount_private").value);
-		
-		
-		
-		
+
+
+
+
 		document.getElementById("priceattn").value = 0;
 		document.getElementById("priceattn").value = "Rp " + FormatDuit(document.getElementById("priceattn").value);
 		document.getElementById("cash").value = 0;
 		document.getElementById("cash").value = "Rp " + FormatDuit(document.getElementById("cash").value);
 		document.getElementById("cashback").value = 0;
 		document.getElementById("cashback").value = "Rp " + FormatDuit(document.getElementById("cashback").value);
-		
-		
+
+
 
 		$('#attendance').on('itemAdded', function(event) {
-		    //alert(document.getElementById('amount').value);
-		    
-		    
-		    
+			//alert(document.getElementById('amount').value);
+
+
+
 			console.log('asd');
 			if (document.getElementById("amount").value != "") {
 				var amount = document.getElementById("amount").value.replace(/\./g, '');
@@ -1581,7 +1423,7 @@
 		document.getElementById("amount").value = parseInt(agenda) + parseInt(booklet) + parseInt(other) + parseInt(book) + parseInt(pointbook) + parseInt(registrasi) + /* parseInt(course) - */ parseInt(attendance);
 		document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 	}
-	
+
 	var monthpay = '';
 	var month = 0;
 	if (monthpay != "") {
@@ -1630,5 +1472,4 @@
 
 	var monthyear = month.concat("-", year);
 	document.getElementById('monthpay').value = monthyear;
-
 </script>
