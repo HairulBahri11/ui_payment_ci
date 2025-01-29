@@ -1,165 +1,5 @@
 <!-- Left side column. contains the logo and sidebar -->
-<aside class="main-sidebar">
-	<!-- sidebar: style can be found in sidebar.less -->
-	<section class="sidebar">
-		<!-- search form -->
-		<form action="#" method="get" class="sidebar-form">
-			<div class="input-group">
-				<img src="<?php echo base_url() ?>assets/dist/img/ui4.jpg" width="210">
-			</div>
-		</form>
-		<!-- Sidebar user panel -->
-		<div class="user-panel">
-			<div class="pull-left image">
-				<img src="<?php echo base_url() ?>assets/dist/img/avatar5.png" class="img-circle" alt="User Image">
-			</div>
-			<div class="pull-left info">
-				<p><?= $this->session->userdata('nama') ?></p>
-				<a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-			</div>
-		</div>
-		<!-- /.search form -->
-		<!-- sidebar menu: : style can be found in sidebar.less -->
-		<ul class="sidebar-menu" data-widget="tree">
-			<li class="header">MAIN NAVIGATION</li>
-			<li>
-				<a href="<?php echo base_url() ?>dashboard">
-					<i class="fa fa-dashboard"></i> <span>Dashboard</span>
-				</a>
-			</li>
 
-			<?php
-			if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 3)) {
-			?>
-				<li>
-					<a href="<?php echo base_url() ?>student/register">
-						<i class="fa fa-edit"></i> <span>Register</span>
-					</a>
-				</li>
-
-				<li class="treeview active">
-					<a href="#">
-						<i class="fa fa-money"></i> <span>Payment</span>
-						<span class="pull-right-container">
-							<i class="fa fa-angle-left pull-right"></i>
-						</span>
-					</a>
-					<ul class="treeview-menu">
-						<li class="active"><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
-						<li><a href="<?= base_url() ?>payment/addregular"><i class="fa fa-circle-o"></i> <span>Regular Payment</span></a></li>
-
-						<li><a href="<?= base_url() ?>expense/addexpense"><i class="fa fa-circle-o"></i> <span>Expense</span></a></li>
-					</ul>
-				</li>
-			<?php
-			}
-			?>
-
-			<li class="treeview">
-				<a href="#">
-					<i class="fa fa-file-text-o"></i> <span>Report</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<?php
-					if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 2)) {
-					?>
-						<li><a href="<?= base_url() ?>report/showexpense"><i class="fa fa-circle-o"></i> <span>Expense Report</span></a></li>
-					<?php
-					}
-					?>
-					<li><a href="<?= base_url() ?>report/showlate"><i class="fa fa-circle-o"></i> <span>Late Payments</span></a></li>
-					<?php
-					if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 2)) {
-					?>
-						<li><a href="<?= base_url() ?>report/showgeneral"><i class="fa fa-circle-o"></i> <span>General</span></a></li>
-						<li><a href="<?= base_url() ?>report/showdetail"><i class="fa fa-circle-o"></i> <span>Detail</span></a></li>
-					<?php
-					}
-					?>
-					<li><a href="<?= base_url() ?>report/showtrans"><i class="fa fa-circle-o"></i> <span>Transaction</span></a></li>
-				</ul>
-			</li>
-			<?php
-			if (($this->session->userdata('level')) == 1) {
-				?>
-				<li >
-				<a href="<?php echo base_url() ?>user" >
-					<i class="fa fa-user"></i> <span>Employee</span>
-				</a>
-			</li>	
-			<?php
-			}
-			?>
-
-			<li>
-				<a href="<?php echo base_url() ?>student">
-					<i class="fa fa-user"></i> <span>Student</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>student/studentOnline">
-					<i class="fa fa-users"></i> <span>Prospective Student</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>teacher">
-					<i class="fa fa-users"></i> <span>Teacher</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>voucher">
-					<i class="fa fa-credit-card"></i> <span>Voucher</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>price">
-					<i class="fa fa-dollar"></i> <span>Price</span>
-				</a>
-			</li>
-
-			<li class="treeview ">
-				<a href="#">
-					<i class="fa fa-money"></i> <span>Payment Bills</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<li class=""><a href="<?= base_url() ?>billing/data"><i class="fa fa-circle-o"></i> <span>Billing Data</span></a></li>
-					<li class="<?= $this->uri->segment(3) == 'addRegularBill' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/addRegularBill"><i class="fa fa-circle-o"></i> <span>Regular Billing Payment</span></a></li>
-					<li class="<?= $this->uri->segment(3) == 'removePenaltyBill' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/removePenaltyBill"><i class="fa fa-circle-o"></i> <span>Remove Penalty</span></a></li>
-				</ul>
-			</li>
-
-			<?php
-			if (($this->session->userdata('level')) == 1 || $this->session->userdata('level') == 2) {
-				?>
-				<li class="treeview">
-				<a href="#">
-					<i class="fa fa-tag"></i> <span>Accounting</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<li class=""><a href="<?= base_url() ?>accounting/journal"><i class="fa fa-circle-o"></i> <span>Journal</span></a></li>
-					<li class=""><a href="<?= base_url() ?>accounting/profit_loss"><i class="fa fa-circle-o"></i> <span>Profit & Loss</span></a></li>
-					
-				</ul>
-			</li>
-				
-			<?php } ?>
-		</ul>
-	</section>
-	<!-- /.sidebar -->
-</aside>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -193,11 +33,11 @@
 							<table id="example1" class="table table-bordered table-striped table-hover">
 								<thead>
 									<tr>
-                                        <th>Student Id</th>
-                                        <th>Name</th>
-                                        <th>Last Program</th>
-                                        <th>Why student inactive</th>
-                                        <th>Date Inactive</th>
+										<th>Student Id</th>
+										<th>Name</th>
+										<th>Last Program</th>
+										<th>Why student inactive</th>
+										<th>Date Inactive</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -205,13 +45,13 @@
 									foreach ($listStudentReview as $row) {
 									?>
 										<tr>
-                                            <td><?= $row->id ?></td>
-                                            <td><?= $row->name ?></td>
-                                            <td><?= $row->program ?></td>
+											<td><?= $row->id ?></td>
+											<td><?= $row->name ?></td>
+											<td><?= $row->program ?></td>
 											<td><?= $row->category_name ?></td>
 											<td><?= date_format(date_create($row->date_inactive), "d F Y") ?></td>
-                                            
-										
+
+
 										</tr>
 									<?php
 									}
@@ -237,7 +77,7 @@
 
 
 <!-- page script -->
- <!-- <script>
+<!-- <script>
 //    get data from checkbox
 $(document).ready(function(){
     $("#btnSend").click(function(){
@@ -282,52 +122,56 @@ $(document).ready(function(){
 });
  </script> -->
 
- <script>
-    $(document).ready(function () {
-    $("#btnSend").click(function () {
-        var listId = [];
-        $('input[name="listId[]"]:checked').each(function () {
-            var studentId = $(this).val();
-            var studentData = findStudentData(studentId); // Fungsi untuk mencari data siswa
-            listId.push(studentData);
-        });
+<script>
+	$(document).ready(function() {
+		$("#btnSend").click(function() {
+			var listId = [];
+			$('input[name="listId[]"]:checked').each(function() {
+				var studentId = $(this).val();
+				var studentData = findStudentData(studentId); // Fungsi untuk mencari data siswa
+				listId.push(studentData);
+			});
 
-        if (listId.length > 0) {
-            // Kirimkan datanya ke controller menggunakan AJAX
-            $.ajax({
-                url: "<?= base_url() ?>Accounting/broadcast",
-                type: "POST",
-                data: { listId: JSON.stringify(listId) },
-                success: function (response) {
-                    console.log("Broadcast berhasil:", response);
-                    alert("Successfully sent broadcast messages");
-                    window.location.reload();
-                },
-                error: function (xhr, status, error) {
-                    console.error("Terjadi kesalahan:", error);
-                }
-            });
-        } else {
-            alert("Silakan pilih siswa");
-        }
-    });
+			if (listId.length > 0) {
+				// Kirimkan datanya ke controller menggunakan AJAX
+				$.ajax({
+					url: "<?= base_url() ?>Accounting/broadcast",
+					type: "POST",
+					data: {
+						listId: JSON.stringify(listId)
+					},
+					success: function(response) {
+						console.log("Broadcast berhasil:", response);
+						alert("Successfully sent broadcast messages");
+						window.location.reload();
+					},
+					error: function(xhr, status, error) {
+						console.error("Terjadi kesalahan:", error);
+					}
+				});
+			} else {
+				alert("Silakan pilih siswa");
+			}
+		});
 
-    // Fungsi untuk mencari data siswa berdasarkan id
-    function findStudentData(id) {
-        var listStudent = <?php echo json_encode($listStudent); ?>;
-        var student = listStudent.find(function (student) {
-            return student.id == id;
-        });
-        var updatedPhone = $('input[name="phone_' + id + '"]').val();
-        var studentMonthPay = new Date(student.monthpay).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-        
-        return {
-            id: student.id,
-            name: student.name,
-            phone: updatedPhone, // Perbarui phone dengan input terbaru
-            lastpaydate: studentMonthPay,
-        };
-    }
-});
+		// Fungsi untuk mencari data siswa berdasarkan id
+		function findStudentData(id) {
+			var listStudent = <?php echo json_encode($listStudent); ?>;
+			var student = listStudent.find(function(student) {
+				return student.id == id;
+			});
+			var updatedPhone = $('input[name="phone_' + id + '"]').val();
+			var studentMonthPay = new Date(student.monthpay).toLocaleDateString('en-US', {
+				month: 'short',
+				year: 'numeric'
+			});
 
- </script>
+			return {
+				id: student.id,
+				name: student.name,
+				phone: updatedPhone, // Perbarui phone dengan input terbaru
+				lastpaydate: studentMonthPay,
+			};
+		}
+	});
+</script>
