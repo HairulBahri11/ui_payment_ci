@@ -1,163 +1,5 @@
 <!-- Left side column. contains the logo and sidebar -->
-<aside class="main-sidebar">
-	<!-- sidebar: style can be found in sidebar.less -->
-	<section class="sidebar">
-		<!-- search form -->
-		<form action="#" method="get" class="sidebar-form">
-			<div class="input-group">
-				<img src="<?php echo base_url() ?>assets/dist/img/ui4.jpg" width="210">
-			</div>
-		</form>
-		<!-- Sidebar user panel -->
-		<div class="user-panel">
-			<div class="pull-left image">
-				<img src="<?php echo base_url() ?>assets/dist/img/avatar5.png" class="img-circle" alt="User Image">
-			</div>
-			<div class="pull-left info">
-				<p><?= $this->session->userdata('nama') ?></p>
-				<a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-			</div>
-		</div>
-		<!-- /.search form -->
-		<!-- sidebar menu: : style can be found in sidebar.less -->
-		<ul class="sidebar-menu" data-widget="tree">
-			<li class="header">MAIN NAVIGATION</li>
-			<li>
-				<a href="<?php echo base_url() ?>dashboard">
-					<i class="fa fa-dashboard"></i> <span>Dashboard</span>
-				</a>
-			</li>
 
-			<?php
-			if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 3)) {
-			?>
-				<li>
-					<a href="<?php echo base_url() ?>student/register">
-						<i class="fa fa-edit"></i> <span>Register</span>
-					</a>
-				</li>
-
-				<li class="treeview">
-					<a href="#">
-						<i class="fa fa-money"></i> <span>Payment</span>
-						<span class="pull-right-container">
-							<i class="fa fa-angle-left pull-right"></i>
-						</span>
-					</a>
-					<ul class="treeview-menu">
-						<li><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
-						<li><a href="<?= base_url() ?>payment/addregular"><i class="fa fa-circle-o"></i> <span>Regular Payment</span></a></li>
-						
-						<li><a href="<?= base_url() ?>expense/addexpense"><i class="fa fa-circle-o"></i> <span>Expense</span></a></li>
-					</ul>
-				</li>
-			<?php
-			}
-			?>
-
-			<li class="treeview">
-				<a href="#">
-					<i class="fa fa-file-text-o"></i> <span>Report</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<?php
-					if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 2)) {
-					?>
-						<li><a href="<?= base_url() ?>report/showexpense"><i class="fa fa-circle-o"></i> <span>Expense Report</span></a></li>
-					<?php
-					}
-					?>
-					<li><a href="<?= base_url() ?>report/showlate"><i class="fa fa-circle-o"></i> <span>Late Payments</span></a></li>
-					<?php
-					if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 2)) {
-					?>
-						<li><a href="<?= base_url() ?>report/showgeneral"><i class="fa fa-circle-o"></i> <span>General</span></a></li>
-						<li><a href="<?= base_url() ?>report/showdetail"><i class="fa fa-circle-o"></i> <span>Detail</span></a></li>
-					<?php
-					}
-					?>
-					<li><a href="<?= base_url() ?>report/showtrans"><i class="fa fa-circle-o"></i> <span>Transaction</span></a></li>
-				</ul>
-			</li>
-			<?php
-			if (($this->session->userdata('level')) == 1) {
-				?>
-				<li >
-				<a href="<?php echo base_url() ?>user" >
-					<i class="fa fa-user"></i> <span>Employee</span>
-				</a>
-			</li>	
-			<?php
-			}
-			?>
-
-			<li class="active">
-				<a href="<?php echo base_url() ?>student">
-					<i class="fa fa-user"></i> <span>Student</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>student/studentOnline">
-					<i class="fa fa-users"></i> <span>Prospective Student</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>teacher">
-					<i class="fa fa-users"></i> <span>Teacher</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>voucher">
-					<i class="fa fa-credit-card"></i> <span>Voucher</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>price">
-					<i class="fa fa-dollar"></i> <span>Price</span>
-				</a>
-			</li>
-			<li class="treeview <?= $this->uri->segment(1) == 'billing' ? 'active' : '' ?>">
-				<a href="#">
-					<i class="fa fa-money"></i> <span>Payment Bills</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<li class="<?= $this->uri->segment(2) == 'data' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/data"><i class="fa fa-circle-o"></i> <span>Billing Data</span></a></li>
-					<li class="<?= $this->uri->segment(2) == 'addRegularBill' || $this->uri->segment(2) == 'studentByClass' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/addRegularBill"><i class="fa fa-circle-o"></i> <span>Regular Billing Payment</span></a></li>
-					<li class="<?= $this->uri->segment(3) == 'removePenaltyBill' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/removePenaltyBill"><i class="fa fa-circle-o"></i> <span>Remove Penalty</span></a></li>
-				</ul>
-			</li>
-			<?php
-			if (($this->session->userdata('level')) == 1 || $this->session->userdata('level') == 2) {
-				?>
-				<li class="treeview">
-				<a href="#">
-					<i class="fa fa-tag"></i> <span>Accounting</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<li class=""><a href="<?= base_url() ?>accounting/journal"><i class="fa fa-circle-o"></i> <span>Journal</span></a></li>
-					<li class=""><a href="<?= base_url() ?>accounting/profit_loss"><i class="fa fa-circle-o"></i> <span>Profit & Loss</span></a></li>
-					
-				</ul>
-			</li>
-				
-			<?php } ?>
-		</ul>
-	</section>
-	<!-- /.sidebar -->
-</aside>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -189,22 +31,22 @@
 					</div>
 					<br>
 					<!-- ambil data dari flash dengan nama alert -->
-					
-					<?php if ($this->session->flashdata('alert')): ?>
-		<div class="alert alert-success" timeout="100">
-			<?php echo $this->session->flashdata('alert'); ?>
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-		</div>
-	<?php endif; ?>
 
-	<script>
-		setTimeout(() => {
-    const alert = document.querySelector('.alert');
-    if (alert) {
-        alert.style.display = 'none';
-    }
-}, 2000); // 3000ms = 3 seconds
-</script>
+					<?php if ($this->session->flashdata('alert')): ?>
+						<div class="alert alert-success" timeout="100">
+							<?php echo $this->session->flashdata('alert'); ?>
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+						</div>
+					<?php endif; ?>
+
+					<script>
+						setTimeout(() => {
+							const alert = document.querySelector('.alert');
+							if (alert) {
+								alert.style.display = 'none';
+							}
+						}, 2000); // 3000ms = 3 seconds
+					</script>
 					<!-- /.box-header -->
 					<div class="box-body">
 						<div class="table-responsive">
@@ -225,10 +67,10 @@
 								</thead>
 								<tbody>
 									<?php
-									
-									
+
+
 									foreach ($listStudent->result() as $row) {
-										
+
 									?>
 
 										<tr class="status<?= $row->status ?>">
@@ -253,26 +95,26 @@
 												echo "<td>-</td>";
 											}
 											?>
-											
+
 											<!-- <td><?= $row->note ?></td> -->
-											
-											
+
+
 											<?php
 											//if ($row->level != "Private") {
-												//if ($row->condition == "DEFAULT") {
+											//if ($row->condition == "DEFAULT") {
 											?>
-													<!--<td><span class="badge bg-yellow">Default: Rp <?= number_format($row->course, 0, ".", ".") ?></span></td>-->
-												<?php
-												//} elseif ($row->condition == "CHANGE") {
-												?>
-													<!--<td><span class="badge bg-light-blue">Change: Rp <?= number_format($row->course, 0, ".", ".") ?></span></td>-->
-												<?php
-												//} else {
-												//	echo "<td>-</td>";
-												//}
+											<!--<td><span class="badge bg-yellow">Default: Rp <?= number_format($row->course, 0, ".", ".") ?></span></td>-->
+											<?php
+											//} elseif ($row->condition == "CHANGE") {
+											?>
+											<!--<td><span class="badge bg-light-blue">Change: Rp <?= number_format($row->course, 0, ".", ".") ?></span></td>-->
+											<?php
 											//} else {
-												?>
-												<!--<td>-</td>-->
+											//	echo "<td>-</td>";
+											//}
+											//} else {
+											?>
+											<!--<td>-</td>-->
 											<?php
 											//}
 											?>
@@ -295,23 +137,23 @@
 												<!-- <a data-toggle="modal" data-target="#delModal<?php echo $row->sid; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a> -->
 												<!-- <a data-toggle="modal" data-target="#showModal<?php echo $row->sid; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a> -->
 												<a href="<?= base_url('student/detailPayment/') ?><?= $row->sid; ?>/<?= $row->name; ?>" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
-											
-												<?php if($row->status == "ACTIVE") { ?>
-													<a data-toggle="modal" 
-													data-target="#delModal" 
-													data-id="<?= $row->sid ?>" 
-													data-name="<?= $row->name ?>" 
-													data-program="<?= $row->program ?>" 
-													data-id_teacher="<?= $row->id_teacher ?>" 
-													data-status="<?= $row->status ?>" 
-													href="#" 
-													class="btn btn-danger btn-xs openModal">
+
+												<?php if ($row->status == "ACTIVE") { ?>
+													<a data-toggle="modal"
+														data-target="#delModal"
+														data-id="<?= $row->sid ?>"
+														data-name="<?= $row->name ?>"
+														data-program="<?= $row->program ?>"
+														data-id_teacher="<?= $row->id_teacher ?>"
+														data-status="<?= $row->status ?>"
+														href="#"
+														class="btn btn-danger btn-xs openModal">
 														<i class="fa fa-check"></i>
 													</a>
 												<?php } else { ?>
-													<a href="<?= base_url() ?>student/activateStudent/<?= $row->sid ?>/<?= $row->status ?>" 
-													class="btn btn-warning btn-xs" 
-													onclick="return confirm('Are you sure you want to activate or deactivate this student?');">
+													<a href="<?= base_url() ?>student/activateStudent/<?= $row->sid ?>/<?= $row->status ?>"
+														class="btn btn-warning btn-xs"
+														onclick="return confirm('Are you sure you want to activate or deactivate this student?');">
 														<i class="fa fa-check"></i>
 													</a>
 												<?php } ?>
@@ -341,40 +183,40 @@
 <!-- /.content-wrapper -->
 
 <div class="modal modal fade" id="delModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="deleteStudentForm" method="post">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalTitle"></h4>
-                </div>
-                <div class="modal-body">
-                    <p id="textModal"></p>
-                    <input type="hidden" name="idstudent" id="idModal" style="color:#000">
-                    <input type="hidden" name="program" id="programNya" class="form-control">
-                    <input type="hidden" name="id_teacher" id="id_teacherNya" class="form-control">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form id="deleteStudentForm" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalTitle"></h4>
+				</div>
+				<div class="modal-body">
+					<p id="textModal"></p>
+					<input type="hidden" name="idstudent" id="idModal" style="color:#000">
+					<input type="hidden" name="program" id="programNya" class="form-control">
+					<input type="hidden" name="id_teacher" id="id_teacherNya" class="form-control">
 					<input type="hidden" name="name" id="name" class="form-control">
 					<div class="form-group mt-3">
-    <label for="choose_alasan">Why did she/he leave from U&I English Course?</label>
-    <select name="review_id" id="choose_alasan" class="form-control">
-        <?php 
-        // Query database
-        $data_query = $this->db->get('category_review')->result();
+						<label for="choose_alasan">Why did she/he leave from U&I English Course?</label>
+						<select name="review_id" id="choose_alasan" class="form-control">
+							<?php
+							// Query database
+							$data_query = $this->db->get('category_review')->result();
 
-        // Cek apakah ada data
-        if (!empty($data_query)) {
-            foreach ($data_query as $key => $value) {
-                ?>
-                <option value="<?= $value->id ?>"><?= $value->category_name ?></option>
-                <?php
-            }
-        } else {
-            echo '<option value="">No data available</option>';
-        }
-        ?>
-    </select>
-</div>
+							// Cek apakah ada data
+							if (!empty($data_query)) {
+								foreach ($data_query as $key => $value) {
+							?>
+									<option value="<?= $value->id ?>"><?= $value->category_name ?></option>
+							<?php
+								}
+							} else {
+								echo '<option value="">No data available</option>';
+							}
+							?>
+						</select>
+					</div>
 					<div class="form-group">
 						<label for="date">Date Inactive</label>
 						<div class="input-group date">
@@ -384,16 +226,16 @@
 							<input type="date" class="form-control pull-right" id="date" name="date">
 						</div>
 					</div>
-					
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 <!-- /.modal -->
 
@@ -421,33 +263,39 @@
 </script> -->
 
 <script>
-$(document).ready(function () {
-    // Ketika tombol dengan class .openModal diklik
-    $('.openModal').on('click', function () {
-        // Ambil data dari atribut data-*
-        const id = $(this).data('id');
-        const name = $(this).data('name');
-        const program = $(this).data('program');
-        const id_teacher = $(this).data('id_teacher');
-        const status = $(this).data('status');
+	$(document).ready(function() {
+		// Ketika tombol dengan class .openModal diklik
+		$('.openModal').on('click', function() {
+			// Ambil data dari atribut data-*
+			const id = $(this).data('id');
+			const name = $(this).data('name');
+			const program = $(this).data('program');
+			const id_teacher = $(this).data('id_teacher');
+			const status = $(this).data('status');
 
-        // Debug data ke konsol
-        console.log({ id, name, program, id_teacher, status });
+			// Debug data ke konsol
+			console.log({
+				id,
+				name,
+				program,
+				id_teacher,
+				status
+			});
 
-        // Isi form di dalam modal
-        $('#idModal').val(id);
-        $('#programNya').val(program);
-        $('#id_teacherNya').val(id_teacher);
-        $('#name').val(name);
+			// Isi form di dalam modal
+			$('#idModal').val(id);
+			$('#programNya').val(program);
+			$('#id_teacherNya').val(id_teacher);
+			$('#name').val(name);
 
-        // Perbarui form action URL di dalam modal
-        const formAction = `<?= base_url() ?>student/activateStudent/${id}/${status}`;
-        $('#deleteStudentForm').attr('action', formAction);
+			// Perbarui form action URL di dalam modal
+			const formAction = `<?= base_url() ?>student/activateStudent/${id}/${status}`;
+			$('#deleteStudentForm').attr('action', formAction);
 
-        // Tampilkan teks konfirmasi di modal
-        $('#myModalTitle').html(`Are you sure to deactivate student: ${name}?`);
-    });
-});
+			// Tampilkan teks konfirmasi di modal
+			$('#myModalTitle').html(`Are you sure to deactivate student: ${name}?`);
+		});
+	});
 </script>
 
 <?php

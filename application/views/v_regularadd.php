@@ -8,165 +8,7 @@ if (isset($_GET['print'])) {
 $url = base_url() . "cetak/printregular/";
 ?>
 <!-- Left side column. contains the logo and sidebar -->
-<aside class="main-sidebar">
-	<!-- sidebar: style can be found in sidebar.less -->
-	<section class="sidebar">
-		<!-- search form -->
-		<form action="#" method="get" class="sidebar-form">
-			<div class="input-group">
-				<img src="<?php echo base_url() ?>assets/dist/img/ui4.jpg" width="210">
-			</div>
-		</form>
-		<!-- Sidebar user panel -->
-		<div class="user-panel">
-			<div class="pull-left image">
-				<img src="<?php echo base_url() ?>assets/dist/img/avatar5.png" class="img-circle" alt="User Image">
-			</div>
-			<div class="pull-left info">
-				<p><?= $this->session->userdata('nama') ?></p>
-				<a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-			</div>
-		</div>
-		<!-- /.search form -->
-		<!-- sidebar menu: : style can be found in sidebar.less -->
-		<ul class="sidebar-menu" data-widget="tree">
-			<li class="header">MAIN NAVIGATION</li>
-			<li>
-				<a href="<?php echo base_url() ?>dashboard">
-					<i class="fa fa-dashboard"></i> <span>Dashboard</span>
-				</a>
-			</li>
 
-			<?php
-			if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 3)) {
-			?>
-				<li>
-					<a href="<?php echo base_url() ?>student/register">
-						<i class="fa fa-edit"></i> <span>Register</span>
-					</a>
-				</li>
-
-				<li class="treeview active">
-					<a href="#">
-						<i class="fa fa-money"></i> <span>Payment</span>
-						<span class="pull-right-container">
-							<i class="fa fa-angle-left pull-right"></i>
-						</span>
-					</a>
-					<ul class="treeview-menu">
-						<li><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
-						<li class="active"><a href="<?= base_url() ?>payment/addregular"><i class="fa fa-circle-o"></i> <span>Regular Payment</span></a></li>
-						
-						<li><a href="<?= base_url() ?>expense/addexpense"><i class="fa fa-circle-o"></i> <span>Expense</span></a></li>
-					</ul>
-				</li>
-			<?php
-			}
-			?>
-
-			<li class="treeview">
-				<a href="#">
-					<i class="fa fa-file-text-o"></i> <span>Report</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<?php
-					if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 2)) {
-					?>
-						<li><a href="<?= base_url() ?>report/showexpense"><i class="fa fa-circle-o"></i> <span>Expense Report</span></a></li>
-					<?php
-					}
-					?>
-					<li><a href="<?= base_url() ?>report/showlate"><i class="fa fa-circle-o"></i> <span>Late Payments</span></a></li>
-					<?php
-					if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 2)) {
-					?>
-						<li><a href="<?= base_url() ?>report/showgeneral"><i class="fa fa-circle-o"></i> <span>General</span></a></li>
-						<li><a href="<?= base_url() ?>report/showdetail"><i class="fa fa-circle-o"></i> <span>Detail</span></a></li>
-					<?php
-					}
-					?>
-					<li><a href="<?= base_url() ?>report/showtrans"><i class="fa fa-circle-o"></i> <span>Transaction</span></a></li>
-				</ul>
-			</li>
-			<?php
-			if (($this->session->userdata('level')) == 1) {
-				?>
-				<li >
-				<a href="<?php echo base_url() ?>user" >
-					<i class="fa fa-user"></i> <span>Employee</span>
-				</a>
-			</li>	
-			<?php
-			}
-			?>
-
-			<li>
-				<a href="<?php echo base_url() ?>student">
-					<i class="fa fa-user"></i> <span>Student</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>student/studentOnline">
-					<i class="fa fa-users"></i> <span>Prospective Student</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>teacher">
-					<i class="fa fa-users"></i> <span>Teacher</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>voucher">
-					<i class="fa fa-credit-card"></i> <span>Voucher</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="<?php echo base_url() ?>price">
-					<i class="fa fa-dollar"></i> <span>Price</span>
-				</a>
-			</li>
-			<li class="treeview <?= $this->uri->segment(1) == 'billing' ? 'active' : '' ?>">
-				<a href="#">
-					<i class="fa fa-money"></i> <span>Payment Bills</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<li class="<?= $this->uri->segment(2) == 'data' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/data"><i class="fa fa-circle-o"></i> <span>Billing Data</span></a></li>
-					<li class="<?= $this->uri->segment(2) == 'addRegularBill' || $this->uri->segment(2) == 'studentByClass' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/addRegularBill"><i class="fa fa-circle-o"></i> <span>Regular Billing Payment</span></a></li>
-					<li class="<?= $this->uri->segment(3) == 'removePenaltyBill' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/removePenaltyBill"><i class="fa fa-circle-o"></i> <span>Remove Penalty</span></a></li>
-				</ul>
-			</li>
-			<?php
-			if (($this->session->userdata('level')) == 1 || $this->session->userdata('level') == 2) {
-				?>
-				<li class="treeview">
-				<a href="#">
-					<i class="fa fa-tag"></i> <span>Accounting</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<li class=""><a href="<?= base_url() ?>accounting/journal"><i class="fa fa-circle-o"></i> <span>Journal</span></a></li>
-					<li class=""><a href="<?= base_url() ?>accounting/profit_loss"><i class="fa fa-circle-o"></i> <span>Profit & Loss</span></a></li>
-					
-				</ul>
-			</li>
-				
-			<?php } ?>
-		</ul>
-	</section>
-	<!-- /.sidebar -->
-</aside>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -362,23 +204,23 @@ $url = base_url() . "cetak/printregular/";
 
 							<!-- <form role="form" id="example3" name="example" class="form-horizontal" action="<?php echo base_url() ?>payment/addRegularDb" method="post" enctype="multipart/form-data"> -->
 							<div id="dpayment" style="display: none">
-							<?php
-							if($this->session->userdata('level') == 1):
-							?>
-								<div class="form-group">
-									<label for="category" class="col-sm-3 control-label">Branch</label>
-									<div class="col-sm-9">
-										<select class="form-control select2" style="width: 100%;" name="branch_id" id="branch_id" required>
-											<option selected="selected" disabled="disabled" value="">-- Choose Branch --</option>
-											<option value="1">Surabaya</option>
-											<option value="2">Bali</option>
-										</select>
+								<?php
+								if ($this->session->userdata('level') == 1):
+								?>
+									<div class="form-group">
+										<label for="category" class="col-sm-3 control-label">Branch</label>
+										<div class="col-sm-9">
+											<select class="form-control select2" style="width: 100%;" name="branch_id" id="branch_id" required>
+												<option selected="selected" disabled="disabled" value="">-- Choose Branch --</option>
+												<option value="1">Surabaya</option>
+												<option value="2">Bali</option>
+											</select>
+										</div>
 									</div>
-								</div>
-							<?php
-							endif;
-							?>
-							<div class="form-group">
+								<?php
+								endif;
+								?>
+								<div class="form-group">
 									<label for="date" class="col-sm-3 control-label">Date</label>
 									<div class="col-sm-9">
 										<input type="date" class="form-control" id="date" name="date" required>
@@ -526,44 +368,44 @@ $url = base_url() . "cetak/printregular/";
 					<div class="box-body">
 						<div class="table-responsive">
 
-						<table id="example2" class="table table-bordered table-striped table-hover">
-							<thead>
-								<tr>
-									<th>ID</th>
-									<th style="display:none;">priceid</th>
-									<th>Name</th>
-									<th>Program</th>
-									<th>Course Fee</th>
-									<th>U&I Place</th>
-									<th style="display:none;">Phone</th>
-								</tr>
-							</thead>
-							<tbody>
-
-								<?php
-								// var_dump($allStudent);
-								// die;
-								foreach ($allStudent as $row) {
-								?>
+							<table id="example2" class="table table-bordered table-striped table-hover">
+								<thead>
 									<tr>
-
-										<td id="id"><?= $row['sid'] ?></td>
-										<td id="priceid" style="display:none;"><?= $row['priceid'] ?></td>
-										<td id="name"><?= $row['name'] ?></td>
-										<td id="program"><?= $row['program'] ?></td>
-										<td id="course"><?= $row['course'] ?></td>
-										<td id="place"><?= $row['branch_id'] == "1" ? "Surabaya" : "Bali" ?></td>
-										<td id="phone" style="display:none;"><?= $row['phone'] ?></td>
+										<th>ID</th>
+										<th style="display:none;">priceid</th>
+										<th>Name</th>
+										<th>Program</th>
+										<th>Course Fee</th>
+										<th>U&I Place</th>
+										<th style="display:none;">Phone</th>
 									</tr>
+								</thead>
+								<tbody>
+
+									<?php
+									// var_dump($allStudent);
+									// die;
+									foreach ($allStudent as $row) {
+									?>
+										<tr>
+
+											<td id="id"><?= $row['sid'] ?></td>
+											<td id="priceid" style="display:none;"><?= $row['priceid'] ?></td>
+											<td id="name"><?= $row['name'] ?></td>
+											<td id="program"><?= $row['program'] ?></td>
+											<td id="course"><?= $row['course'] ?></td>
+											<td id="place"><?= $row['branch_id'] == "1" ? "Surabaya" : "Bali" ?></td>
+											<td id="phone" style="display:none;"><?= $row['phone'] ?></td>
+										</tr>
 
 
-								<?php
+									<?php
 
-								}
-								?>
-							</tbody>
+									}
+									?>
+								</tbody>
 
-						</table>
+							</table>
 						</div>
 					</div>
 					<!-- /.box-body -->
@@ -941,222 +783,222 @@ $url = base_url() . "cetak/printregular/";
 					<?php
 					}
 					?>
-// Ubah `monthpay` ke format baru
-// var monthpay = "2022-12"; // Contoh nilai awal "YYYY-MM"
-var parts = monthpay.split("-"); // Pisahkan string berdasarkan "-"
-var lastBulan = parseInt(parts[1]); // Ambil bulan dari last payment
-var lastTahun = parseInt(parts[0]); // Ambil tahun dari last payment
+					// Ubah `monthpay` ke format baru
+					// var monthpay = "2022-12"; // Contoh nilai awal "YYYY-MM"
+					var parts = monthpay.split("-"); // Pisahkan string berdasarkan "-"
+					var lastBulan = parseInt(parts[1]); // Ambil bulan dari last payment
+					var lastTahun = parseInt(parts[0]); // Ambil tahun dari last payment
 
-// Ambil bulan dan tahun sekarang
-var now = new Date();
-var currentBulan = now.getMonth() + 1; // Bulan saat ini (0-11, +1 untuk 1-12)
-var currentTahun = now.getFullYear(); // Tahun saat ini
+					// Ambil bulan dan tahun sekarang
+					var now = new Date();
+					var currentBulan = now.getMonth() + 1; // Bulan saat ini (0-11, +1 untuk 1-12)
+					var currentTahun = now.getFullYear(); // Tahun saat ini
 
-// Array nama bulan dalam bahasa Inggris
-var namaBulan = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
+					// Array nama bulan dalam bahasa Inggris
+					var namaBulan = [
+						"January", "February", "March", "April", "May", "June",
+						"July", "August", "September", "October", "November", "December"
+					];
 
-// Elemen <select> dengan ID 'monthpay'
-var select = document.getElementById('monthpay');
+					// Elemen <select> dengan ID 'monthpay'
+					var select = document.getElementById('monthpay');
 
-// Logika untuk menentukan titik awal
-var startBulan, startTahun;
+					// Logika untuk menentukan titik awal
+					var startBulan, startTahun;
 
-if (lastTahun < currentTahun - 1 || (lastTahun === currentTahun - 1 && lastBulan < currentBulan)) {
-  // Jika tahun terakhir lebih dari 1 tahun sebelum tahun sekarang
-  startBulan = currentBulan; // Mulai dari bulan ini
-  startTahun = currentTahun;
-} else {
-  // Jika tahun terakhir masih relevan
-  startBulan = lastBulan + 1; // Mulai dari bulan berikutnya
-  startTahun = lastTahun;
-  if (startBulan > 12) {
-    startBulan = 1; // Reset ke Januari jika bulan > 12
-    startTahun++; // Tambah tahun
-  }
-}
+					if (lastTahun < currentTahun - 1 || (lastTahun === currentTahun - 1 && lastBulan < currentBulan)) {
+						// Jika tahun terakhir lebih dari 1 tahun sebelum tahun sekarang
+						startBulan = currentBulan; // Mulai dari bulan ini
+						startTahun = currentTahun;
+					} else {
+						// Jika tahun terakhir masih relevan
+						startBulan = lastBulan + 1; // Mulai dari bulan berikutnya
+						startTahun = lastTahun;
+						if (startBulan > 12) {
+							startBulan = 1; // Reset ke Januari jika bulan > 12
+							startTahun++; // Tambah tahun
+						}
+					}
 
-// Fungsi untuk menghitung 12 bulan berikutnya dan menambahkannya ke <select>
-function generateNextMonths(bulan, tahun) {
-  // Hapus semua opsi sebelumnya
-  select.innerHTML = ""; // Reset elemen <select>
+					// Fungsi untuk menghitung 12 bulan berikutnya dan menambahkannya ke <select>
+					function generateNextMonths(bulan, tahun) {
+						// Hapus semua opsi sebelumnya
+						select.innerHTML = ""; // Reset elemen <select>
 
-  for (let i = 0; i < 12; i++) {
-    // Hitung bulan dan tahun
-    let currentMonth = bulan + i; // Tambah i ke bulan
-    let currentYear = tahun;
+						for (let i = 0; i < 12; i++) {
+							// Hitung bulan dan tahun
+							let currentMonth = bulan + i; // Tambah i ke bulan
+							let currentYear = tahun;
 
-    if (currentMonth > 12) {
-      currentMonth -= 12; // Reset ke Januari jika bulan > 12
-      currentYear++; // Tambahkan tahun
-    }
+							if (currentMonth > 12) {
+								currentMonth -= 12; // Reset ke Januari jika bulan > 12
+								currentYear++; // Tambahkan tahun
+							}
 
-    // Format nama bulan dan tahun
-    let monthName = namaBulan[currentMonth - 1]; // Nama bulan
-    let monthpay = `${monthName} ${currentYear}`;
-    let value_option = `${String(currentMonth).padStart(2, '0')}-${currentYear}`; // Format MM-YYYY
+							// Format nama bulan dan tahun
+							let monthName = namaBulan[currentMonth - 1]; // Nama bulan
+							let monthpay = `${monthName} ${currentYear}`;
+							let value_option = `${String(currentMonth).padStart(2, '0')}-${currentYear}`; // Format MM-YYYY
 
-    // Buat elemen <option>
-    let option = document.createElement('option');
-    option.value = value_option;
-    option.text = monthpay;
+							// Buat elemen <option>
+							let option = document.createElement('option');
+							option.value = value_option;
+							option.text = monthpay;
 
-    // Tambahkan opsi ke elemen <select>
-    select.add(option);
-  }
-}
+							// Tambahkan opsi ke elemen <select>
+							select.add(option);
+						}
+					}
 
-// Panggil fungsi untuk menambahkan 12 bulan berikutnya
-generateNextMonths(startBulan, startTahun);
+					// Panggil fungsi untuk menambahkan 12 bulan berikutnya
+					generateNextMonths(startBulan, startTahun);
 
 
 
 					// Ubah `monthpay` ke format baru
-// Ubah `monthpay` ke format baru
-// var monthpay = "2024-12"; // Contoh nilai awal "YYYY-MM"
-// var parts = monthpay.split("-"); // Pisahkan string berdasarkan "-"
-// var bulan = parseInt(parts[1]); // Ambil bulan
-// var tahun = parseInt(parts[0]); // Ambil tahun
+					// Ubah `monthpay` ke format baru
+					// var monthpay = "2024-12"; // Contoh nilai awal "YYYY-MM"
+					// var parts = monthpay.split("-"); // Pisahkan string berdasarkan "-"
+					// var bulan = parseInt(parts[1]); // Ambil bulan
+					// var tahun = parseInt(parts[0]); // Ambil tahun
 
-// // Array nama bulan dalam bahasa Inggris
-// var namaBulan = [
-//   "January", "February", "March", "April", "May", "June",
-//   "July", "August", "September", "October", "November", "December"
-// ];
+					// // Array nama bulan dalam bahasa Inggris
+					// var namaBulan = [
+					//   "January", "February", "March", "April", "May", "June",
+					//   "July", "August", "September", "October", "November", "December"
+					// ];
 
-// // Elemen <select> dengan ID 'monthpay'
-// var select = document.getElementById('monthpay');
+					// // Elemen <select> dengan ID 'monthpay'
+					// var select = document.getElementById('monthpay');
 
-// // Fungsi untuk menghitung 12 bulan berikutnya, dimulai dari 1 bulan setelah `last payment`
-// function generateNextMonths(bulan, tahun) {
-//   // Hapus semua opsi sebelumnya
-//   select.innerHTML = ""; // Reset elemen <select>
-// //   hitung range tahun dari tahun ini
-// $range_year = $tahun
-//   for (let i = 1; i <= 12; i++) { // Mulai dari 1 bulan berikutnya
-//     // Hitung bulan dan tahun
-//     let currentMonth = bulan + i; // Tambah i ke bulan
-//     let currentYear = tahun;
+					// // Fungsi untuk menghitung 12 bulan berikutnya, dimulai dari 1 bulan setelah `last payment`
+					// function generateNextMonths(bulan, tahun) {
+					//   // Hapus semua opsi sebelumnya
+					//   select.innerHTML = ""; // Reset elemen <select>
+					// //   hitung range tahun dari tahun ini
+					// $range_year = $tahun
+					//   for (let i = 1; i <= 12; i++) { // Mulai dari 1 bulan berikutnya
+					//     // Hitung bulan dan tahun
+					//     let currentMonth = bulan + i; // Tambah i ke bulan
+					//     let currentYear = tahun;
 
-//     if (currentMonth > 12) {
-//       currentMonth -= 12; // Reset ke Januari jika bulan > 12
-//       currentYear++; // Tambahkan tahun
-//     }
+					//     if (currentMonth > 12) {
+					//       currentMonth -= 12; // Reset ke Januari jika bulan > 12
+					//       currentYear++; // Tambahkan tahun
+					//     }
 
-//     // Format nama bulan dan tahun
-//     let monthName = namaBulan[currentMonth - 1]; // Nama bulan
-//     let monthpay = `${monthName} ${currentYear}`;
-//     let value_option = `${String(currentMonth).padStart(2, '0')}-${currentYear}`; // Format MM-YYYY
+					//     // Format nama bulan dan tahun
+					//     let monthName = namaBulan[currentMonth - 1]; // Nama bulan
+					//     let monthpay = `${monthName} ${currentYear}`;
+					//     let value_option = `${String(currentMonth).padStart(2, '0')}-${currentYear}`; // Format MM-YYYY
 
-//     // Buat elemen <option>
-//     let option = document.createElement('option');
-//     option.value = value_option;
-//     option.text = monthpay;
+					//     // Buat elemen <option>
+					//     let option = document.createElement('option');
+					//     option.value = value_option;
+					//     option.text = monthpay;
 
-//     // Tambahkan opsi ke elemen <select>
-//     select.add(option);
-//   }
-
-
-// }
-
-// // Panggil fungsi untuk menambahkan 12 bulan berikutnya
-// generateNextMonths(bulan, tahun);
+					//     // Tambahkan opsi ke elemen <select>
+					//     select.add(option);
+					//   }
 
 
+					// }
+
+					// // Panggil fungsi untuk menambahkan 12 bulan berikutnya
+					// generateNextMonths(bulan, tahun);
 
 
 
-// // Ubah `monthpay` ke format baru (Desember 2024)
-// var parts = monthpay.split("-"); // Pisahkan string berdasarkan "-"
-// var bulan = parseInt(parts[1]); // Ambil bulan
-// var tahun = parseInt(parts[0]); // Ambil tahun
 
-// // Array nama bulan dalam bahasa inggris
 
-// var namaBulan = [
-// 	"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-// ];
+					// // Ubah `monthpay` ke format baru (Desember 2024)
+					// var parts = monthpay.split("-"); // Pisahkan string berdasarkan "-"
+					// var bulan = parseInt(parts[1]); // Ambil bulan
+					// var tahun = parseInt(parts[0]); // Ambil tahun
 
-// // Format bulan sekarang
-// var formattedDate = namaBulan[bulan - 1] + " " + tahun;
-// console.log("Last Payment:", formattedDate); // Output: Desember 2024
+					// // Array nama bulan dalam bahasa inggris
 
-// // Tambahkan 1 bulan ke `monthpay`
-// var nextMonth = new Date(tahun, bulan, 1); // Bulan `bulan` otomatis dihitung 0-11
-// nextMonth.setMonth(nextMonth.getMonth()); // Tambah 1 bulan
+					// var namaBulan = [
+					// 	"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+					// ];
 
-// // Format ulang menjadi DD-MM-YYYY
-// var day = "01"; // Tetap tanggal 01
-// var newMonth = String(nextMonth.getMonth() + 1).padStart(2, '0'); // Bulan (ditambah 1 dan zero-padded)
-// var newYear = nextMonth.getFullYear();// Tahun baru
+					// // Format bulan sekarang
+					// var formattedDate = namaBulan[bulan - 1] + " " + tahun;
+					// console.log("Last Payment:", formattedDate); // Output: Desember 2024
 
-// // ubah newMonth menjadi nama bulan
-// var monthName = namaBulan[newMonth - 1];
+					// // Tambahkan 1 bulan ke `monthpay`
+					// var nextMonth = new Date(tahun, bulan, 1); // Bulan `bulan` otomatis dihitung 0-11
+					// nextMonth.setMonth(nextMonth.getMonth()); // Tambah 1 bulan
 
-// // Set nilai baru ke `monthpay`
-// monthpay = `${monthName} ${newYear}`;
-// var value_option = `${newMonth}-${newYear}`;
-// console.log("Next Month:", monthpay); // Output: 01-01-2025
+					// // Format ulang menjadi DD-MM-YYYY
+					// var day = "01"; // Tetap tanggal 01
+					// var newMonth = String(nextMonth.getMonth() + 1).padStart(2, '0'); // Bulan (ditambah 1 dan zero-padded)
+					// var newYear = nextMonth.getFullYear();// Tahun baru
 
-// // document.getElementById('monthpay').value = monthpay;
-// // saya ingin menambahkan nilai monthpay ke select option
+					// // ubah newMonth menjadi nama bulan
+					// var monthName = namaBulan[newMonth - 1];
 
-// var select = document.getElementById('monthpay');
-// // Hapus semua opsi sebelumnya
-// select.innerHTML = ""; // Menghapus semua opsi di elemen <select>
-// var option = document.createElement('option');
-// option.value = value_option;
-// option.text = monthpay;
-// select.add(option);
-// // addoption
+					// // Set nilai baru ke `monthpay`
+					// monthpay = `${monthName} ${newYear}`;
+					// var value_option = `${newMonth}-${newYear}`;
+					// console.log("Next Month:", monthpay); // Output: 01-01-2025
 
-					
-					
-					
-					
+					// // document.getElementById('monthpay').value = monthpay;
+					// // saya ingin menambahkan nilai monthpay ke select option
 
-// 					var monthPay = '';
-// 					var month = 0;
-// 					if (monthpay != "") {
-// 						var res = monthpay.split("-");
-// 						month = parseInt(res[1]);
-// 					} else {
-// 						var mon = (new Date()).getMonth();
-// 						month = parseInt(mon);
-// 					}
+					// var select = document.getElementById('monthpay');
+					// // Hapus semua opsi sebelumnya
+					// select.innerHTML = ""; // Menghapus semua opsi di elemen <select>
+					// var option = document.createElement('option');
+					// option.value = value_option;
+					// option.text = monthpay;
+					// select.add(option);
+					// // addoption
 
-// 					// var year = (new Date()).getFullYear();
-// 					var years = (new Date()).getFullYear();
-// var yearArray = [years - 1, years]; // Tahun 2024 dan 2025
 
-// var monthpay = document.getElementById('monthpay');
-// var length = monthpay.options.length;
 
-// // Hapus semua opsi sebelumnya
-// for (i = length - 1; i >= 0; i--) {
-//     monthpay.remove(i);
-// }
 
-// // Nama-nama bulan
-// var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-// // Loop untuk setiap tahun dan bulan
-// for (var y = 0; y < yearArray.length; y++) {
-//     var year = yearArray[y];
-//     for (var i = 0; i < 12; i++) {
-//         var option = document.createElement("option");
-//         var monthValue = (i + 1 < 10 ? "0" : "") + (i + 1); // Format bulan jadi 01, 02, dst.
-//         option.value = monthValue + "-" + year;
-//         option.text = months[i] + " " + year;
-//         monthpay.add(option);
-//     }
-// }
 
-// // Set nilai default (opsional)
-// document.getElementById('monthpay').value = "01-" + years; // Set ke Januari tahun saat ini
+					// 					var monthPay = '';
+					// 					var month = 0;
+					// 					if (monthpay != "") {
+					// 						var res = monthpay.split("-");
+					// 						month = parseInt(res[1]);
+					// 					} else {
+					// 						var mon = (new Date()).getMonth();
+					// 						month = parseInt(mon);
+					// 					}
+
+					// 					// var year = (new Date()).getFullYear();
+					// 					var years = (new Date()).getFullYear();
+					// var yearArray = [years - 1, years]; // Tahun 2024 dan 2025
+
+					// var monthpay = document.getElementById('monthpay');
+					// var length = monthpay.options.length;
+
+					// // Hapus semua opsi sebelumnya
+					// for (i = length - 1; i >= 0; i--) {
+					//     monthpay.remove(i);
+					// }
+
+					// // Nama-nama bulan
+					// var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+					// // Loop untuk setiap tahun dan bulan
+					// for (var y = 0; y < yearArray.length; y++) {
+					//     var year = yearArray[y];
+					//     for (var i = 0; i < 12; i++) {
+					//         var option = document.createElement("option");
+					//         var monthValue = (i + 1 < 10 ? "0" : "") + (i + 1); // Format bulan jadi 01, 02, dst.
+					//         option.value = monthValue + "-" + year;
+					//         option.text = months[i] + " " + year;
+					//         monthpay.add(option);
+					//     }
+					// }
+
+					// // Set nilai default (opsional)
+					// document.getElementById('monthpay').value = "01-" + years; // Set ke Januari tahun saat ini
 
 
 					$("#perioddiv").show(750);
