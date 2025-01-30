@@ -5,7 +5,6 @@ class Mstudent extends CI_Model
 	function __construct()
 	{
 		parent::__construct();
-
 	}
 	function getAllStudent()
 	{
@@ -59,7 +58,7 @@ class Mstudent extends CI_Model
 		$this->db->join("price p", "s.priceid = p.id", "inner");
 		$this->db->where('p.level =', 'Private');
 		$this->db->where('s.status =', 'ACTIVE');
-		
+
 
 		if ($this->session->userdata('userid') != 'superadmin') {
 			$this->db->where('s.branch_id', $this->session->userdata('branch'));
@@ -164,7 +163,7 @@ class Mstudent extends CI_Model
 
 	function getOnlineStudent()
 	{
-				$this->db->select("
+		$this->db->select("
 			student.*,
 			staff.name as staff_name,
 			price.program as result,
@@ -193,7 +192,6 @@ class Mstudent extends CI_Model
 		}
 
 		return $this->db->get();
-
 	}
 
 
@@ -210,15 +208,17 @@ class Mstudent extends CI_Model
 		$this->db->insert('mutasi_siswa', $data);
 	}
 
-	function getStudentLatePayment(){
+	function getStudentLatePayment()
+	{
 		$query = $this->db->query("
-    SELECT s.id, s.name, p.program, s.status, s.phone, pd.category,
+    SELECT s.id, s.name, p.program, s.status, s.phone, t.name as teacher_name, pd.category,
            pd.id AS id_detail_pd,  
            MAX(pd.monthpay) AS monthpay, 
            p.level
     FROM student s
     LEFT OUTER JOIN price p ON s.priceid = p.id
     LEFT OUTER JOIN paydetail pd ON s.id = pd.studentid
+	Left OUTER JOIN teacher t on s.id_teacher = t.id
     WHERE s.status = 'ACTIVE'
       AND pd.category = 'COURSE'
 	  AND p.level <> 'Private'
@@ -229,11 +229,11 @@ class Mstudent extends CI_Model
     ORDER BY `monthpay` ASC
 ");
 
-return $query->result();
-	
+		return $query->result();
 	}
 
-	function getStudentReview(){
+	function getStudentReview()
+	{
 		$query = $this->db->query("
 	SELECT rs.id as id_review, s.id, s.name, rs.program, s.status, rs.date_inactive, cr.category_name
 		   from student_review rs
@@ -243,6 +243,5 @@ return $query->result();
 		   ");
 
 		return $query->result();
-
 	}
 }
