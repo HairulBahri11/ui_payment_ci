@@ -216,7 +216,7 @@
           </li>
 
           <li class="<?= $this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'studentOnline' ? 'active' : '' ?>">
-            <a href="<?= base_url() ?>student">
+            <a href="<?= base_url() ?>student/studentOnline">
               <i class="fa fa-users"></i> <span>Prospective Student</span>
             </a>
           </li>
