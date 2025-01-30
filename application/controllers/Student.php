@@ -154,6 +154,7 @@ class Student extends CI_Controller
 		date_default_timezone_set("Asia/Jakarta");
 		$date = date('Y-m-d');
 		$time = date('Y-m-d h:i:s');
+		$branch_id = $this->input->post('branch_id');
 
 		$birthday = $this->input->post('month') . " " . $this->input->post('date');
 
@@ -183,6 +184,27 @@ class Student extends CI_Controller
 		$replace = "";
 		$total = str_replace($order, $replace, $total);
 
+		// ambil id akun kas dari masing-masing cabang
+		$akun_kas_id = null;
+		if ($branch_id == '1') //jika cabang = Surabaya
+			$akun_kas_id = 3;
+		elseif ($branch_id == '2') //jika cabang = Bali
+			$akun_kas_id = 4;
+
+// ambil id akun bank dari masing-masing cabang
+		$akun_bank_id = null;
+		if ($branch_id == '1') //jika cabang = Surabaya
+			$akun_bank_id = 6;
+		elseif ($branch_id == '2') //jika cabang = Bali
+			$akun_bank_id = 7;
+
+// ambil id akun pendapatan dari masing-masing cabang
+		$akun_pendapatan_id = null;
+		if ($branch_id == '1') //jika cabang = Surabaya
+			$akun_pendapatan_id = 10;
+		elseif ($branch_id == '2') //jika cabang = Bali
+			$akun_pendapatan_id = 11;
+
 		$var = $this->input->post('trfdate');
 		if ($var != "") {
 			$parts = explode('/', $var);
@@ -198,6 +220,42 @@ class Student extends CI_Controller
 				'username' => $this->session->userdata('nama')
 			);
 			$latestRecordPayment = $this->mpayment->addPayment($data);
+
+			//input journal
+// simpan transaksi jurnal
+			$data_trx_akuntansi = array(
+				'payment_id' => $latestRecordPayment['id'],
+				'deskripsi' => 'Income from payment id ' . $latestRecordPayment['id'],
+				'tanggal' => $date,
+				'branch_id' => $branch_id,
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_trx_akuntansi = $this->MTrxAkuntansi->addTrxAkuntansi($data_trx_akuntansi);
+
+// simpan transaksi ke detail jurnal
+			$data_akun_trx_akuntansi_detail = array(
+				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+				'id_akun' => $this->input->post('method') == 'CASH' ? $akun_kas_id : $akun_bank_id,
+				'jumlah' => $total - $paycut,
+				'tipe' => 'DEBIT',
+				'keterangan' => 'akun',
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
+
+			$data_lawan_trx_akuntansi_detail = array(
+				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+				'id_akun' => $akun_pendapatan_id,
+				'jumlah' => $total - $paycut,
+				'tipe' => 'KREDIT',
+				'keterangan' => 'lawan',
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
+
 		} else {
 			$data = array(
 				'paydate' => $date,
@@ -209,6 +267,41 @@ class Student extends CI_Controller
 				'username' => $this->session->userdata('nama')
 			);
 			$latestRecordPayment = $this->mpayment->addPayment($data);
+
+			//input journal
+			//		simpan transaksi jurnal
+			$data_trx_akuntansi = array(
+				'payment_id' => $latestRecordPayment['id'],
+				'deskripsi' => 'Income from payment id ' . $latestRecordPayment['id'],
+				'tanggal' => $date,
+				'branch_id' => $branch_id,
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_trx_akuntansi = $this->MTrxAkuntansi->addTrxAkuntansi($data_trx_akuntansi);
+
+			//		simpan transaksi ke detail jurnal
+			$data_akun_trx_akuntansi_detail = array(
+				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+				'id_akun' => $this->input->post('method') == 'CASH' ? $akun_kas_id : $akun_bank_id,
+				'jumlah' => $total - $paycut,
+				'tipe' => 'DEBIT',
+				'keterangan' => 'akun',
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
+
+			$data_lawan_trx_akuntansi_detail = array(
+				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+				'id_akun' => $akun_pendapatan_id,
+				'jumlah' => $total - $paycut,
+				'tipe' => 'KREDIT',
+				'keterangan' => 'lawan',
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
 		}
 
 		if (isset($_POST['registration'])) {
