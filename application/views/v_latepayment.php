@@ -35,6 +35,7 @@
 										<th>ID</th>
 										<th>Student Name</th>
 										<th>Class</th>
+										<th>Teacher</th>
 
 										<th>Phone</th>
 
@@ -50,6 +51,7 @@
 											<td><?= $row->id ?></td>
 											<td><?= $row->name ?></td>
 											<td><?= $row->program ?></td>
+											<td><?= $row->teacher_name == "" ? "-" : $row->teacher_name ?></td>
 											<td>
 												<input type="text" name="phone_<?= $row->id ?>" value="<?= $row->phone ?>" class="form-control">
 											</td>
