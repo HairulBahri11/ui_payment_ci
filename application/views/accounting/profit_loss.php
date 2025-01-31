@@ -29,7 +29,7 @@
 
 			<?php
 			if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 3)) {
-				?>
+			?>
 				<li>
 					<a href="<?php echo base_url() ?>student/register">
 						<i class="fa fa-edit"></i> <span>Register</span>
@@ -46,11 +46,11 @@
 					<ul class="treeview-menu">
 						<li><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
 						<li><a href="<?= base_url() ?>payment/addregular"><i class="fa fa-circle-o"></i> <span>Regular Payment</span></a></li>
-						
+
 						<li><a href="<?= base_url() ?>expense/addexpense"><i class="fa fa-circle-o"></i> <span>Expense</span></a></li>
 					</ul>
 				</li>
-				<?php
+			<?php
 			}
 			?>
 
@@ -64,18 +64,18 @@
 				<ul class="treeview-menu">
 					<?php
 					if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 2)) {
-						?>
+					?>
 						<li><a href="<?= base_url() ?>report/showexpense"><i class="fa fa-circle-o"></i> <span>Expense Report</span></a></li>
-						<?php
+					<?php
 					}
 					?>
 					<li><a href="<?= base_url() ?>report/showlate"><i class="fa fa-circle-o"></i> <span>Late Payments</span></a></li>
 					<?php
 					if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 2)) {
-						?>
+					?>
 						<li><a href="<?= base_url() ?>report/showgeneral"><i class="fa fa-circle-o"></i> <span>General</span></a></li>
 						<li><a href="<?= base_url() ?>report/showdetail"><i class="fa fa-circle-o"></i> <span>Detail</span></a></li>
-						<?php
+					<?php
 					}
 					?>
 					<li class="active"><a href="<?= base_url() ?>report/showtrans"><i class="fa fa-circle-o"></i> <span>Transaction</span></a></li>
@@ -126,21 +126,21 @@
 			</li>
 			<?php
 			if (($this->session->userdata('level')) == 1 || $this->session->userdata('level') == 2) {
-				?>
+			?>
 				<li class="treeview active">
-				<a href="#">
-					<i class="fa fa-tag"></i> <span>Accounting</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<li class=""><a href="<?= base_url() ?>accounting/journal"><i class="fa fa-circle-o"></i> <span>Journal</span></a></li>
-					<li class=""><a href="<?= base_url() ?>accounting/profit_loss"><i class="fa fa-circle-o"></i> <span>Profit & Loss</span></a></li>
-					
-				</ul>
-			</li>
-				
+					<a href="#">
+						<i class="fa fa-tag"></i> <span>Accounting</span>
+						<span class="pull-right-container">
+							<i class="fa fa-angle-left pull-right"></i>
+						</span>
+					</a>
+					<ul class="treeview-menu">
+						<li class=""><a href="<?= base_url() ?>accounting/journal"><i class="fa fa-circle-o"></i> <span>Journal</span></a></li>
+						<li class=""><a href="<?= base_url() ?>accounting/profit_loss"><i class="fa fa-circle-o"></i> <span>Profit & Loss</span></a></li>
+
+					</ul>
+				</li>
+
 			<?php } ?>
 		</ul>
 	</section>
@@ -162,7 +162,7 @@
 			<div class="box-header">
 				<h3 class="box-title">Profit and Loss</h3>
 				<div class="box-tools pull-right">
-					<?php echo form_open('accounting/profit_loss', ['method' => 'post', 'class' => 'form-inline']); ?>
+					<!-- <?php echo form_open('accounting/profit_loss', ['method' => 'post', 'class' => 'form-inline']); ?>
 					<label>Pilih Bulan : </label>&nbsp;
 					<select data-plugin-selectTwo class="form-control select2" name="month" id="month" required>
 						<option value="">--Select Month--</option>
@@ -187,11 +187,22 @@
 						?>
 						<option value="<?= $i ?>" <?= $year == $i ? 'selected' : '' ?> > <?= $i ?></option>
 						<?php
-							endfor;
+						endfor;
 						?>
 					</select>
 					<button class="btn btn-success">Search</button>
 
+					<?php echo form_close(); ?> -->
+
+
+					<?php echo form_open('accounting/profit_loss', ['method' => 'post', 'class' => 'form-inline']); ?>
+					<label>Start Date: </label>&nbsp;
+					<input type="date" class="form-control" name="start_date" id="start_date" value="<?= isset($start_date) ? $start_date : '' ?>" required>
+					&nbsp;
+					<label>End Date: </label>&nbsp;
+					<input type="date" class="form-control" name="end_date" id="end_date" value="<?= isset($end_date) ? $end_date : '' ?>" required>
+					&nbsp;
+					<button class="btn btn-success">Search</button>
 					<?php echo form_close(); ?>
 				</div>
 			</div>
@@ -211,16 +222,16 @@
 						?>
 						<tr>
 							<td>Income</td>
-							<td><?= number_format($data['pendapatan'],0,',','.') ?></td>
+							<td><?= number_format($data['pendapatan'], 0, ',', '.') ?></td>
 						</tr>
 						<tr>
 							<td>Penalty Income</td>
-							<td><?= number_format($data['pendapatan_denda'],0,',','.') ?></td>
+							<td><?= number_format($data['pendapatan_denda'], 0, ',', '.') ?></td>
 						</tr>
 
 						<tr bgColor="#cad6e3">
 							<td>Total Income</td>
-							<td><?= number_format($total_revenue,0,',','.') ?></td>
+							<td><?= number_format($total_revenue, 0, ',', '.') ?></td>
 						</tr>
 						</tbody>
 					</table>
@@ -241,7 +252,7 @@
 						?>
 						<tr>
 							<td><?= $value->explanation ?> </td>
-							<td><?= number_format($value->amount,0,',','.')?></td>
+							<td><?= number_format($value->amount, 0, ',', '.') ?></td>
 						</tr>
 						<?php
 						endforeach;
@@ -249,7 +260,7 @@
 						?>
 						<tr bgColor="#cad6e3">
 							<td>Total Expense</td>
-							<td><?= number_format($total_expense,0,',','.') ?> </td>
+							<td><?= number_format($total_expense, 0, ',', '.') ?> </td>
 						</tr>
 						</tbody>
 					</table>
@@ -264,167 +275,166 @@
 					</table>
 				</div>
 			</div> -->
-		
-			
+
+
 			<div class="box-body">
-    <div class="table-responsive">
-        <table class="table table-bordered">
-            <thead style="background-color:#3c8dbc; color:white">
-            <tr>
-                <th>Category</th>
-                <th colspan="2">Details</th>
-                <th width="25%">Amount</th>
-            </tr>
-            </thead>
-            <tbody>
-    <?php 
-    $categories = ['COURSE', 'BOOK', 'EXERCISE', 'BOOKLET', 'REGISTRATION', 'OTHER'];
-    $kalkulasi_card = 0;
-    $kalkulasi_bank = 0;
-    $kalkulasi_cash = 0;
-    ?>
-
-    <!-- Loop untuk BANK TRANSFER -->
-    <tr style="font-weight:bold;">
-        <td>Income</td>
-        <td>Transfer Transaction</td>
-        <td></td>
-        <td rowspan="<?= count($categories) + 1 ?>" style="text-align: center; vertical-align: middle;">
-            <?= isset($data['group_income']['BANK TRANSFER']) 
-                ? number_format(array_sum($data['group_income']['BANK TRANSFER']), 0, ',', '.') 
-                : '0' ?>
-        </td>
-    </tr>
-
-    <?php foreach ($categories as $category): ?>
-        <tr>
-            <td></td>
-            <td> 
-                <?= $category === 'BOOK' ? 'Text Book' : ($category === 'EXERCISE' ? 'Exercise Book' : ucwords(strtolower($category))) ?>
-            </td>
-            <td>
-                <?= isset($data['group_income']['BANK TRANSFER']) ? number_format($data['group_income']['BANK TRANSFER'][$category] ?? 0, 0, ',', '.') : 0 ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-
-    <!-- Loop untuk CARD -->
-    <tr style="font-weight:bold;">
-        <td></td>
-        <td>Card Transaction</td>
-        <td></td>
-        <td rowspan="<?= count($categories) + 1 ?>" style="text-align: center; vertical-align: middle;">
-            <?= isset($data['group_income']['CARD']) ? number_format(array_sum($data['group_income']['CARD']), 0, ',', '.') : '0' ?>
-        </td>
-    </tr>
-    <?php foreach ($categories as $category): ?>
-        <tr>
-            <td></td>
-            <td>
-                <?= $category === 'BOOK' ? 'Text Book' : ($category === 'EXERCISE' ? 'Exercise Book' : ucwords(strtolower($category))) ?>
-            </td>
-            <td>
-                <?= isset($data['group_income']['CARD']) ? number_format($data['group_income']['CARD'][$category] ?? 0, 0, ',', '.') : 0 ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-
-    <!-- Loop untuk CASH -->
-    <tr style="font-weight:bold;">
-        <td></td>
-        <td>Cash Transaction</td>
-        <td></td>
-        <td rowspan="<?= count($categories) + 1 ?>" style="text-align: center; vertical-align: middle;">
-            <?= isset($data['group_income']['CASH']) ? number_format(array_sum($data['group_income']['CASH']), 0, ',', '.') : '0' ?>
-        </td>
-    </tr>
-    <?php foreach ($categories as $category): ?>
-        <tr>
-            <td></td>
-            <td>
-                <?= $category === 'BOOK' ? 'Text Book' : ($category === 'EXERCISE' ? 'Exercise Book' : ucwords(strtolower($category))) ?>
-            </td>
-            <td>
-                <?= isset($data['group_income']['CASH']) ? number_format($data['group_income']['CASH'][$category] ?? 0, 0, ',', '.') : 0 ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-
-    <!-- Penalty Income -->
-    <tr>
-        <td>Penalty Income</td>
-        <td colspan="2"></td>
-        <td class="text-center" style="font-weight:bold;">
-            <?= number_format($data['pendapatan_denda'], 0, ',', '.') ?>
-        </td>
-    </tr>
-
-    <?php 
-    // Calculate total income
-    $total_income = 
-        (isset($data['group_income']['CASH']) ? array_sum($data['group_income']['CASH']) : 0) +
-        (isset($data['group_income']['CARD']) ? array_sum($data['group_income']['CARD']) : 0) +
-        (isset($data['group_income']['BANK TRANSFER']) ? array_sum($data['group_income']['BANK TRANSFER']) : 0) +
-        $data['pendapatan_denda'];
-    ?>
-
-    <!-- Total Income -->
-    <tr bgColor="#cad6e3">
-        <td>Total Income</td>
-        <td colspan="2"></td>
-        <td class="text-center" style="font-weight:bold;">
-            <?= number_format($total_income, 0, ',', '.') ?>
-        </td>
-    </tr>
-
-</tbody>
-
-        </table>
-		<table class="table table-bordered">
-						<thead class="mt-3" style="background-color:#3c8dbc; color:white">
-						<tr>
-							<th>Expenses</th>
-							<th width="25%"></th>
-						</tr>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead style="background-color:#3c8dbc; color:white">
+							<tr>
+								<th>Category</th>
+								<th colspan="2">Details</th>
+								<th width="25%">Amount</th>
+							</tr>
 						</thead>
 						<tbody>
-						<?php
-						$total_expense = 0;
-						?>
-						<?php
-						foreach ($data['detail_pengeluaran'] as $key => $value):
-							$total_expense += $value->amount;
-						?>
-						<tr>
-							<td><?= $value->explanation ?> </td>
-							<td><?= number_format($value->amount,0,',','.')?></td>
-						</tr>
-						<?php
-						endforeach;
-						$profit_loss = $total_income - $total_expense;
-						?>
-						<tr bgColor="#cad6e3">
-							<td>Total Expense</td>
-							<td class="text-center"><?= number_format($total_expense,0,',','.') ?> </td>
-						</tr>
+							<?php
+							$categories = ['COURSE', 'BOOK', 'EXERCISE', 'BOOKLET', 'REGISTRATION', 'OTHER'];
+							$kalkulasi_card = 0;
+							$kalkulasi_bank = 0;
+							$kalkulasi_cash = 0;
+							?>
+
+							<!-- Loop untuk BANK TRANSFER -->
+							<tr style="font-weight:bold;">
+								<td>Income</td>
+								<td>Transfer Transaction</td>
+								<td></td>
+								<td rowspan="<?= count($categories) + 1 ?>" style="text-align: center; vertical-align: middle;">
+									<?= isset($data['group_income']['BANK TRANSFER'])
+										? number_format(array_sum($data['group_income']['BANK TRANSFER']), 0, ',', '.')
+										: '0' ?>
+								</td>
+							</tr>
+
+							<?php foreach ($categories as $category): ?>
+								<tr>
+									<td></td>
+									<td>
+										<?= $category === 'BOOK' ? 'Text Book' : ($category === 'EXERCISE' ? 'Exercise Book' : ucwords(strtolower($category))) ?>
+									</td>
+									<td>
+										<?= isset($data['group_income']['BANK TRANSFER']) ? number_format($data['group_income']['BANK TRANSFER'][$category] ?? 0, 0, ',', '.') : 0 ?>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+
+							<!-- Loop untuk CARD -->
+							<tr style="font-weight:bold;">
+								<td></td>
+								<td>Card Transaction</td>
+								<td></td>
+								<td rowspan="<?= count($categories) + 1 ?>" style="text-align: center; vertical-align: middle;">
+									<?= isset($data['group_income']['CARD']) ? number_format(array_sum($data['group_income']['CARD']), 0, ',', '.') : '0' ?>
+								</td>
+							</tr>
+							<?php foreach ($categories as $category): ?>
+								<tr>
+									<td></td>
+									<td>
+										<?= $category === 'BOOK' ? 'Text Book' : ($category === 'EXERCISE' ? 'Exercise Book' : ucwords(strtolower($category))) ?>
+									</td>
+									<td>
+										<?= isset($data['group_income']['CARD']) ? number_format($data['group_income']['CARD'][$category] ?? 0, 0, ',', '.') : 0 ?>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+
+							<!-- Loop untuk CASH -->
+							<tr style="font-weight:bold;">
+								<td></td>
+								<td>Cash Transaction</td>
+								<td></td>
+								<td rowspan="<?= count($categories) + 1 ?>" style="text-align: center; vertical-align: middle;">
+									<?= isset($data['group_income']['CASH']) ? number_format(array_sum($data['group_income']['CASH']), 0, ',', '.') : '0' ?>
+								</td>
+							</tr>
+							<?php foreach ($categories as $category): ?>
+								<tr>
+									<td></td>
+									<td>
+										<?= $category === 'BOOK' ? 'Text Book' : ($category === 'EXERCISE' ? 'Exercise Book' : ucwords(strtolower($category))) ?>
+									</td>
+									<td>
+										<?= isset($data['group_income']['CASH']) ? number_format($data['group_income']['CASH'][$category] ?? 0, 0, ',', '.') : 0 ?>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+
+							<!-- Penalty Income -->
+							<tr>
+								<td>Penalty Income</td>
+								<td colspan="2"></td>
+								<td class="text-center" style="font-weight:bold;">
+									<?= number_format($data['pendapatan_denda'], 0, ',', '.') ?>
+								</td>
+							</tr>
+
+							<?php
+							// Calculate total income
+							$total_income =
+								(isset($data['group_income']['CASH']) ? array_sum($data['group_income']['CASH']) : 0) +
+								(isset($data['group_income']['CARD']) ? array_sum($data['group_income']['CARD']) : 0) +
+								(isset($data['group_income']['BANK TRANSFER']) ? array_sum($data['group_income']['BANK TRANSFER']) : 0) +
+								$data['pendapatan_denda'];
+							?>
+
+							<!-- Total Income -->
+							<tr bgColor="#cad6e3">
+								<td>Total Income</td>
+								<td colspan="2"></td>
+								<td class="text-center" style="font-weight:bold;">
+									<?= number_format($total_income, 0, ',', '.') ?>
+								</td>
+							</tr>
+
+						</tbody>
+
+					</table>
+					<table class="table table-bordered">
+						<thead class="mt-3" style="background-color:#3c8dbc; color:white">
+							<tr>
+								<th>Expenses</th>
+								<th width="25%"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							$total_expense = 0;
+							?>
+							<?php
+							foreach ($data['detail_pengeluaran'] as $key => $value):
+								$total_expense += $value->amount;
+							?>
+								<tr>
+									<td><?= $value->explanation ?> </td>
+									<td><?= number_format($value->amount, 0, ',', '.') ?></td>
+								</tr>
+							<?php
+							endforeach;
+							$profit_loss = $total_income - $total_expense;
+							?>
+							<tr bgColor="#cad6e3">
+								<td>Total Expense</td>
+								<td class="text-center"><?= number_format($total_expense, 0, ',', '.') ?> </td>
+							</tr>
 						</tbody>
 					</table>
 
 					<table class="table table-bordered">
 						<thead style="background-color:#3c8dbc; color:white">
-						<tr>
-							<th>Profit & Loss</th>
-							<th width="25%" class="text-center"><?= number_format($profit_loss, 0, ',', '.') ?></th>
-						</tr>
+							<tr>
+								<th>Profit & Loss</th>
+								<th width="25%" class="text-center"><?= number_format($profit_loss, 0, ',', '.') ?></th>
+							</tr>
 						</thead>
 					</table>
 
-       
-    </div>
-</div>
 
-		
+				</div>
+			</div>
+
+
 		</div>
 	</section>
 </div>
-
