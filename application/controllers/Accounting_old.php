@@ -52,7 +52,7 @@ class Accounting extends CI_Controller
 		$this->load->view('v_footer');
 	}
 
-	// In the same controller or a separate method
+// In the same controller or a separate method
 	private function get_detail_kas($id)
 	{
 		return $this->db->select('tbl_trx_akuntansi_detail.*, tbl_akun.*')
@@ -67,32 +67,47 @@ class Accounting extends CI_Controller
 
 	public function profit_loss()
 	{
+		// Remove authentication check or adjust as per your project
+
 		$user_id = $this->session->userdata('user_id');
 		$branch_id = $this->session->userdata('branch');
 
-		$start_date = $this->input->post('start_date') ? $this->input->post('start_date') : date('Y-m-01');
-		$end_date = $this->input->post('end_date') ? $this->input->post('end_date') : date('Y-m-t');
+		$month = date('m');
+		$year = date('Y');
+		$month = $this->input->post('month') ? $this->input->post('month') : $month;
+		$year = $this->input->post('year') ? $this->input->post('year') : $year;
+		$year_month = $year . '-' . $month;
 
+		// Fixed variable assignments
 		$id_akun_pendapatan = null;
 		$id_akun_pendapatan_denda = null;
 
+		// Set account IDs based on branch
 		if ($branch_id === null) {
-			$id_akun_pendapatan = array(10, 11);
-			$id_akun_pendapatan_denda = array(13, 14);
+			$id_akun_pendapatan = array(10,11);
+			$id_akun_pendapatan_denda = array(13,14);
 		} else {
 			$id_akun_pendapatan = $branch_id == 1 ? 10 : 11;
 			$id_akun_pendapatan_denda = $branch_id == 1 ? 13 : 14;
 		}
 
+		// Add debug logging
 		log_message('debug', "Branch ID: " . $branch_id);
-		log_message('debug', "Start Date: " . $start_date);
-		log_message('debug', "End Date: " . $end_date);
+		log_message('debug', "Year-Month: " . $year_month);
 		log_message('debug', "Revenue Account IDs: " . print_r($id_akun_pendapatan, true));
 		log_message('debug', "Penalty Account IDs: " . print_r($id_akun_pendapatan_denda, true));
 
-		$data['pendapatan'] = $this->getDetailAkuntansi($id_akun_pendapatan, $start_date, $end_date, $branch_id, '');
-		$data['group_income'] = $this->getDataIncome($id_akun_pendapatan, $start_date, $end_date, $branch_id, '');
-		$data['pendapatan_denda'] = $this->getDetailAkuntansi($id_akun_pendapatan_denda, $start_date, $end_date, $branch_id, '');
+		$data['pendapatan'] = $this->getDetailAkuntansi($id_akun_pendapatan, $year_month, $branch_id, '');
+
+		$data['group_income'] = $this->getDataIncome($id_akun_pendapatan, $year_month, $branch_id, '');
+		
+		// Membungkus var_dump dengan <pre> agar terlihat rapi
+// echo '<pre style="background-color: #f4f4f4; color: #333; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; line-height: 1.5; overflow: auto;">';
+// var_dump($data['group_income']['BANK TRANSFER']);
+// echo '</pre>';
+// die();
+		$data['pendapatan_denda'] = $this->getDetailAkuntansi($id_akun_pendapatan_denda, $year_month, $branch_id, '');
+
 
 		$this->db->select('ed.id, ed.expenseid, ed.id_akun, ed.category, ed.expdate, ed.amount, ed.explanation');
 		$this->db->from('expdetail ed');
@@ -100,67 +115,123 @@ class Accounting extends CI_Controller
 		if ($branch_id != null) {
 			$this->db->where('e.branch_id', $branch_id);
 		}
-		$this->db->where('ed.expdate >=', $start_date);
-		$this->db->where('ed.expdate <=', $end_date);
+		$this->db->like('ed.expdate', $year_month, 'after');
 
-		$data['detail_pengeluaran'] = $this->db->get()->result();
+		$data['detail_pengeluaran'] =$this->db->get()->result();
 
 		$this->load->view('v_header');
-		$this->load->view('accounting/profit_loss', ['data' => $data, 'start_date' => $start_date, 'end_date' => $end_date]);
+		$this->load->view('accounting/profit_loss', ['data' => $data, 'month' => $month, 'year' => $year]);
 		$this->load->view('v_footer');
 	}
 
-
-	// 	public function getDetailAkuntansi($idAkun, $date, $branch_id, $desc = '')
-	// 	{
-	// 		$this->db->select('p.method,SUM(pd.amount) as totalnya');
-	// $this->db->from('tbl_trx_akuntansi_detail as d');
-	// $this->db->join('tbl_trx_akuntansi as a', 'd.id_trx_akun = a.id_trx_akun');
-	// $this->db->join('payment as p', 'a.payment_id = p.id');
-	// $this->db->join('paydetail as pd', 'p.id = pd.paymentid');
-
-
-	// if ($branch_id !== null) {
-	//     $this->db->where('branch_id', $branch_id);
-	// }
-
-	// if (!empty($desc)) {
-	//     $this->db->like('deskripsi', $desc);
-	// }
-
-	// $this->db->like('tanggal', "$date", 'after');
-
-	// if (is_array($idAkun)) {
-	//     $this->db->group_start();
-	//     foreach ($idAkun as $value) {
-	//         $this->db->or_where('id_akun', $value);
-	//     }
-	//     $this->db->group_end();
-	// } else {
-	//     $this->db->where('id_akun', $idAkun);
-	// }
-
-	// // Tambahkan GROUP BY untuk payment_id
-	// $this->db->group_by('p.method');
-
-	// $query = $this->db->get();
-	// $result = $query->result(); // Menggunakan result() untuk mengambil semua baris
-
-	// return $result;
-
-	// 	}
+// 	public function getDetailAkuntansi($idAkun, $date, $branch_id, $desc = '')
+// 	{
+// 		$this->db->select('p.method,SUM(pd.amount) as totalnya');
+// $this->db->from('tbl_trx_akuntansi_detail as d');
+// $this->db->join('tbl_trx_akuntansi as a', 'd.id_trx_akun = a.id_trx_akun');
+// $this->db->join('payment as p', 'a.payment_id = p.id');
+// $this->db->join('paydetail as pd', 'p.id = pd.paymentid');
 
 
-	public function getDataIncome($id_akun, $start_date, $end_date, $branch_id, $desc = '')
+// if ($branch_id !== null) {
+//     $this->db->where('branch_id', $branch_id);
+// }
+
+// if (!empty($desc)) {
+//     $this->db->like('deskripsi', $desc);
+// }
+
+// $this->db->like('tanggal', "$date", 'after');
+
+// if (is_array($idAkun)) {
+//     $this->db->group_start();
+//     foreach ($idAkun as $value) {
+//         $this->db->or_where('id_akun', $value);
+//     }
+//     $this->db->group_end();
+// } else {
+//     $this->db->where('id_akun', $idAkun);
+// }
+
+// // Tambahkan GROUP BY untuk payment_id
+// $this->db->group_by('p.method');
+
+// $query = $this->db->get();
+// $result = $query->result(); // Menggunakan result() untuk mengambil semua baris
+
+// return $result;
+
+// 	}
+
+
+function getDataIncome($id_akun, $date, $branch_id, $desc = '')
+{
+	$result = []; // Variabel untuk menampung hasil
+	$this->db->select('p.method, pd.amount, pd.category , p.id');
+	$this->db->from('tbl_trx_akuntansi_detail as d');
+	$this->db->join('tbl_trx_akuntansi as a', 'd.id_trx_akun = a.id_trx_akun');
+	$this->db->join('payment as p', 'a.payment_id = p.id');
+	$this->db->join('paydetail as pd', 'p.id = pd.paymentid');
+	$this->db->like('tanggal', "$date", 'after');
+	
+	if ($branch_id !== null) {
+		$this->db->where('branch_id', $branch_id);
+	}
+
+	if (!empty($desc)) {
+		$this->db->like('deskripsi', $desc);
+	}
+
+	if (is_array($id_akun)) {
+		$this->db->group_start();
+		foreach ($id_akun as $value) {
+			$this->db->or_where('d.id_akun', $value);
+		}
+		$this->db->group_end();
+	} else {
+		$this->db->where('d.id_akun', $id_akun);
+	}
+
+	$query = $this->db->get();
+	$data = $query->result();
+
+	
+
+
+	foreach ($data as $item) {
+		// Gabungkan method tertentu menjadi 'Card'
+		$method = in_array($item->method, ["DEBIT", "CREDIT", "SWITCHING CARD"]) ? "CARD" : $item->method;
+		$category = $item->category; // Ambil category
+	
+		// Inisialisasi array jika belum ada
+		if (!isset($result[$method])) {
+			$result[$method] = [];
+		}
+		if (!isset($result[$method][$category])) {
+			$result[$method][$category] = 0; // Inisialisasi total dengan 0
+		}
+	
+		// Tambahkan amount ke total yang sesuai
+		$result[$method][$category] += $item->amount;
+	}
+
+
+
+
+	return $result;
+
+
+}
+
+	public function getDetailAkuntansi($idAkun, $date, $branch_id, $desc = '')
 	{
-		$result = [];
-		$this->db->select('p.method, pd.amount, pd.category, p.id');
+		$this->db->select('COALESCE(SUM(d.jumlah), 0) as jml');
 		$this->db->from('tbl_trx_akuntansi_detail as d');
 		$this->db->join('tbl_trx_akuntansi as a', 'd.id_trx_akun = a.id_trx_akun');
 		$this->db->join('payment as p', 'a.payment_id = p.id');
-		$this->db->join('paydetail as pd', 'p.id = pd.paymentid');
-		$this->db->where('tanggal >=', $start_date);
-		$this->db->where('tanggal <=', $end_date);
+
+// 		$this->db->join('payment as p', 'a.payment_id = p.id');
+// $this->db->join('paydetail as pd', 'p.id = pd.paymentid');
 
 		if ($branch_id !== null) {
 			$this->db->where('branch_id', $branch_id);
@@ -170,56 +241,16 @@ class Accounting extends CI_Controller
 			$this->db->like('deskripsi', $desc);
 		}
 
-		if (is_array($id_akun)) {
-			$this->db->where_in('d.id_akun', $id_akun);
-		} else {
-			$this->db->where('d.id_akun', $id_akun);
-		}
+		$this->db->like('tanggal', "$date", 'after');
 
-		$query = $this->db->get();
-		$data = $query->result();
-
-		foreach ($data as $item) {
-			$method = in_array($item->method, ["DEBIT", "CREDIT", "SWITCHING CARD"]) ? "CARD" : $item->method;
-			$category = $item->category;
-
-			if (!isset($result[$method])) {
-				$result[$method] = [];
-			}
-			if (!isset($result[$method][$category])) {
-				$result[$method][$category] = 0;
-			}
-
-			$result[$method][$category] += $item->amount;
-		}
-
-		return $result;
-	}
-
-	public function getDetailAkuntansi($idAkun, $start_date, $end_date, $branch_id, $desc = '')
-	{
-		$this->db->select('COALESCE(SUM(d.jumlah), 0) as jml');
-		$this->db->from('tbl_trx_akuntansi_detail as d');
-		$this->db->join('tbl_trx_akuntansi as a', 'd.id_trx_akun = a.id_trx_akun');
-		$this->db->join('payment as p', 'a.payment_id = p.id');
-
-		// Tambahkan alias untuk tanggal agar tidak ambigu
-		$this->db->where('a.tanggal >=', $start_date);
-		$this->db->where('a.tanggal <=', $end_date);
-
-		if ($branch_id !== null) {
-			$this->db->where('a.branch_id', $branch_id);
-		}
-
-		if (!empty($desc)) {
-			$this->db->like('a.deskripsi', $desc);
-		}
-
-		// Gunakan where_in jika idAkun berupa array
 		if (is_array($idAkun)) {
-			$this->db->where_in('d.id_akun', $idAkun);
+			$this->db->group_start();
+			foreach ($idAkun as $value) {
+				$this->db->or_where('id_akun', $value);
+			}
+			$this->db->group_end();
 		} else {
-			$this->db->where('d.id_akun', $idAkun);
+			$this->db->where('id_akun', $idAkun);
 		}
 
 		$query = $this->db->get();
@@ -227,7 +258,6 @@ class Accounting extends CI_Controller
 
 		return $result->jml;
 	}
-
 	public function addRegular()
 	{
 		$listLateStudent = $this->mstudent->getLatePaymentStudent();
@@ -722,7 +752,8 @@ class Accounting extends CI_Controller
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
 			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
-		} else { //jika ada penalty
+		}
+		else{ //jika ada penalty
 			//		simpan transaksi jurnal
 			$data_trx_akuntansi = array(
 				'payment_id' => $latestRecord['id'],
@@ -1391,80 +1422,79 @@ class Accounting extends CI_Controller
 	}
 
 	public function broadcast()
-	{
-		// Ambil data dari request body
-		$data = $this->input->post('listId'); // Mendapatkan data JSON dari POST
-		if ($data) {
-			$decodedData = json_decode($data, true);
-		} else {
-			$decodedData = [];
-		}
+{
+    // Ambil data dari request body
+    $data = $this->input->post('listId'); // Mendapatkan data JSON dari POST
+    if ($data) {
+        $decodedData = json_decode($data, true);
+    } else {
+        $decodedData = [];
+    }
 
-		// var_dump($decodedData);
-		// die();
+	// var_dump($decodedData);
+	// die();
 
-		// Proses data (misal: kirimkan WA broadcast)
-		$response = $this->sendBroadCastWa($decodedData);
+    // Proses data (misal: kirimkan WA broadcast)
+    $response = $this->sendBroadCastWa($decodedData);
 
-		// Return response ke frontend
-		echo json_encode(['status' => 'success', 'data' => $response]);
-	}
-
-
-	public function sendBroadCastWa($data)
-	{
-		$url = "https://ui-backoffice.primtechdev.com/api/broadcast";
-		$token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo"; // Token Anda
+    // Return response ke frontend
+    echo json_encode(['status' => 'success', 'data' => $response]);
+}
 
 
+public function sendBroadCastWa($data){
+    $url = "https://ui-backoffice.primtechdev.com/api/broadcast";
+    $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo"; // Token Anda
+	
 
-		$ch = curl_init();
 
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_POST, true); // Mengirim POST request
-		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); // Data dikirim dalam format JSON
-		curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			"Authorization: Bearer $token",
-			"Content-Type: application/json"
-		]);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $ch = curl_init();
 
-		$response = curl_exec($ch);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, true); // Mengirim POST request
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); // Data dikirim dalam format JSON
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer $token",
+        "Content-Type: application/json"
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-		if (curl_errno($ch)) {
-			echo 'Error: ' . curl_error($ch);
-		} else {
-			echo $response;
-		}
+    $response = curl_exec($ch);
 
-		curl_close($ch);
-	}
+    if (curl_errno($ch)) {
+        echo 'Error: ' . curl_error($ch);
+    } else {
+        echo $response;
+    }
 
-	// function sendBroadCastWa($data){
-	// 	$datadecode = urldecode($data);
-	// $url = "https://ui-backoffice.primtechdev.com/api/broadcast/$data";
-	// $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo";
+    curl_close($ch);
+}
 
-	// $ch = curl_init();
+// function sendBroadCastWa($data){
+// 	$datadecode = urldecode($data);
+// $url = "https://ui-backoffice.primtechdev.com/api/broadcast/$data";
+// $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo";
 
-	// curl_setopt($ch, CURLOPT_URL, $url);
+// $ch = curl_init();
 
-	// $headers = [
-	// 	"Authorization: Bearer $token",
-	// 	"Content-Type: application/json"
-	// ];
-	// curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+// curl_setopt($ch, CURLOPT_URL, $url);
 
-	// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// $headers = [
+// 	"Authorization: Bearer $token",
+// 	"Content-Type: application/json"
+// ];
+// curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-	// $response = curl_exec($ch);
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-	// if (curl_errno($ch)) {
-	// 	echo 'Error: ' . curl_error($ch);
-	// } else {
-	// 	echo $response;
-	// }
+// $response = curl_exec($ch);
 
-	// curl_close($ch);
-	// }
+// if (curl_errno($ch)) {
+// 	echo 'Error: ' . curl_error($ch);
+// } else {
+// 	echo $response;
+// }
+
+// curl_close($ch);
+// }
 }
