@@ -151,10 +151,56 @@ class Accounting extends CI_Controller
 	// 	}
 
 
+	// public function getDataIncome($id_akun, $start_date, $end_date, $branch_id, $desc = '')
+	// {
+	// 	$result = [];
+	// 	$this->db->select('p.method, p.bank, pd.amount, pd.category, p.id');
+	// 	$this->db->from('tbl_trx_akuntansi_detail as d');
+	// 	$this->db->join('tbl_trx_akuntansi as a', 'd.id_trx_akun = a.id_trx_akun');
+	// 	$this->db->join('payment as p', 'a.payment_id = p.id');
+	// 	$this->db->join('paydetail as pd', 'p.id = pd.paymentid');
+	// 	$this->db->where('tanggal >=', $start_date);
+	// 	$this->db->where('tanggal <=', $end_date);
+
+	// 	if ($branch_id !== null) {
+	// 		$this->db->where('branch_id', $branch_id);
+	// 	}
+
+	// 	if (!empty($desc)) {
+	// 		$this->db->like('deskripsi', $desc);
+	// 	}
+
+	// 	if (is_array($id_akun)) {
+	// 		$this->db->where_in('d.id_akun', $id_akun);
+	// 	} else {
+	// 		$this->db->where('d.id_akun', $id_akun);
+	// 	}
+
+	// 	$query = $this->db->get();
+	// 	$data = $query->result();
+
+	// 	foreach ($data as $item) {
+	// 		$method = in_array($item->method, ["DEBIT", "CREDIT", "SWITCHING CARD", "QRIS"]) ? "CARD" : $item->method;
+	// 		$category = $item->category;
+
+	// 		if (!isset($result[$method])) {
+	// 			$result[$method] = [];
+	// 		}
+	// 		if (!isset($result[$method][$category])) {
+	// 			$result[$method][$category] = 0;
+	// 		}
+
+	// 		$result[$method][$category] += $item->amount;
+	// 	}
+
+	// 	return $result;
+	// }
+
 	public function getDataIncome($id_akun, $start_date, $end_date, $branch_id, $desc = '')
 	{
 		$result = [];
-		$this->db->select('p.method, pd.amount, pd.category, p.id');
+
+		$this->db->select("p.method, p.bank, pd.amount, pd.category, p.id");
 		$this->db->from('tbl_trx_akuntansi_detail as d');
 		$this->db->join('tbl_trx_akuntansi as a', 'd.id_trx_akun = a.id_trx_akun');
 		$this->db->join('payment as p', 'a.payment_id = p.id');
@@ -180,7 +226,37 @@ class Accounting extends CI_Controller
 		$data = $query->result();
 
 		foreach ($data as $item) {
-			$method = in_array($item->method, ["DEBIT", "CREDIT", "SWITCHING CARD"]) ? "CARD" : $item->method;
+			$potongan = 0;
+
+			// Perhitungan potongan sesuai method dan bank
+			if ($item->method == 'DEBIT') {
+				if ($item->bank == 'BCA CARD') {
+					$potongan = $item->amount * 0.0015; // 0.15%
+				} else {
+					$potongan = $item->amount * 0.01; // 1%
+				}
+			} elseif ($item->method == 'CREDIT') {
+				if ($item->bank == 'BCA CARD') {
+					$potongan = $item->amount * 0.009; // 0.9%
+				} elseif ($item->bank == 'AMERICAN EXPRESS') {
+					$potongan = $item->amount * 0.0325; // 3.25%
+				} elseif ($item->bank == 'JCB') {
+					$potongan = $item->amount * 0.02; // 2%
+				} else {
+					$potongan = $item->amount * 0.02; // 2% untuk non-BCA, non-American Express
+				}
+			} elseif ($item->method == 'SWITCHING CARD') {
+				$potongan = $item->amount * 0.0075; // 0.75%
+			} elseif ($item->method == 'QRIS') {
+				$potongan = $item->amount * 0.006; // 0.6%
+			}
+
+
+			// Hitung jumlah setelah potongan
+			$net_amount = $item->amount - $potongan;
+
+			// Cek apakah metode termasuk dalam kategori "CARD"
+			$method = in_array($item->method, ["DEBIT", "CREDIT", "SWITCHING CARD", "QRIS"]) ? "CARD" : $item->method;
 			$category = $item->category;
 
 			if (!isset($result[$method])) {
@@ -190,11 +266,13 @@ class Accounting extends CI_Controller
 				$result[$method][$category] = 0;
 			}
 
-			$result[$method][$category] += $item->amount;
+			// Tambahkan nilai yang sudah dikurangi potongan
+			$result[$method][$category] += $net_amount;
 		}
 
 		return $result;
 	}
+
 
 	public function getDetailAkuntansi($idAkun, $start_date, $end_date, $branch_id, $desc = '')
 	{
