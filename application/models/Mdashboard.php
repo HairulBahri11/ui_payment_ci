@@ -68,15 +68,28 @@ class Mdashboard extends CI_Model
 
 	function getMonthlyPayment()
 	{
-		$query = $this->db->query("SELECT SUM(total) AS totalpay, MONTHNAME(paydate) AS nmonth FROM payment GROUP BY MONTH(paydate)");
-		$result = $query->result();
-		return $result;
+		$query = $this->db->query("
+        SELECT 
+            SUM(total) AS totalpay, 
+            MONTHNAME(paydate) AS nmonth 
+        FROM payment 
+        WHERE YEAR(paydate) = YEAR(CURDATE()) 
+        GROUP BY MONTH(paydate)
+    ");
+		return $query->result();
 	}
+
 
 	function getMonthlyExpense()
 	{
-		$query = $this->db->query("SELECT SUM(total) AS totalexp, MONTHNAME(entrydate) AS nmonth FROM expense GROUP BY MONTH(entrydate)");
-		$result = $query->result();
-		return $result;
+		$query = $this->db->query("
+        SELECT 
+            SUM(total) AS totalexp, 
+            MONTHNAME(entrydate) AS nmonth 
+        FROM expense 
+        WHERE YEAR(entrydate) = YEAR(CURDATE()) 
+        GROUP BY MONTH(entrydate)
+    ");
+		return $query->result();
 	}
 }
