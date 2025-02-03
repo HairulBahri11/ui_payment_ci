@@ -36,7 +36,7 @@ class Mdashboard extends CI_Model
 
 	function getActiveStudent()
 	{
-		$query = $this->db->query("SELECT COUNT(*) AS studentnum FROM student WHERE status = 'ACTIVE'");
+		$query = $this->db->query("SELECT COUNT(*) AS studentnum FROM student WHERE status = 'ACTIVE' AND course_time IS NOT NULL");
 		$result = $query->row_array();
 		return $result;
 	}
