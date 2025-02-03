@@ -1,4 +1,3 @@
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
@@ -87,7 +86,7 @@
 			</div>
 			<!-- ./col -->
 
-			<div class="col-md-6">
+			<div class="col-md-5">
 				<!-- DONUT CHART -->
 				<div class="box box-danger">
 					<div class="box-header with-border">
@@ -99,16 +98,19 @@
 							<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
 						</div>
 					</div>
-					<div class="box-body">
-						<canvas id="pieChart" style="height:250px"></canvas>
+					<div class="box-body" style="display: flex; justify-content: center; align-items: center;">
+						<div style="width: 50%; max-width: 500px;">
+							<canvas id="pieChart" style="height: 265px;"></canvas>
+						</div>
 					</div>
+
 					<!-- /.box-body -->
 				</div>
 				<!-- /.box -->
 			</div>
 			<!-- /.col (LEFT) -->
 
-			<div class="col-md-6">
+			<div class="col-md-7">
 				<!-- BAR CHART -->
 				<div class="box box-success">
 					<div class="box-header with-border">
@@ -137,10 +139,8 @@
 	<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
-
 <!-- page script -->
-<script>
+<!-- <script>
 	$(function() {
 		/* ChartJS
 		 * -------
@@ -295,4 +295,125 @@
 		barChartOptions.datasetFill = false
 		barChart.Bar(barChartData, barChartOptions)
 	})
+</script> -->
+
+<!-- Tambahkan library Chart.js dulu -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Lalu tambahkan kode untuk pie chart -->
+<script>
+	// Ambil tanggal sekarang
+	var currentDate = new Date();
+
+	// Format bulan dan tahun (contoh: "October 2025")
+	var options = {
+		year: 'numeric',
+		month: 'long'
+	};
+	var formattedDate = currentDate.toLocaleDateString('en-US', options);
+
+	$(document).ready(function() {
+		var pieChartCanvas = $('#pieChart').get(0).getContext('2d');
+		var pieChart = new Chart(pieChartCanvas, {
+			type: 'doughnut',
+			data: {
+				labels: ['Students Pay Late', 'Students Have Paid'],
+				datasets: [{
+					data: [<?php echo $listLateStudent; ?>, <?php echo $listTimeStudent; ?>],
+					backgroundColor: ['#f56954', '#3c8dbc'],
+					hoverBackgroundColor: ['#f56954', '#3c8dbc']
+				}]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: true,
+				plugins: {
+					title: {
+						display: true,
+						text: formattedDate, // Contoh: "Student Payment Status - October 2025"
+						font: {
+							size: 18
+						}
+					}
+				}
+			}
+		});
+	});
+
+	// Ambil tanggal sekarang dengan format "October 2025"
+	var currentDate = new Date();
+	var options = {
+		year: 'numeric',
+		month: 'long'
+	};
+	var formattedDate = currentDate.toLocaleDateString('en-US', options);
+
+	$(document).ready(function() {
+		var ctx = $('#barChart').get(0).getContext('2d');
+
+		var barChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: [
+					<?php
+					$labels = [];
+					$dataExp = [];
+					$dataPay = [];
+
+					foreach ($listMonthlyPay as $monthlypay) {
+						$labels[] = "'" . $monthlypay->nmonth . "'";
+						$dataPay[] = $monthlypay->totalpay;
+
+						// Cek apakah ada data expense untuk bulan yang sama
+						$totalExp = 0;
+						foreach ($listMonthlyExp as $monthlyexp) {
+							if ($monthlyexp->nmonth == $monthlypay->nmonth) {
+								$totalExp = $monthlyexp->totalexp;
+								break;
+							}
+						}
+						$dataExp[] = $totalExp;
+					}
+
+					echo implode(',', $labels);
+					?>
+				],
+				datasets: [{
+						label: 'Expenses',
+						backgroundColor: 'rgba(210, 214, 222, 1)',
+						borderColor: 'rgba(210, 214, 222, 1)',
+						data: [<?= implode(',', $dataExp) ?>]
+					},
+					{
+						label: 'Income',
+						backgroundColor: '#00a65a',
+						borderColor: '#00a65a',
+						data: [<?= implode(',', $dataPay) ?>]
+					}
+				]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: {
+					title: {
+						display: true,
+						// text: formattedDate, // Contoh: "Monthly Financial Report - October 2025"
+						font: {
+							size: 18
+						}
+					},
+					legend: {
+						display: true,
+						position: 'top'
+					}
+				},
+				scales: {
+					y: {
+						beginAtZero: true
+					}
+				}
+			}
+		});
+	});
 </script>
