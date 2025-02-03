@@ -211,26 +211,30 @@ class Mstudent extends CI_Model
 	function getStudentLatePayment()
 	{
 		$query = $this->db->query("
-    SELECT s.id, s.name, p.program, s.status, s.phone, t.name as teacher_name, pd.category,
-           pd.id AS id_detail_pd,  
-           MAX(pd.monthpay) AS monthpay, 
-           p.level
-    FROM student s
-    LEFT OUTER JOIN price p ON s.priceid = p.id
-    LEFT OUTER JOIN paydetail pd ON s.id = pd.studentid
-	Left OUTER JOIN teacher t on s.id_teacher = t.id
-    WHERE s.status = 'ACTIVE'
-      AND pd.category = 'COURSE'
-	  AND p.level <> 'Private'
-	  AND s.course_time IS NOT NULL
-    GROUP BY s.id  
-    HAVING (MONTH(monthpay) != MONTH(CURDATE()) OR monthpay != NULL)
-       AND (YEAR(monthpay) != YEAR(CURDATE()) OR monthpay != NULL)
-    ORDER BY `monthpay` ASC
-");
+        SELECT s.id, s.name, p.program, s.status, s.phone, t.name as teacher_name, pd.category,
+               pd.id AS id_detail_pd,  
+               MAX(pd.monthpay) AS monthpay, 
+               p.level
+        FROM student s
+        LEFT OUTER JOIN price p ON s.priceid = p.id
+        LEFT OUTER JOIN paydetail pd ON s.id = pd.studentid
+        LEFT OUTER JOIN teacher t ON s.id_teacher = t.id
+        WHERE s.status = 'ACTIVE'
+          AND pd.category = 'COURSE'
+          AND p.level <> 'Private'
+          AND s.course_time IS NOT NULL
+        GROUP BY s.id
+        HAVING MAX(pd.monthpay) < CURDATE()  -- Mengambil pembayaran sebelum bulan saat ini
+        AND YEAR(MAX(pd.monthpay)) < YEAR(CURDATE())  -- Menambahkan filter agar pembayaran sebelum tahun saat ini
+        OR (YEAR(MAX(pd.monthpay)) = YEAR(CURDATE()) AND MONTH(MAX(pd.monthpay)) < MONTH(CURDATE()))  -- Menambahkan filter agar pembayaran sebelum bulan ini dalam tahun yang sama
+        ORDER BY `monthpay` ASC
+    ");
 
 		return $query->result();
 	}
+
+
+
 
 	function getStudentReview()
 	{
