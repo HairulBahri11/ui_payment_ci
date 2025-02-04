@@ -60,7 +60,7 @@
 										<!--  <th>Last Payment</th> -->
 										<th>Program</th>
 										<!--<th>Course Fee</th>-->
-										<th>Note</th>
+										<!-- <th>Note</th> -->
 										<th>Status</th>
 										<th class="notPrintable" width="10%">Action</th>
 									</tr>
@@ -95,11 +95,11 @@
 												echo "<td>-</td>";
 											}
 
-											// get latest note for inactive student
-											$note = $this->db->query("SELECT * FROM student_review WHERE student_id = '$row->sid' ORDER BY id DESC LIMIT 1")->row();
+											// // get latest note for inactive student
+											// $note = $this->db->query("SELECT * FROM student_review WHERE student_id = '$row->sid' ORDER BY id DESC LIMIT 1")->row();
 
-											// Pastikan $note tidak null sebelum mengakses propertinya
-											echo "<td>" . ($note ? $note->explanation : "") . "</td>";
+											// // Pastikan $note tidak null sebelum mengakses propertinya
+											// echo "<td>" . ($note ? $note->explanation : "") . "</td>";
 
 											?>
 
