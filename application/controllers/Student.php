@@ -55,10 +55,10 @@ class Student extends CI_Controller
 		$balance = str_replace($order, $replace, $balance);
 
 		$birthday = $this->input->post('month') . " " . $this->input->post('date');
-		
+
 
 		$data = array(
-			'branch_id' =>$this->input->post('branch_id'),
+			'branch_id' => $this->input->post('branch_id'),
 			'priceid' => $this->input->post('program'),
 			'name' => $this->input->post('name'),
 			'phone' => $this->input->post('phone'),
@@ -119,9 +119,9 @@ class Student extends CI_Controller
 			'penalty' => 0,
 			'status' => $this->input->post('status'),
 			'condition' => $this->input->post('cond'),
-			
+
 			'note' => $this->input->post('note')
-			
+
 		);
 		$program = $this->db->where('id', $this->input->post('program'))->get('price')->result();
 
@@ -352,7 +352,7 @@ class Student extends CI_Controller
 
 	public function updateStudentOnline()
 	{
-	    $var = $this->input->post('monthpay');
+		$var = $this->input->post('monthpay');
 		$parts = explode('-', $var);
 		//$montharr = date_parse($parts[0]);
 		//if ($montharr['month'] < 10) {
@@ -361,15 +361,15 @@ class Student extends CI_Controller
 		//	$month = $montharr['month'];
 		//}
 		$monthpay = $parts[1] . '-' . $parts[0] . '-' . '1';
-	    
-	    //echo $monthpay;
-	    
-	    
-	    
-	    //exit();
-	    
-	    
-	    
+
+		//echo $monthpay;
+
+
+
+		//exit();
+
+
+
 		date_default_timezone_set("Asia/Jakarta");
 		$date = date('Y-m-d');
 		$time = date('Y-m-d h:i:s');
@@ -479,8 +479,6 @@ class Student extends CI_Controller
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
 			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
-
-
 		} else {
 			$data = array(
 				'paydate' => $date,
@@ -528,7 +526,6 @@ class Student extends CI_Controller
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
 			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
-
 		}
 
 		if (isset($_POST['registration'])) {
@@ -595,7 +592,7 @@ class Student extends CI_Controller
 			$replace = "";
 			$priceattn = str_replace($order, $replace, $priceattn);
 			$discount = $this->input->post('discount');
-			
+
 			//2023-12-28
 			$amount = $this->input->post('amount');
 			$amount = str_replace($order, $replace, $amount);
@@ -611,14 +608,14 @@ class Student extends CI_Controller
 				'voucherid' => $this->input->post('vid'),
 				'category' => "COURSE",
 				'explanation' => $explanation,
-				'amount' => $amount//$total - $paycut
+				'amount' => $amount //$total - $paycut
 			);
 			// var_dump($data);
 			$var = $this->mpaydetail->addPaydetail($data);
 		} else {
 			if (isset($_POST['course'])) {
-			    
-			    //$var = $this->input->post('monthpay');
+
+				//$var = $this->input->post('monthpay');
 				//$parts = explode(' ', $var);
 				//$montharr = date_parse($parts[0]);
 				//if ($montharr['month'] < 10) {
@@ -627,13 +624,13 @@ class Student extends CI_Controller
 				//	$month = $montharr['month'];
 				//}
 				//$monthpay = $parts[1] . '-' . $month . '-' . '1';
-				
+
 				//$amount = $this->input->post('amount');
-    			//$order   = array("Rp ", ".");
-    			//$replace = "";
-    			//$amount = str_replace($order, $replace, $amount);
-			    
-			    
+				//$order   = array("Rp ", ".");
+				//$replace = "";
+				//$amount = str_replace($order, $replace, $amount);
+
+
 				$countattn = $this->input->post('countattn');
 				$attendance = $this->input->post('attendancereg');
 				$priceattn = $this->input->post('priceattnreg');
@@ -652,7 +649,7 @@ class Student extends CI_Controller
 					'studentid' => $this->input->post('idstudent'),
 					'voucherid' => $this->input->post('vid'),
 					'category' => "COURSE",
-					'monthpay' => $monthpay,//$date,
+					'monthpay' => $monthpay, //$date,
 					'explanation' => $explanation,
 					'amount' => $this->input->post('vcourse'),
 				);
@@ -810,32 +807,34 @@ class Student extends CI_Controller
 		redirect(base_url('student/studentOnline'));
 	}
 
-	public function activateStudent($id , $status){
+	public function activateStudent($id, $status)
+	{
 
-		if($status == 'ACTIVE'){
+		if ($status == 'ACTIVE') {
 			$setStatus = 'INACTIVE';
 			$message = 'deactivated successfully';
-		}elseif($status == 'INACTIVE'){
+		} elseif ($status == 'INACTIVE') {
 			$setStatus = 'ACTIVE';
 			$message = 'activated successfully';
-		}else{
+		} else {
 			$setStatus = 'NO clue';
 		}
 
-		 $this->db->where('id', $id);
-		 $proses =$this->db->update('student', array('status' => $setStatus));
-		 if ($proses) {
+		$this->db->where('id', $id);
+		$proses = $this->db->update('student', array('status' => $setStatus));
+		if ($proses) {
 			$msg = $message;
-		
+
 			// Ambil data dari form
 			$program = $this->input->post('program');
 			// $name = $this->input->post('name');
 			$review_id = $this->input->post('review_id');
 			$id_teacher = $this->input->post('id_teacher');
 			$date_inactive = $this->input->post('date');
+			$explanation = $this->input->post('explanation');
 			$created_at = date('Y-m-d H:i:s');
 
-		
+
 			// Cek apakah program tidak null
 			if ($program != null) {
 				// Persiapkan data untuk disimpan ke database
@@ -846,12 +845,13 @@ class Student extends CI_Controller
 					'review_id' => $review_id,
 					'teacher_id' => $id_teacher ? $id_teacher : 0,
 					'date_inactive' => $date_inactive,
+					'explanation' => $explanation,
 					'created_at' => $created_at
 				];
-		
+
 				// Simpan data ke tabel student_review
 				$this->db->insert('student_review', $data);
-		
+
 				// Cek apakah data berhasil disimpan
 				if ($this->db->affected_rows() > 0) {
 					// Berikan respon sukses
@@ -863,29 +863,29 @@ class Student extends CI_Controller
 			} else {
 				$msg = "Activate successfully";
 			}
+		} else {
+			$msg = 'failed';
 		}
-		
-		 else{
-			 $msg = 'failed';
-		 }
 
 		$this->session->set_flashdata('alert', $msg);
 		redirect(base_url('student'));
 	}
 
-	public function latepayment(){
+	public function latepayment()
+	{
 		$data['listStudent'] = $this->mstudent->getStudentLatePayment();
-// 		echo '<pre style="background-color: #f4f4f4; color: #333; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; line-height: 1.5; overflow: auto;">';
-// var_dump($data['listStudent']);
-// echo '</pre>';
-// die();
+		// 		echo '<pre style="background-color: #f4f4f4; color: #333; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; line-height: 1.5; overflow: auto;">';
+		// var_dump($data['listStudent']);
+		// echo '</pre>';
+		// die();
 
-$this->load->view('v_header');
-$this->load->view('v_latepayment', $data);
-$this->load->view('v_footer');
+		$this->load->view('v_header');
+		$this->load->view('v_latepayment', $data);
+		$this->load->view('v_footer');
 	}
 
-	public function student_review(){
+	public function student_review()
+	{
 		$data['listStudentReview'] = $this->mstudent->getStudentReview();
 
 		$this->load->view('v_header');

@@ -239,7 +239,7 @@ class Mstudent extends CI_Model
 	function getStudentReview()
 	{
 		$query = $this->db->query("
-	SELECT rs.id as id_review, s.id, s.name, rs.program, s.status, rs.date_inactive, cr.category_name
+	SELECT rs.id as id_review, s.id, s.name, rs.program, s.status, rs.date_inactive, cr.category_name, rs.explanation
 		   from student_review rs
 		   join student s on rs.student_id = s.id
 		   join category_review cr on rs.review_id = cr.id
