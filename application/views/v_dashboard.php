@@ -380,8 +380,8 @@
 				],
 				datasets: [{
 						label: 'Expenses',
-						backgroundColor: 'rgba(210, 214, 222, 1)',
-						borderColor: 'rgba(210, 214, 222, 1)',
+						backgroundColor: 'rgb(231, 181, 33)',
+						borderColor: 'rgb(231, 181, 33)',
 						data: [<?= implode(',', $dataExp) ?>]
 					},
 					{
