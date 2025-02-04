@@ -37,6 +37,7 @@
 										<th>Name</th>
 										<th>Last Program</th>
 										<th>Why student inactive</th>
+										<th>Note</th>
 										<th>Date Inactive</th>
 									</tr>
 								</thead>
@@ -49,6 +50,7 @@
 											<td><?= $row->name ?></td>
 											<td><?= $row->program ?></td>
 											<td><?= $row->category_name ?></td>
+											<td><?= $row->explanation ? $row->explanation : '-' ?></td>
 											<td><?= date_format(date_create($row->date_inactive), "d F Y") ?></td>
 
 

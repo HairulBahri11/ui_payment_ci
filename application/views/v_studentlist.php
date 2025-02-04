@@ -60,7 +60,7 @@
 										<!--  <th>Last Payment</th> -->
 										<th>Program</th>
 										<!--<th>Course Fee</th>-->
-										<!-- <th>Note</th> -->
+										<th>Note</th>
 										<th>Status</th>
 										<th class="notPrintable" width="10%">Action</th>
 									</tr>
@@ -94,30 +94,16 @@
 											} else {
 												echo "<td>-</td>";
 											}
+
+											// get latest note for inactive student
+											$note = $this->db->query("SELECT * FROM student_review WHERE student_id = '$row->sid' ORDER BY id DESC LIMIT 1")->row();
+
+											// Pastikan $note tidak null sebelum mengakses propertinya
+											echo "<td>" . ($note ? $note->explanation : "") . "</td>";
+
 											?>
 
-											<!-- <td><?= $row->note ?></td> -->
 
-
-											<?php
-											//if ($row->level != "Private") {
-											//if ($row->condition == "DEFAULT") {
-											?>
-											<!--<td><span class="badge bg-yellow">Default: Rp <?= number_format($row->course, 0, ".", ".") ?></span></td>-->
-											<?php
-											//} elseif ($row->condition == "CHANGE") {
-											?>
-											<!--<td><span class="badge bg-light-blue">Change: Rp <?= number_format($row->course, 0, ".", ".") ?></span></td>-->
-											<?php
-											//} else {
-											//	echo "<td>-</td>";
-											//}
-											//} else {
-											?>
-											<!--<td>-</td>-->
-											<?php
-											//}
-											?>
 											<?php
 											if ($row->status == "ACTIVE") {
 											?>
@@ -147,12 +133,12 @@
 														data-id_teacher="<?= $row->id_teacher ?>"
 														data-status="<?= $row->status ?>"
 														href="#"
-														class="btn btn-danger btn-xs openModal">
+														class="btn btn-warning btn-xs openModal">
 														<i class="fa fa-check"></i>
 													</a>
 												<?php } else { ?>
 													<a href="<?= base_url() ?>student/activateStudent/<?= $row->sid ?>/<?= $row->status ?>"
-														class="btn btn-warning btn-xs"
+														class="btn btn-danger btn-xs"
 														onclick="return confirm('Are you sure you want to activate or deactivate this student?');">
 														<i class="fa fa-check"></i>
 													</a>
@@ -199,7 +185,7 @@
 					<input type="hidden" name="name" id="name" class="form-control">
 					<div class="form-group mt-3">
 						<label for="choose_alasan">Why did she/he leave from U&I English Course?</label>
-						<select name="review_id" id="choose_alasan" class="form-control">
+						<select name="review_id" id="choose_alasan" class="form-control" required>
 							<?php
 							// Query database
 							$data_query = $this->db->get('category_review')->result();
@@ -216,6 +202,10 @@
 							}
 							?>
 						</select>
+					</div>
+					<div class="form-group">
+						<label for="explanation">Note</label>
+						<textarea name="explanation" id="explanation" class="form-control" cols="30" rows="10" required></textarea>
 					</div>
 					<div class="form-group">
 						<label for="date">Date Inactive</label>
