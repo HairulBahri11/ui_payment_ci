@@ -192,7 +192,7 @@ class Expense extends CI_Controller  {
 //			elseif ($this->session->userdata('branch') == NULL)
 //				echo 'asdfsf' . $this->input->post('branch_id');
 
-			$id_beban = $expense_details->branch_id == 1 ? 17 : 18;
+			$id_beban = $expense_detail->branch_id == 1 ? 17 : 18;
 
 			$trx_akun = array(
 				'expense_id' => $id,
