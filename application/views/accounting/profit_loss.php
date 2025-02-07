@@ -246,6 +246,7 @@
 						<thead class="mt-3" style="background-color:#3c8dbc; color:white">
 							<tr>
 								<th>Expenses</th>
+								<th>Details</th>
 								<th width="25%"></th>
 							</tr>
 						</thead>
@@ -258,6 +259,7 @@
 								$total_expense += $value->amount;
 							?>
 								<tr>
+									<td><?= $value->category ?></td>
 									<td><?= $value->explanation ?> </td>
 									<td><?= number_format($value->amount, 0, ',', '.') ?></td>
 								</tr>
@@ -267,6 +269,7 @@
 							?>
 							<tr bgColor="#cad6e3">
 								<td>Total Expense</td>
+								<td></td>
 								<td class="text-center"><?= number_format($total_expense, 0, ',', '.') ?> </td>
 							</tr>
 						</tbody>
