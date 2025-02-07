@@ -41,6 +41,7 @@ class Report extends CI_Controller
 			$enddate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 
 			$data['listExpdetail'] = $this->mreport->getExpense($startdate, $enddate);
+//			print_r($data['listExpdetail']);
 			$this->load->view('v_header');
 			$this->load->view('v_reportexp', $data);
 			$this->load->view('v_footer');

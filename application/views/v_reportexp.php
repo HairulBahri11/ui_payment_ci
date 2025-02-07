@@ -31,7 +31,7 @@
 								<div class="row">
 									<div class="col-xs-5">
 										<div class="form-group">
-											<label for="inputPassword3" class="col-sm-3 control-label">Start Entry Date</label>
+											<label for="inputPassword3" class="col-sm-3 control-label">Start Date</label>
 											<div class="col-sm-9">
 												<div class="input-group date">
 													<div class="input-group-addon">
@@ -44,7 +44,7 @@
 									</div>
 									<div class="col-xs-5">
 										<div class="form-group">
-											<label for="inputPassword3" class="col-sm-3 control-label">End Entry Date</label>
+											<label for="inputPassword3" class="col-sm-3 control-label">End Date</label>
 											<div class="col-sm-9">
 												<div class="input-group date">
 													<div class="input-group-addon">
@@ -80,11 +80,11 @@
 											?>
 													<tr>
 														<?php
-														$var = $row->entrydate;
+														$var = $row->expdate;
 														$parts = explode('-', $var);
-														$entrydate = $parts[2] . '/' . $parts[1] . '/' . $parts[0];
+														$expdate = $parts[2] . '/' . $parts[1] . '/' . $parts[0];
 														?>
-														<td><?= $entrydate ?></td>
+														<td><?= $expdate ?></td>
 														<td><?= $row->category ?></td>
 														<td><?= $row->explanation ?></td>
 														<td>Rp <?= number_format($row->amount, 0, ".", ".") ?></td>

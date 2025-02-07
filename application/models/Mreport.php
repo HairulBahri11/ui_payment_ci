@@ -14,9 +14,9 @@ class Mreport extends CI_Model
 						   ed.expenseid, ed.category, ed.expdate, ed.amount, ed.explanation");
 		$this->db->from("expdetail ed");
 		$this->db->join("expense ex", "ed.expenseid = ex.id", "inner");
-		$this->db->where('entrydate >=', $startdate);
-		$this->db->where('entrydate <=', $enddate);
-		$this->db->order_by('entrydate', 'asc');
+		$this->db->where('expdate >=', $startdate);
+		$this->db->where('expdate <=', $enddate);
+		$this->db->order_by('expdate', 'asc');
 
 		// $this->db->select("*");
 		// $this->db->from("expdetail");
