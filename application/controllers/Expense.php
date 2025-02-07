@@ -68,6 +68,7 @@ class Expense extends CI_Controller  {
 		if ($this->input->post('category') == "OTHER") {
 			$data = array(
 					'expenseid' => $latestRecord['id'],
+					'branch_id' => $this->input->post('branch_id'),
 					'id_akun' => $this->input->post('id_akun'),
 					'category' => $this->input->post('other'),
 					'explanation' => $this->input->post('explanation'),
@@ -78,6 +79,7 @@ class Expense extends CI_Controller  {
 		} else {
 			$data = array(
 					'expenseid' => $latestRecord['id'],
+					'branch_id' => $this->input->post('branch_id'),
 					'id_akun' => $this->input->post('id_akun'),
 					'category' => $this->input->post('category'),
 					'explanation' => $this->input->post('explanation'),
@@ -132,6 +134,7 @@ class Expense extends CI_Controller  {
 		if ($this->input->post('category') == "OTHER") {
 			$data = array(
 					'expenseid' => $id,
+					'branch_id' => $this->input->post('branch_id'),
 					'id_akun' => $this->input->post('id_akun'),
 					'category' => $this->input->post('other'),
 					'explanation' => $this->input->post('explanation'),
@@ -142,6 +145,7 @@ class Expense extends CI_Controller  {
 		} else {
 			$data = array(
 					'expenseid' => $id,
+					'branch_id' => $this->input->post('branch_id'),
 					'id_akun' => $this->input->post('id_akun'),
 					'category' => $this->input->post('category'),
 					'explanation' => $this->input->post('explanation'),
@@ -176,30 +180,31 @@ class Expense extends CI_Controller  {
 
 		$expense = $this->mexpense->getExpenseById($id)->result();
 
-
-//		insert into tbl_trx_akuntansi and tbl_trx_akuntansi_detail
-		$id_beban = 0;
-		if ($this->session->userdata('branch') == 1)
-			$id_beban = 17;
-		elseif ($this->session->userdata('branch') == 2)
-			$id_beban = 18;
-		elseif ($this->session->userdata('branch') == NULL)
-			echo 'asdfsf' . $this->input->post('branch_id');
-			$id_beban = $expense[0]->branch_id == 1 ? 17 : 18;
-
-		$trx_akun = array(
-			'expense_id' => $id,
-			'deskripsi' => 'Expense from id ' . $id,
-			'tanggal' => $date,
-			'branch_id' => $this->session->userdata('branch') != NULL ? $this->session->userdata('branch') : $expense[0]->branch_id,
-			'dtm_crt' => date('Y-m-d H:i:s'),
-			'dtm_upd' => date('Y-m-d H:i:s'),
-		);
-		$id_trx_akuntansi = $this->MTrxAkuntansi->addTrxAkuntansi($trx_akun);
-
 		$expense_details = $this->mexpdetail->getExpdetailByExpenseId($id)->result();
 
 		foreach ($expense_details as $expense_detail) {
+			//		insert into tbl_trx_akuntansi and tbl_trx_akuntansi_detail
+//			$id_beban = 0;
+//			if ($this->session->userdata('branch') == 1)
+//				$id_beban = 17;
+//			elseif ($this->session->userdata('branch') == 2)
+//				$id_beban = 18;
+//			elseif ($this->session->userdata('branch') == NULL)
+//				echo 'asdfsf' . $this->input->post('branch_id');
+
+			$id_beban = $expense_details->branch_id == 1 ? 17 : 18;
+
+			$trx_akun = array(
+				'expense_id' => $id,
+				'expdetail_id' => $expense_detail->id,
+				'deskripsi' => $expense_detail->explanation,
+				'tanggal' => $expense_detail->expdate,
+				'branch_id' => $expense_detail->branch_id,
+				'dtm_crt' => date('Y-m-d H:i:s'),
+				'dtm_upd' => date('Y-m-d H:i:s'),
+			);
+			$id_trx_akuntansi = $this->MTrxAkuntansi->addTrxAkuntansi($trx_akun);
+
 			//		simpan transaksi ke detail jurnal
 			$data_akun_trx_akuntansi_detail = array(
 				'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
