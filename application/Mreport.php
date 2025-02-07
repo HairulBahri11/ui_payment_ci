@@ -14,9 +14,9 @@
 						   ed.expenseid, ed.category, ed.expdate, ed.amount, ed.explanation");
 		$this->db->from("expdetail ed");
 		$this->db->join("expense ex", "ed.expenseid = ex.id", "inner");
-		$this->db->where('entrydate >=', $startdate);
-		$this->db->where('entrydate <=', $enddate);
-		$this->db->order_by('entrydate', 'asc');
+		$this->db->where('ed.expdate >=', $startdate);
+		$this->db->where('ed.expdate <=', $enddate);
+		$this->db->order_by('ed.expdate', 'asc');
 
         // $this->db->select("*");
 		// $this->db->from("expdetail");
