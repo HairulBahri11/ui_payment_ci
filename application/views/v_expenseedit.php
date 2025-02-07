@@ -105,7 +105,7 @@
 								<div class="form-group">
 									<label for="explanation" class="col-sm-3 control-label">Explanation</label>
 									<div class="col-sm-9">
-										<textarea class="form-control" rows="3" id="explanation" name="explanation"></textarea>
+										<textarea class="form-control" rows="3" id="explanation" name="explanation" required></textarea>
 									</div>
 								</div>
 
