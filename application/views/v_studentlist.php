@@ -60,7 +60,7 @@
 										<!--  <th>Last Payment</th> -->
 										<th>Program</th>
 										<!--<th>Course Fee</th>-->
-										<!-- <th>Note</th> -->
+										<th>Note</th>
 										<th>Status</th>
 										<th class="notPrintable" width="10%">Action</th>
 									</tr>
@@ -102,6 +102,7 @@
 											// echo "<td>" . ($note ? $note->explanation : "") . "</td>";
 
 											?>
+											<td><?= $row->note ?></td>
 
 
 											<?php
