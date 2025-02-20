@@ -37,7 +37,7 @@
 										<th>Class</th>
 										<th>Teacher</th>
 
-										<th>Phone</th>
+										<th>WhatsApp Number</th>
 
 									</tr>
 								</thead>
