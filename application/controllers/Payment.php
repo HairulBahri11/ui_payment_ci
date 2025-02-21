@@ -29,7 +29,7 @@ class Payment extends CI_Controller
 			} else {
 				$monthpay = ''; // Atur default jika $student->monthpay kosong atau null
 			}
-		
+
 			if (($monthpay < date('m')) || ($student->monthpay == '')) {
 				if ($student->condition == "DEFAULT") {
 					$data = array(
@@ -45,13 +45,13 @@ class Payment extends CI_Controller
 					'penalty' => 0
 				);
 			}
-		
+
 			$where['id'] = $student->id;
 			$this->mstudent->updateStudent($data, $where);
 		}
-		
 
-		
+
+
 
 		$listUncomplete = $this->mpayment->getUncompletePayment();
 		foreach ($listUncomplete as $uncomplete) {
@@ -215,25 +215,40 @@ class Payment extends CI_Controller
 
 		$other_detail = $this->input->post('other_detail');
 
-		$var = $this->input->post('trfdate');
+		// $var = $this->input->post('trfdate');
+		$var = trim($this->input->post('date'));
+
+		if (!empty($var) && $this->input->post('method') == 'BANK TRANSFER') {
+			$parts = explode('-', $var); // Ubah pemisah dari '/' ke '-'
+
+			if (count($parts) === 3) {
+				$trfdate = $parts[0] . '-' . $parts[1] . '-' . $parts[2]; // Tetap dalam format YYYY-MM-DD
+			} else {
+				$trfdate = null; // Jika format salah, atur ke null
+			}
+		} else {
+			$trfdate = null;
+		}
+
+
 
 		// check session user login
-		if($this->session->userdata('userid') == 'superadmin'){
+		if ($this->session->userdata('userid') == 'superadmin') {
 			$data_branch =  $this->input->post('branch_id');
-		}else{
+		} else {
 			$data_branch = $this->session->userdata('branch');
 		}
 
 		$cek_branch = '';
-		if($this->input->post('branch_id') == '') {
+		if ($this->input->post('branch_id') == '') {
 			$cek_branch = $this->session->userdata('branch');
-		}elseif($this->input->post('branch_id') != '') {
+		} elseif ($this->input->post('branch_id') != '') {
 			$cek_branch = $this->input->post('branch_id');
 		}
 
 		if ($var != "") {
-			$parts = explode('/', $var);
-			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
+			// $parts = explode('/', $var);
+			// $trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 			$data = array(
 				'paydate' => $date,
 				'paytime' => $time,
@@ -476,7 +491,7 @@ class Payment extends CI_Controller
 			$url = "https://example.com";
 		}
 
-		
+
 
 		// ambil id akun kas dari masing-masing cabang
 		$akun_kas_id = null;
@@ -541,8 +556,7 @@ class Payment extends CI_Controller
 				'dtm_upd' => date('Y-m-d H:i:s'),
 			);
 			$id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
-		}
-		else{ //jika ada penalty
+		} else { //jika ada penalty
 			//		simpan transaksi jurnal
 			$data_trx_akuntansi = array(
 				'payment_id' => $latestRecord['id'],
@@ -616,25 +630,38 @@ class Payment extends CI_Controller
 		$total = str_replace($order, $replace, $total);
 
 
-		$var = $this->input->post('trfdate');
+		// $var = $this->input->post('trfdate');
+		$var = trim($this->input->post('date'));
+
+		if (!empty($var) && $this->input->post('method') == 'BANK TRANSFER') {
+			$parts = explode('-', $var); // Ubah pemisah dari '/' ke '-'
+
+			if (count($parts) === 3) {
+				$trfdate = $parts[0] . '-' . $parts[1] . '-' . $parts[2]; // Tetap dalam format YYYY-MM-DD
+			} else {
+				$trfdate = null; // Jika format salah, atur ke null
+			}
+		} else {
+			$trfdate = null;
+		}
 
 		// check session user login
-		if($this->session->userdata('userid') == 'superadmin'){
+		if ($this->session->userdata('userid') == 'superadmin') {
 			$data_branch =  $this->input->post('branch_id');
-		}else{
+		} else {
 			$data_branch = $this->session->userdata('branch');
 		}
 
 		$cek_branch = '';
-		if($this->input->post('branch_id') == '') {
+		if ($this->input->post('branch_id') == '') {
 			$cek_branch = $this->session->userdata('branch');
-		}elseif($this->input->post('branch_id') != '') {
+		} elseif ($this->input->post('branch_id') != '') {
 			$cek_branch = $this->input->post('branch_id');
 		}
 
 		if ($var != "") {
-			$parts = explode('/', $var);
-			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
+			// $parts = explode('/', $var);
+			// $trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 			$data = array(
 				'paydate' => $date,
 				'paytime' => $time,
@@ -1229,17 +1256,17 @@ class Payment extends CI_Controller
 	}
 
 
-	function broadcast($data){
+	function broadcast($data)
+	{
 
-				// Membungkus var_dump dengan <pre> agar terlihat rapi
-			echo '<pre style="background-color: #f4f4f4; color: #333; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; line-height: 1.5; overflow: auto;">';
-			var_dump($data);
-			echo '</pre>';
-			die();
-		
-
+		// Membungkus var_dump dengan <pre> agar terlihat rapi
+		echo '<pre style="background-color: #f4f4f4; color: #333; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; line-height: 1.5; overflow: auto;">';
+		var_dump($data);
+		echo '</pre>';
+		die();
 	}
-	function sendBroadCastWa($data){
+	function sendBroadCastWa($data)
+	{
 		$url = "https://ui-backoffice.primtechdev.com/api/broadcast/$data";
 		$token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo";
 

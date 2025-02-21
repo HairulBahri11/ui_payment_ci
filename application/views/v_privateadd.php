@@ -870,7 +870,7 @@ $url = base_url() . "cetak/printprivate/";
 			$("#dcut").hide(750);
 			$("#dnumber").hide(750);
 		} else if (document.getElementById("method").value == "BANK TRANSFER") {
-			$("#dtrfdate").show(750);
+			$("#dtrfdate").hide(750);
 			$("#dnumber").show(750);
 			$("#dbank").hide(750);
 			$("#dcut").hide(750);
