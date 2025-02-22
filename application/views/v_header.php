@@ -252,7 +252,7 @@
               <i class="fa fa-file"></i> <span>Student Review</span>
             </a>
           </li>
-          <?php if ($this->session->userdata('level') == 1 || $this->session->userdata('level') == 2) { ?>
+          <?php if ($this->session->userdata('level') == 1) { ?>
             <li class="treeview <?= $this->uri->segment(1) == 'accounting' ? 'active menu-open' : '' ?>">
               <a href="#">
                 <i class="fa fa-tag"></i> <span>Accounting</span>
