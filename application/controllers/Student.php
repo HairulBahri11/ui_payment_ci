@@ -107,7 +107,7 @@ class Student extends CI_Controller
 		$penalty = str_replace($order, $replace, $penalty);
 		$balance = str_replace($order, $replace, $balance);
 
-		$birthday = $this->input->post('month') . " " . $this->input->post('date');
+		$birthday = $this->input->post('year') . " " . $this->input->post('month') . " " . $this->input->post('date');
 
 		$data = array(
 			'priceid' => $this->input->post('program'),
@@ -461,6 +461,9 @@ class Student extends CI_Controller
 
 		//exit();
 
+		// var_dump($this->input->post());
+		// die();
+
 
 
 		date_default_timezone_set("Asia/Jakarta");
@@ -476,6 +479,9 @@ class Student extends CI_Controller
 		$day2 = "";
 		$coursetime = "";
 		$branch_id = $this->input->post('branch_id');
+
+		// date from input request
+		$date = date_format(date_create($this->input->post('date')), "Y-m-d");
 
 		if ($this->input->post('category') == "PRIVATE") {
 			$program = $this->input->post('programprv');
@@ -521,10 +527,23 @@ class Student extends CI_Controller
 		elseif ($branch_id == '2') //jika cabang = Bali
 			$akun_pendapatan_id = 11;
 
-		$var = $this->input->post('trfdate');
+		// $var = $this->input->post('trfdate');
+		$var = trim($this->input->post('date'));
+
+		if (!empty($var) && $this->input->post('method') == 'BANK TRANSFER') {
+			$parts = explode('-', $var); // Ubah pemisah dari '/' ke '-'
+
+			if (count($parts) === 3) {
+				$trfdate = $parts[0] . '-' . $parts[1] . '-' . $parts[2]; // Tetap dalam format YYYY-MM-DD
+			} else {
+				$trfdate = null; // Jika format salah, atur ke null
+			}
+		} else {
+			$trfdate = null;
+		}
 		if ($var != "") {
-			$parts = explode('/', $var);
-			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
+			// $parts = explode('/', $var);
+			// $trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 			$data = array(
 				'paydate' => $date,
 				'paytime' => $time,

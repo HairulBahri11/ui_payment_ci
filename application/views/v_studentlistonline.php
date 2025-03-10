@@ -105,6 +105,12 @@
 					<input type="hidden" name="idstudent" id="idModal" style="color:#000">
 					<input type="hidden" name="branch_id" id="branch_id">
 					<div class="form-group">
+						<label for="date" class="col-sm-3 control-label">Date</label>
+						<div class="col-sm-9">
+							<input type="date" class="form-control" id="date" name="date" required>
+						</div>
+					</div>
+					<div class="form-group">
 						<label for="category" class="col-sm-3 control-label">Category</label>
 						<div class="col-sm-9">
 							<select class="form-control select2" style="width: 100%;" name="category" id="category" onchange="changeCategory()" required>
@@ -1249,7 +1255,7 @@
 			$("#dcut").hide(750);
 			$("#dnumber").hide(750);
 		} else if (document.getElementById("method").value == "BANK TRANSFER") {
-			$("#dtrfdate").show(750);
+			$("#dtrfdate").hide(750);
 			$("#dnumber").show(750);
 			$("#dbank").hide(750);
 			$("#dcut").hide(750);
