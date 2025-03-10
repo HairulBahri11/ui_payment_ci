@@ -41,7 +41,7 @@
 									<label for="birthday" class="col-sm-3 control-label">Birthday</label>
 									<div class="col-sm-9">
 										<div class="row">
-											<div class="col-xs-6">
+											<div class="col-xs-3">
 												<select class="form-control select2" style="width: 100%;" name="date" required>
 													<option selected="selected" disabled="disabled" value="">-- Choose Date --</option>
 													<?php
@@ -61,7 +61,7 @@
 													?>
 												</select>
 											</div>
-											<div class="col-xs-6">
+											<div class="col-xs-5">
 												<select class="form-control select2" style="width: 100%;" name="month" required>
 													<option disabled="disabled" value="">-- Choose month --</option>
 													<?php
@@ -81,6 +81,9 @@
 													}
 													?>
 												</select>
+											</div>
+											<div class="col-xs-4">
+												<input type="year" name="year" class="form-control" required>
 											</div>
 										</div>
 									</div>
