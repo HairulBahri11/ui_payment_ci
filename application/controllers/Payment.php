@@ -318,7 +318,7 @@ class Payment extends CI_Controller
             $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail([
                 'id_trx_akun' => $transactionId,
                 'id_akun' => $incomeAccountId,
-                'jumlah' => $total - ($total_penalty ?: 0),
+                'jumlah' => floatval($total) - floatval($total_penalty),,
                 'tipe' => 'KREDIT',
                 'keterangan' => 'lawan',
                 'dtm_crt' => $time,
