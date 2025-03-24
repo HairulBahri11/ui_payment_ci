@@ -1307,7 +1307,7 @@ $url = base_url() . "cetak/printregular/";
 	}
 
 	$("#example3").submit(function() {
-		// $(this).preventDefault();
+		$(this).preventDefault();
 		var example3 = document.getElementById("example3");
 		var paytab = document.getElementById("paytab");
 		var recordnum = 0;
