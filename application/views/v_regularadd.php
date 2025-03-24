@@ -1306,136 +1306,95 @@ $url = base_url() . "cetak/printregular/";
 		document.getElementById("paymentcut").value = "Rp " + FormatDuit(document.getElementById("paymentcut").value);
 	}
 
-	// $("#example3").submit(function() {
-	// 	// $(this).preventDefault();
-	// 	var example3 = document.getElementById("example3");
-	// 	var paytab = document.getElementById("paytab");
-	// 	var recordnum = 0;
-
-	// 	for (var i = 1, row; row = paytab.rows[i]; i++) {
-	// 		var fieldname = "name";
-	// 		var fieldname = fieldname.concat(i);
-	// 		var value = row.cells[0].innerHTML;
-	// 		var field = document.createElement("INPUT");
-	// 		field.setAttribute("type", "hidden");
-	// 		field.setAttribute("name", fieldname);
-	// 		field.setAttribute("value", value);
-	// 		example3.appendChild(field);
-
-	// 		var fieldname = "level";
-	// 		var fieldname = fieldname.concat(i);
-	// 		var value = row.cells[1].innerHTML;
-	// 		var field = document.createElement("INPUT");
-	// 		field.setAttribute("type", "hidden");
-	// 		field.setAttribute("name", fieldname);
-	// 		field.setAttribute("value", value);
-	// 		example3.appendChild(field);
-
-	// 		var fieldname = "payment";
-	// 		var fieldname = fieldname.concat(i);
-	// 		var value = row.cells[2].innerHTML;
-	// 		var field = document.createElement("INPUT");
-	// 		field.setAttribute("type", "hidden");
-	// 		field.setAttribute("name", fieldname);
-	// 		field.setAttribute("value", value);
-	// 		example3.appendChild(field);
-
-	// 		var fieldname = "month";
-	// 		var fieldname = fieldname.concat(i);
-	// 		var value = row.cells[3].innerHTML;
-	// 		var field = document.createElement("INPUT");
-	// 		field.setAttribute("type", "hidden");
-	// 		field.setAttribute("name", fieldname);
-	// 		field.setAttribute("value", value);
-	// 		example3.appendChild(field);
-
-	// 		var fieldname = "voucher";
-	// 		var fieldname = fieldname.concat(i);
-	// 		var value = row.cells[4].innerHTML;
-	// 		var field = document.createElement("INPUT");
-	// 		field.setAttribute("type", "hidden");
-	// 		field.setAttribute("name", fieldname);
-	// 		field.setAttribute("value", value);
-	// 		example3.appendChild(field);
-
-	// 		var fieldname = "amount";
-	// 		var fieldname = fieldname.concat(i);
-	// 		var value = row.cells[5].innerHTML;
-	// 		var field = document.createElement("INPUT");
-	// 		field.setAttribute("type", "hidden");
-	// 		field.setAttribute("name", fieldname);
-	// 		field.setAttribute("value", value);
-	// 		example3.appendChild(field);
-
-	// 		var fieldname = "studentid";
-	// 		var fieldname = fieldname.concat(i);
-	// 		var value = row.cells[7].innerHTML;
-	// 		var field = document.createElement("INPUT");
-	// 		field.setAttribute("type", "hidden");
-	// 		field.setAttribute("name", fieldname);
-	// 		field.setAttribute("value", value);
-	// 		example3.appendChild(field);
-
-	// 		recordnum = recordnum + 1;
-	// 	}
-
-	// 	var fieldname = "recordnum";
-	// 	var field = document.createElement("INPUT");
-	// 	field.setAttribute("type", "hidden");
-	// 	field.setAttribute("name", fieldname);
-	// 	field.setAttribute("value", recordnum);
-	// 	example3.appendChild(field);
-
-	// 	var amount = document.getElementById("total").value.replace(/\./g, '');
-	// 	amount = amount.replace("Rp ", "");
-	// 	var paymentcut = document.getElementById("paymentcut").value.replace(/\./g, '');
-	// 	paymentcut = paymentcut.replace("Rp ", "");
-	// 	document.getElementById("total").value = parseInt(amount) - parseInt(paymentcut);
-	// 	document.getElementById("total").value = "Rp " + FormatDuit(document.getElementById("total").value);
-	// 	// alert('Add regular payment successful.');
-	// });
-
-
-	$("#example3").submit(function(event) {
-		// Mencegah pengiriman formulir ganda
-		if ($(this).data('submitted') === true) {
-			event.preventDefault();
-			return false;
-		}
-
-		$(this).data('submitted', true); // Menandai formulir sebagai telah dikirim
-
-		var $form = $(this);
-		var $paytab = $("#paytab");
+	$("#example3").submit(function() {
+		// $(this).preventDefault();
+		var example3 = document.getElementById("example3");
+		var paytab = document.getElementById("paytab");
 		var recordnum = 0;
 
-		// Menambahkan input hidden untuk setiap baris di tabel
-		$paytab.find("tr:gt(0)").each(function() { // Melewati baris header
-			var $row = $(this);
-			recordnum++;
-			$form.append('<input type="hidden" name="name' + recordnum + '" value="' + $row.find("td:eq(0)").text() + '">');
-			$form.append('<input type="hidden" name="level' + recordnum + '" value="' + $row.find("td:eq(1)").text() + '">');
-			$form.append('<input type="hidden" name="payment' + recordnum + '" value="' + $row.find("td:eq(2)").text() + '">');
-			$form.append('<input type="hidden" name="month' + recordnum + '" value="' + $row.find("td:eq(3)").text() + '">');
-			$form.append('<input type="hidden" name="voucher' + recordnum + '" value="' + $row.find("td:eq(4)").text() + '">');
-			$form.append('<input type="hidden" name="amount' + recordnum + '" value="' + $row.find("td:eq(5)").text() + '">');
-			$form.append('<input type="hidden" name="studentid' + recordnum + '" value="' + $row.find("td:eq(7)").text() + '">');
-		});
+		for (var i = 1, row; row = paytab.rows[i]; i++) {
+			var fieldname = "name";
+			var fieldname = fieldname.concat(i);
+			var value = row.cells[0].innerHTML;
+			var field = document.createElement("INPUT");
+			field.setAttribute("type", "hidden");
+			field.setAttribute("name", fieldname);
+			field.setAttribute("value", value);
+			example3.appendChild(field);
 
-		$form.append('<input type="hidden" name="recordnum" value="' + recordnum + '">');
+			var fieldname = "level";
+			var fieldname = fieldname.concat(i);
+			var value = row.cells[1].innerHTML;
+			var field = document.createElement("INPUT");
+			field.setAttribute("type", "hidden");
+			field.setAttribute("name", fieldname);
+			field.setAttribute("value", value);
+			example3.appendChild(field);
 
-		// Manipulasi nilai total (jika diperlukan)
-		var $total = $("#total");
-		var $paymentcut = $("#paymentcut");
-		var amount = $total.val().replace(/\./g, '').replace("Rp ", "");
-		var paymentcut = $paymentcut.val().replace(/\./g, '').replace("Rp ", "");
-		$total.val("Rp " + FormatDuit(parseInt(amount) - parseInt(paymentcut)));
+			var fieldname = "payment";
+			var fieldname = fieldname.concat(i);
+			var value = row.cells[2].innerHTML;
+			var field = document.createElement("INPUT");
+			field.setAttribute("type", "hidden");
+			field.setAttribute("name", fieldname);
+			field.setAttribute("value", value);
+			example3.appendChild(field);
 
-		// Mengaktifkan kembali tombol submit setelah 5 detik (opsional)
-		setTimeout(function() {
-			$form.data('submitted', false);
-		}, 5000);
+			var fieldname = "month";
+			var fieldname = fieldname.concat(i);
+			var value = row.cells[3].innerHTML;
+			var field = document.createElement("INPUT");
+			field.setAttribute("type", "hidden");
+			field.setAttribute("name", fieldname);
+			field.setAttribute("value", value);
+			example3.appendChild(field);
+
+			var fieldname = "voucher";
+			var fieldname = fieldname.concat(i);
+			var value = row.cells[4].innerHTML;
+			var field = document.createElement("INPUT");
+			field.setAttribute("type", "hidden");
+			field.setAttribute("name", fieldname);
+			field.setAttribute("value", value);
+			example3.appendChild(field);
+
+			var fieldname = "amount";
+			var fieldname = fieldname.concat(i);
+			var value = row.cells[5].innerHTML;
+			var field = document.createElement("INPUT");
+			field.setAttribute("type", "hidden");
+			field.setAttribute("name", fieldname);
+			field.setAttribute("value", value);
+			example3.appendChild(field);
+
+			var fieldname = "studentid";
+			var fieldname = fieldname.concat(i);
+			var value = row.cells[7].innerHTML;
+			var field = document.createElement("INPUT");
+			field.setAttribute("type", "hidden");
+			field.setAttribute("name", fieldname);
+			field.setAttribute("value", value);
+			example3.appendChild(field);
+
+			recordnum = recordnum + 1;
+		}
+
+		var fieldname = "recordnum";
+		var field = document.createElement("INPUT");
+		field.setAttribute("type", "hidden");
+		field.setAttribute("name", fieldname);
+		field.setAttribute("value", recordnum);
+		example3.appendChild(field);
+
+		var amount = document.getElementById("total").value.replace(/\./g, '');
+		amount = amount.replace("Rp ", "");
+		var paymentcut = document.getElementById("paymentcut").value.replace(/\./g, '');
+		paymentcut = paymentcut.replace("Rp ", "");
+		document.getElementById("total").value = parseInt(amount) - parseInt(paymentcut);
+		document.getElementById("total").value = "Rp " + FormatDuit(document.getElementById("total").value);
+		// alert('Add regular payment successful.');
 	});
+
 	var idprint = <?= $idprint; ?>;
 
 	function Printdata() {
