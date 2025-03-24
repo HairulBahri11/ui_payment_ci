@@ -1392,7 +1392,7 @@ $url = base_url() . "cetak/printregular/";
 		paymentcut = paymentcut.replace("Rp ", "");
 		document.getElementById("total").value = parseInt(amount) - parseInt(paymentcut);
 		document.getElementById("total").value = "Rp " + FormatDuit(document.getElementById("total").value);
-		alert('Add regular payment successful.');
+		// alert('Add regular payment successful.');
 	});
 
 	var idprint = <?= $idprint; ?>;
