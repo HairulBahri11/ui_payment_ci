@@ -199,141 +199,254 @@ class Payment extends CI_Controller
         $this->load->view('v_footer');
     }
 
-
     public function addRegularDb()
     {
-        $this->db->trans_start(); // Memulai transaksi database
-
         date_default_timezone_set("Asia/Jakarta");
+        // $date = date('Y-m-d');
         $date = $this->input->post("date");
-        $time = date('Y-m-d H:i:s');
+        $time = date('Y-m-d h:i:s');
 
-        $total = str_replace(['Rp ', '.'], '', $this->input->post('total'));
-        $total_penalty = str_replace(['Rp ', '.'], '', $this->input->post('total_penalty'));
+        $total = $this->input->post('total');
+        $total_penalty = $this->input->post('total_penalty');
+        $order   = array("Rp ", ".");
+        $replace = "";
+        $total = str_replace($order, $replace, $total);
+        $total_penalty = str_replace($order, $replace, $total_penalty);
+
         $other_detail = $this->input->post('other_detail');
 
+        // $var = $this->input->post('trfdate');
         $var = trim($this->input->post('date'));
-        $trfdate = (!empty($var) && $this->input->post('method') == 'BANK TRANSFER') ?
-            (count($parts = explode('-', $var)) === 3 ? implode('-', $parts) : null) :
-            null;
 
-        $data_branch = ($this->session->userdata('userid') == 'superadmin') ?
-            $this->input->post('branch_id') :
-            $this->session->userdata('branch');
+        if (!empty($var) && $this->input->post('method') == 'BANK TRANSFER') {
+            $parts = explode('-', $var); // Ubah pemisah dari '/' ke '-'
 
-        $cek_branch = $this->input->post('branch_id') ?: $this->session->userdata('branch');
-
-        $data = [
-            'paydate' => $date,
-            'paytime' => $time,
-            'method' => $this->input->post('method'),
-            'number' => $this->input->post('number'),
-            'bank' => $this->input->post('bank'),
-            'total' => $total,
-            'trfdate' => $trfdate,
-            'username' => $this->session->userdata('nama'),
-            'branch_id' => $data_branch
-        ];
-
-        // Pengecekan data ganda (contoh: berdasarkan paydate, total, studentid)
-        $this->db->where('paydate', $date);
-        $this->db->where('total', $total);
-        // tambahkan kondisi studentid jika perlu, atau kondisi lain yang sesuai.
-        $existingPayment = $this->mpayment->getPayment($this->db->get_where('payment', ['paydate' => $date, 'total' => $total])->row_array());
-
-        if ($existingPayment) {
-            $this->db->trans_rollback();
-            echo "Pembayaran dengan tanggal dan total yang sama sudah ada.";
-            return; // Hentikan eksekusi jika data ganda ditemukan
+            if (count($parts) === 3) {
+                $trfdate = $parts[0] . '-' . $parts[1] . '-' . $parts[2]; // Tetap dalam format YYYY-MM-DD
+            } else {
+                $trfdate = null; // Jika format salah, atur ke null
+            }
+        } else {
+            $trfdate = null;
         }
 
-        $latestRecord = $this->mpayment->addPayment($data);
+
+
+        // check session user login
+        if ($this->session->userdata('userid') == 'superadmin') {
+            $data_branch =  $this->input->post('branch_id');
+        } else {
+            $data_branch = $this->session->userdata('branch');
+        }
+
+        $cek_branch = '';
+        if ($this->input->post('branch_id') == '') {
+            $cek_branch = $this->session->userdata('branch');
+        } elseif ($this->input->post('branch_id') != '') {
+            $cek_branch = $this->input->post('branch_id');
+        }
+
+        if ($var != "") {
+            // $parts = explode('/', $var);
+            // $trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
+            $data = array(
+                'paydate' => $date,
+                'paytime' => $time,
+                'method' => $this->input->post('method'),
+                'number' => $this->input->post('number'),
+                'bank' => $this->input->post('bank'),
+                'total' => $total,
+                'trfdate' => $trfdate,
+                'username' => $this->session->userdata('nama'),
+                'branch_id' => $data_branch
+            );
+            $latestRecord = $this->mpayment->addPayment($data);
+        } else {
+            $data = array(
+                'paydate' => $date,
+                'paytime' => $time,
+                'method' => $this->input->post('method'),
+                'number' => $this->input->post('number'),
+                'bank' => $this->input->post('bank'),
+                'total' => $total,
+                'username' => $this->session->userdata('nama'),
+                'branch_id' => $data_branch
+            );
+            $latestRecord = $this->mpayment->addPayment($data);
+        }
 
         $recordnum = $this->input->post('recordnum');
         for ($i = 1; $i <= $recordnum; $i++) {
-            $amount = str_replace(['Rp ', '.'], '', $this->input->post('amount' . $i));
+            $amount = $this->input->post('amount' . $i);
+            $order   = array("Rp ", ".");
+            $replace = "";
+            $amount = str_replace($order, $replace, $amount);
 
             if ($this->input->post('payment' . $i) == "COURSE") {
-                $monthParts = date_parse(explode(' ', $this->input->post('month' . $i))[0]);
-                $month = str_pad($monthParts['month'], 2, '0', STR_PAD_LEFT);
-                $monthpay = explode(' ', $this->input->post('month' . $i))[1] . '-' . $month . '-01';
+                $var = $this->input->post('month' . $i);
+                $parts = explode(' ', $var);
+                $montharr = date_parse($parts[0]);
+                if ($montharr['month'] < 10) {
+                    $month = "0" . $montharr['month'];
+                } else {
+                    $month = $montharr['month'];
+                }
+                $monthpay = $parts[1] . '-' . $month . '-' . '1';
             }
 
             if ($this->input->post('voucher' . $i) != "") {
-                $this->mvoucher->updateVoucher(['isused' => "NO"], ['id' => $this->input->post('voucher' . $i)]);
+                $data = array(
+                    'isused' => "NO"
+                );
+                $where['id'] = $this->input->post('voucher' . $i);
+                $this->mvoucher->updateVoucher($data, $where);
             }
-
+            $exRegMonth = explode('-', $monthpay);
+            // echo '<pre>';
             if ($this->input->post('payment' . $i) == "COURSE") {
-                $exRegMonth = explode('-', $monthpay);
-                $regularBill = $this->mpayment->getPaymentReg($this->input->post('studentid' . $i), $exRegMonth[0], $exRegMonth[1]);
+                // $regularBill = $this->mpayment->getPaymentReg($this->input->post('studentid' . $i));
+                $regularBill = $this->mpayment->getPaymentReg($this->input->post('studentid' . $i),  $exRegMonth[0], $exRegMonth[1]);
+                $retRegularBill = $regularBill;
+                $exRegBill = null;
 
-                $payDetailData = [
-                    'paymentid' => $latestRecord['id'],
-                    'studentid' => $this->input->post('studentid' . $i),
-                    'voucherid' => $this->input->post('voucher' . $i),
-                    'category' => $this->input->post('payment' . $i),
-                    'monthpay' => $monthpay,
-                    'amount' => $amount,
-                    'other_detail' => ($this->input->post('payment' . $i) == "OTHER") ? $other_detail : null
-                ];
-                $this->mpaydetail->addPaydetail($payDetailData);
+                if ($retRegularBill != null) {
+                    $exRegBill = explode(' ', $retRegularBill[0]->payment);
+                    if ($exRegBill[1] == $exRegMonth[1] . '-' . $exRegMonth[0]) {
+                        print_r('ccd');
+                        $data = array(
+                            'paymentid' => $latestRecord['id'],
+                            'studentid' => $this->input->post('studentid' . $i),
+                            'voucherid' => $this->input->post('voucher' . $i),
+                            'category' => $this->input->post('payment' . $i),
+                            'monthpay' => $monthpay,
+                            'amount' => $amount,
+                        );
 
-                $paymentRegData = [
-                    "total_price" => $amount,
-                    'class_type' => 'Reguler',
-                    'created_by' => $this->session->userdata('nama'),
-                    'updated_by' => $this->session->userdata('nama'),
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
-                ];
-                $lastIdReg = $this->mpayment->addPaymentReg($paymentRegData);
+                        // Tambahkan nilai 'other_detail' jika kategori adalah "OTHER"
+                        if ($this->input->post('payment' . $i) == "OTHER") {
+                            $data['other_detail'] = $other_detail;
+                        }
+                        $var = $this->mpaydetail->addPaydetail($data);
+                        $regPay = array(
+                            'status' => 'Paid',
+                            'unique_code' => $latestRecord['id'],
+                        );
+                        $historyRegPay = array(
+                            'unique_code' => $latestRecord['id'],
+                        );
+                        $this->mpayment->updateHistyoryReg($historyRegPay, $retRegularBill[0]->unique_code);
+                        $this->mpayment->updatePaymentReg($regPay, $this->input->post('studentid' . $i), $this->input->post('payment' . $i), $retRegularBill[0]->payment);
+                    } else {
+                        $data = array(
+                            'paymentid' => $latestRecord['id'],
+                            'studentid' => $this->input->post('studentid' . $i),
+                            'voucherid' => $this->input->post('voucher' . $i),
+                            'category' => $this->input->post('payment' . $i),
+                            'monthpay' => $monthpay,
+                            'amount' => $amount,
 
-                $paymentRegDetailData = [
-                    'id_payment_bill' => $lastIdReg['id'],
-                    'student_id' => $this->input->post('studentid' . $i),
-                    'category' => $this->input->post('payment' . $i),
-                    'price' => $amount,
-                    'payment' => $this->input->post('payment' . $i) == "COURSE" ? $this->input->post('payment' . $i) . ' ' . $exRegMonth[1] . '-' . $exRegMonth[0] : $this->input->post('payment' . $i),
-                    'status' => 'Paid',
-                    'unique_code' => $latestRecord['id'],
-                ];
-                $this->mpayment->addPaymentRegDetail($paymentRegDetailData);
+                        );
+                        // Tambahkan nilai 'other_detail' jika kategori adalah "OTHER"
+                        if ($this->input->post('payment' . $i) == "OTHER") {
+                            $data['other_detail'] = $other_detail;
+                        }
+                        $var = $this->mpaydetail->addPaydetail($data);
+                        $paymentReg = array(
+                            "total_price" => $amount,
+                            'class_type' => 'Reguler',
+                            'created_by' => $this->session->userdata('nama'),
+                            'updated_by' => $this->session->userdata('nama'),
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'updated_at' => date('Y-m-d H:i:s'),
+                        );
+                        $lastIdReg = $this->mpayment->addPaymentReg($paymentReg);
+                        $paymentRegDet = array(
+                            'id_payment_bill' => $lastIdReg['id'],
+                            'student_id' => $this->input->post('studentid' . $i),
+                            'category' => $this->input->post('payment' . $i),
+                            'price' => $amount,
+                            'payment' => $this->input->post('payment' . $i) == "COURSE" ? $this->input->post('payment' . $i) . ' ' . $exRegMonth[1] . '-' . $exRegMonth[0] : $this->input->post('payment' . $i),
+                            'status' => 'Paid',
+                            'unique_code' => $latestRecord['id'],
+                        );
+                        $this->mpayment->addPaymentRegDetail($paymentRegDet);
+                        $paymentRegHist = array(
+                            'amount' => $amount,
+                            'unique_code' => $latestRecord['id'],
+                            'created_by_admin' => $this->session->userdata('nama'),
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'updated_at' => date('Y-m-d H:i:s'),
+                        );
+                        $this->mpayment->addPaymentHistory($paymentRegHist);
+                    }
+                } else {
+                    $data = array(
+                        'paymentid' => $latestRecord['id'],
+                        'studentid' => $this->input->post('studentid' . $i),
+                        'voucherid' => $this->input->post('voucher' . $i),
+                        'category' => $this->input->post('payment' . $i),
+                        'monthpay' => $monthpay,
+                        'amount' => $amount,
 
-                $paymentRegHistoryData = [
-                    'amount' => $amount,
-                    'unique_code' => $latestRecord['id'],
-                    'created_by_admin' => $this->session->userdata('nama'),
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
-                ];
-                $this->mpayment->addPaymentHistory($paymentRegHistoryData);
+                    );
 
-                if ($regularBill) {
-                    $this->mpayment->updateHistyoryReg(['unique_code' => $latestRecord['id']], $regularBill[0]->unique_code);
-                    $this->mpayment->updatePaymentReg(['status' => 'Paid', 'unique_code' => $latestRecord['id']], $this->input->post('studentid' . $i), $this->input->post('payment' . $i), $regularBill[0]->payment);
+                    // Tambahkan nilai 'other_detail' jika kategori adalah "OTHER"
+                    if ($this->input->post('payment' . $i) == "OTHER") {
+                        $data['other_detail'] = $other_detail;
+                    }
+                    $var = $this->mpaydetail->addPaydetail($data);
+                    $paymentReg = array(
+                        "total_price" => $amount,
+                        'class_type' => 'Reguler',
+                        'created_by' => $this->session->userdata('nama'),
+                        'updated_by' => $this->session->userdata('nama'),
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                    );
+                    $lastIdReg = $this->mpayment->addPaymentReg($paymentReg);
+                    $paymentRegDet = array(
+                        'id_payment_bill' => $lastIdReg['id'],
+                        'student_id' => $this->input->post('studentid' . $i),
+                        'category' => $this->input->post('payment' . $i),
+                        'price' => $amount,
+                        'payment' => $this->input->post('payment' . $i) == "COURSE" ? $this->input->post('payment' . $i) . ' ' . $exRegMonth[1] . '-' . $exRegMonth[0] : $this->input->post('payment' . $i),
+                        'status' => 'Paid',
+                        'unique_code' => $latestRecord['id'],
+                    );
+                    $this->mpayment->addPaymentRegDetail($paymentRegDet);
+                    $paymentRegHist = array(
+                        'amount' => $amount,
+                        'unique_code' => $latestRecord['id'],
+                        'created_by_admin' => $this->session->userdata('nama'),
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                    );
+                    $this->mpayment->addPaymentHistory($paymentRegHist);
                 }
             } else {
-                $payDetailData = [
+                $data = array(
                     'paymentid' => $latestRecord['id'],
                     'studentid' => $this->input->post('studentid' . $i),
                     'voucherid' => $this->input->post('voucher' . $i),
                     'category' => $this->input->post('payment' . $i),
                     'amount' => $amount,
-                    'other_detail' => ($this->input->post('payment' . $i) == "OTHER") ? $other_detail : null
-                ];
-                $this->mpaydetail->addPaydetail($payDetailData);
+                );
 
-                $paymentRegData = [
+                // Tambahkan nilai 'other_detail' jika kategori adalah "OTHER"
+                if ($this->input->post('payment' . $i) == "OTHER") {
+                    $data['other_detail'] = $other_detail;
+                }
+                $var = $this->mpaydetail->addPaydetail($data);
+                $paymentReg = array(
                     "total_price" => $amount,
                     'class_type' => 'Reguler',
                     'created_by' => $this->session->userdata('nama'),
                     'updated_by' => $this->session->userdata('nama'),
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
-                ];
-                $lastIdReg = $this->mpayment->addPaymentReg($paymentRegData);
-
-                $paymentRegDetailData = [
+                );
+                $lastIdReg = $this->mpayment->addPaymentReg($paymentReg);
+                $paymentRegDet = array(
                     'id_payment_bill' => $lastIdReg['id'],
                     'student_id' => $this->input->post('studentid' . $i),
                     'category' => $this->input->post('payment' . $i),
@@ -341,49 +454,76 @@ class Payment extends CI_Controller
                     'payment' => $this->input->post('payment' . $i) == "COURSE" ? $this->input->post('payment' . $i) . ' ' . $exRegMonth[1] . '-' . $exRegMonth[0] : $this->input->post('payment' . $i),
                     'status' => 'Paid',
                     'unique_code' => $latestRecord['id'],
-                ];
-                $this->mpayment->addPaymentRegDetail($paymentRegDetailData);
-
-                $paymentRegHistoryData = [
+                );
+                $this->mpayment->addPaymentRegDetail($paymentRegDet);
+                $paymentRegHist = array(
                     'amount' => $amount,
                     'unique_code' => $latestRecord['id'],
                     'created_by_admin' => $this->session->userdata('nama'),
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
-                ];
-                $this->mpayment->addPaymentHistory($paymentRegHistoryData);
+                );
+                $this->mpayment->addPaymentHistory($paymentRegHist);
             }
+            $url = "https://example.com";
         }
 
-        // Penanganan Jurnal
-        $akun_kas_id = ($cek_branch == '1') ? 3 : (($cek_branch == '2') ? 4 : null);
-        $akun_bank_id = ($cek_branch == '1') ? 6 : (($cek_branch == '2') ? 7 : null);
-        $akun_pendapatan_id = ($cek_branch == '1') ? 10 : (($cek_branch == '2') ? 11 : null);
-        $akun_denda_id = ($cek_branch == '1') ? 13 : (($cek_branch == '2') ? 14 : null);
 
-        $trxAkuntansiData = [
-            'payment_id' => $latestRecord['id'],
-            'deskripsi' => 'Income from payment id ' . $latestRecord['id'],
-            'tanggal' => $date,
-            'branch_id' => $cek_branch,
-            'dtm_crt' => date('Y-m-d H:i:s'),
-            'dtm_upd' => date('Y-m-d H:i:s'),
-        ];
-        $id_trx_akuntansi = $this->MTrxAkuntansi->addTrxAkuntansi($trxAkuntansiData);
 
-        $trxAkuntansiDetailDebit = [
-            'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
-            'id_akun' => $this->input->post('method') == 'CASH' ? $akun_kas_id : $akun_bank_id,
-            'jumlah' => $total,
-            'tipe' => 'DEBIT',
-            'keterangan' => 'akun',
-            'dtm_crt' => date('Y-m-d H:i:s'),
-            'dtm_upd' => date('Y-m-d H:i:s'),
-        ];
-        $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($trxAkuntansiDetailDebit);
+        // ambil id akun kas dari masing-masing cabang
+        $akun_kas_id = null;
+        if ($cek_branch == '1') //jika cabang = Surabaya
+            $akun_kas_id = 3;
+        elseif ($cek_branch == '2') //jika cabang = Bali
+            $akun_kas_id = 4;
 
+        //		ambil id akun bank dari masing-masing cabang
+        $akun_bank_id = null;
+        if ($cek_branch == '1') //jika cabang = Surabaya
+            $akun_bank_id = 6;
+        elseif ($cek_branch == '2') //jika cabang = Bali
+            $akun_bank_id = 7;
+
+        //		ambil id akun pendapatan dari masing-masing cabang
+        $akun_pendapatan_id = null;
+        if ($cek_branch == '1') //jika cabang = Surabaya
+            $akun_pendapatan_id = 10;
+        elseif ($cek_branch == '2') //jika cabang = Bali
+            $akun_pendapatan_id = 11;
+
+        //		ambil id akun pendapatan denda dari masing-masing cabang
+        $akun_denda_id = null;
+        if ($cek_branch == '1') //jika cabang = Surabaya
+            $akun_denda_id = 13;
+        elseif ($cek_branch == '2') //jika cabang = Bali
+            $akun_denda_id = 14;
+
+        //jika tanpa penalty
         if ($total_penalty == null || $total_penalty == 0) {
-            $trxAkuntansiDetailCredit = [
+            //		simpan transaksi jurnal
+            $data_trx_akuntansi = array(
+                'payment_id' => $latestRecord['id'],
+                'deskripsi' => 'Income from payment id ' . $latestRecord['id'],
+                'tanggal' => $date,
+                'branch_id' => $cek_branch,
+                'dtm_crt' => date('Y-m-d H:i:s'),
+                'dtm_upd' => date('Y-m-d H:i:s'),
+            );
+            $id_trx_akuntansi = $this->MTrxAkuntansi->addTrxAkuntansi($data_trx_akuntansi);
+
+            //		simpan transaksi ke detail jurnal
+            $data_akun_trx_akuntansi_detail = array(
+                'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+                'id_akun' => $this->input->post('method') == 'CASH' ? $akun_kas_id : $akun_bank_id,
+                'jumlah' => $total,
+                'tipe' => 'DEBIT',
+                'keterangan' => 'akun',
+                'dtm_crt' => date('Y-m-d H:i:s'),
+                'dtm_upd' => date('Y-m-d H:i:s'),
+            );
+            $id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
+
+            $data_lawan_trx_akuntansi_detail = array(
                 'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
                 'id_akun' => $akun_pendapatan_id,
                 'jumlah' => $total,
@@ -391,10 +531,34 @@ class Payment extends CI_Controller
                 'keterangan' => 'lawan',
                 'dtm_crt' => date('Y-m-d H:i:s'),
                 'dtm_upd' => date('Y-m-d H:i:s'),
-            ];
-            $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($trxAkuntansiDetailCredit);
-        } else {
-            $trxAkuntansiDetailCreditPendapatan = [
+            );
+            $id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
+        } else { //jika ada penalty
+            //		simpan transaksi jurnal
+            $data_trx_akuntansi = array(
+                'payment_id' => $latestRecord['id'],
+                'deskripsi' => 'Income from payment id ' . $latestRecord['id'],
+                'tanggal' => $date,
+                'branch_id' => $cek_branch,
+                'dtm_crt' => date('Y-m-d H:i:s'),
+                'dtm_upd' => date('Y-m-d H:i:s'),
+            );
+            $id_trx_akuntansi = $this->MTrxAkuntansi->addTrxAkuntansi($data_trx_akuntansi);
+
+            //		simpan transaksi ke detail jurnal
+            $data_akun_trx_akuntansi_detail = array(
+                'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
+                'id_akun' => $this->input->post('method') == 'CASH' ? $akun_kas_id : $akun_bank_id,
+                'jumlah' => $total,
+                'tipe' => 'DEBIT',
+                'keterangan' => 'akun',
+                'dtm_crt' => date('Y-m-d H:i:s'),
+                'dtm_upd' => date('Y-m-d H:i:s'),
+            );
+            $id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_akun_trx_akuntansi_detail);
+
+            //insert total tanpa penalty ke pendapatan
+            $data_lawan_trx_akuntansi_detail = array(
                 'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
                 'id_akun' => $akun_pendapatan_id,
                 'jumlah' => floatval($total) - floatval($total_penalty),
@@ -402,10 +566,11 @@ class Payment extends CI_Controller
                 'keterangan' => 'lawan',
                 'dtm_crt' => date('Y-m-d H:i:s'),
                 'dtm_upd' => date('Y-m-d H:i:s'),
-            ];
-            $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($trxAkuntansiDetailCreditPendapatan);
+            );
+            $id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
 
-            $trxAkuntansiDetailCreditDenda = [
+            //insert total penalty ke pendapatan denda
+            $data_lawan_trx_akuntansi_detail = array(
                 'id_trx_akun' => $id_trx_akuntansi['id_trx_akun'],
                 'id_akun' => $akun_denda_id,
                 'jumlah' => $total_penalty,
@@ -413,23 +578,19 @@ class Payment extends CI_Controller
                 'keterangan' => 'lawan',
                 'dtm_crt' => date('Y-m-d H:i:s'),
                 'dtm_upd' => date('Y-m-d H:i:s'),
-            ];
-            $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($trxAkuntansiDetailCreditDenda);
+            );
+            $id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
         }
 
-        $this->db->trans_complete(); // Menyelesaikan transaksi database
-
-        if ($this->db->trans_status() === FALSE) {
-            $this->db->trans_rollback();
-            echo "Gagal menyimpan data.";
-            return;
-        }
 
         $this->send_notif_wa(preg_replace("/[^0-9]/", "", $this->input->post('no_hp')), $latestRecord['id'], 'Regular');
+        // redirect(base_url("payment/addregular"));
         sleep(2);
         redirect(base_url("payment/addregular?print=" . $latestRecord['id']));
-        // redirect(base_url("escpos/example/printregular.php?id=".$latestRecord['id']));
+        //redirect(base_url("escpos/example/printregular.php?id=".$latestRecord['id']));
+        // redirect(base_url("dashboard"));
     }
+
     public function addPrivateDb()
     {
 
