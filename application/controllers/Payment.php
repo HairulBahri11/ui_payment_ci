@@ -611,7 +611,7 @@ class Payment extends CI_Controller
         sleep(2);
         // redirect(base_url("payment/addregular?print=" . $latestRecord['id']));
         //redirect(base_url("escpos/example/printregular.php?id=".$latestRecord['id']));
-        redirect(base_url("dasbhoard"));
+        redirect(base_url("dashboard"));
     }
 
     public function addPrivateDb()
