@@ -201,6 +201,10 @@ class Payment extends CI_Controller
 
     public function addRegularDb()
     {
+
+        print_r($this->input->post());
+        die();
+
         date_default_timezone_set("Asia/Jakarta");
         // $date = date('Y-m-d');
         $date = $this->input->post("date");
