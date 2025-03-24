@@ -210,8 +210,20 @@ class Payment extends CI_Controller
         $total_penalty = $this->input->post('total_penalty');
         $order = array("Rp ", ".");
         $replace = "";
-        $total = str_replace($order, $replace, $total);
-        $total_penalty = str_replace($order, $replace, $total_penalty);
+
+        // Pastikan $total bukan null sebelum str_replace
+        if ($total !== null) {
+            $total = str_replace($order, $replace, $total);
+        } else {
+            $total = '0'; // Atau nilai default lainnya
+        }
+
+        // Pastikan $total_penalty bukan null sebelum str_replace
+        if ($total_penalty !== null) {
+            $total_penalty = str_replace($order, $replace, $total_penalty);
+        } else {
+            $total_penalty = '0'; // Atau nilai default lainnya
+        }
 
         // Pastikan total_penalty adalah numerik
         if (!is_numeric($total_penalty)) {
@@ -257,9 +269,15 @@ class Payment extends CI_Controller
         $recordnum = $this->input->post('recordnum');
         for ($i = 1; $i <= $recordnum; $i++) {
             $amount = $this->input->post('amount' . $i);
-            $amount = str_replace($order, $replace, $amount);
 
-            $monthpay = null;
+            // Pastikan $amount bukan null sebelum str_replace
+            if ($amount !== null) {
+                $amount = str_replace($order, $replace, $amount);
+            } else {
+                $amount = '0'; // Atau nilai default lainnya
+            }
+
+            $monthpay = null; // Inisialisasi $monthpay di sini
             if ($this->input->post('payment' . $i) == "COURSE") {
                 $var = $this->input->post('month' . $i);
                 $parts = explode(' ', $var);
@@ -350,7 +368,7 @@ class Payment extends CI_Controller
                     );
                     $addPaymentHistory = $this->mpayment->addPaymentHistory($paymentRegHist);
                     if (!$addPaymentRegDetail || !$addPaymentHistory) {
-                        $this->db->trans_rollback();
+                        $this->$this->db->trans_rollback();
                         echo "Gagal menambahkan detail atau history payment regular.";
                         return;
                     }
