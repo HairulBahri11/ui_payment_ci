@@ -22,7 +22,7 @@ class Student extends CI_Controller
 	{
 		// echo "<pre>";
 		// print_r($this->mstudent->getAllStudent()->result());
-		$getStudent = $this->db->query("SELECT s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, s.note, p.id, p.program, p.course, p.level , s.id_teacher, s.course_time, s.day1, s.day2  FROM student s INNER JOIN price p ON s.priceid = p.id  ORDER BY `sid` ASC");
+		$getStudent = $this->db->query("SELECT s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, s.note, s.branch_id, p.id, p.program, p.course, p.level , s.id_teacher, s.course_time, s.day1, s.day2  FROM student s INNER JOIN price p ON s.priceid = p.id  ORDER BY `sid` ASC");
 		// print_r($asd->result());
 		$data['listStudent'] = $getStudent;
 		$data['listStudentPayment'] = $this->mstudent->getStudentPayment();

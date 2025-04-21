@@ -213,7 +213,7 @@ $url = base_url() . "cetak/printregular/";
 											<select class="form-control select2" style="width: 100%;" name="branch_id" id="branch_id" required>
 												<option selected="selected" disabled="disabled" value="">-- Choose Branch --</option>
 												<option value="1">Surabaya</option>
-												<option value="2">Bali</option>
+												<option value="2">Denpasar</option>
 											</select>
 										</div>
 									</div>
@@ -394,7 +394,7 @@ $url = base_url() . "cetak/printregular/";
 											<td id="name"><?= $row['name'] ?></td>
 											<td id="program"><?= $row['program'] ?></td>
 											<td id="course"><?= $row['course'] ?></td>
-											<td id="place"><?= $row['branch_id'] == "1" ? "Surabaya" : "Bali" ?></td>
+											<td id="place"><?= $row['branch_id'] == "1" ? "Surabaya" : "Denpasar" ?></td>
 											<td id="phone" style="display:none;"><?= $row['phone'] ?></td>
 										</tr>
 
@@ -1306,93 +1306,142 @@ $url = base_url() . "cetak/printregular/";
 		document.getElementById("paymentcut").value = "Rp " + FormatDuit(document.getElementById("paymentcut").value);
 	}
 
-	$("#example3").submit(function() {
-		// $(this).preventDefault();
-		var example3 = document.getElementById("example3");
-		var paytab = document.getElementById("paytab");
-		var recordnum = 0;
+	// $("#example3").submit(function() {
+	// 	// $(this).preventDefault();
+	// 	var example3 = document.getElementById("example3");
+	// 	var paytab = document.getElementById("paytab");
+	// 	var recordnum = 0;
 
-		for (var i = 1, row; row = paytab.rows[i]; i++) {
-			var fieldname = "name";
-			var fieldname = fieldname.concat(i);
-			var value = row.cells[0].innerHTML;
-			var field = document.createElement("INPUT");
-			field.setAttribute("type", "hidden");
-			field.setAttribute("name", fieldname);
-			field.setAttribute("value", value);
-			example3.appendChild(field);
+	// 	for (var i = 1, row; row = paytab.rows[i]; i++) {
+	// 		var fieldname = "name";
+	// 		var fieldname = fieldname.concat(i);
+	// 		var value = row.cells[0].innerHTML;
+	// 		var field = document.createElement("INPUT");
+	// 		field.setAttribute("type", "hidden");
+	// 		field.setAttribute("name", fieldname);
+	// 		field.setAttribute("value", value);
+	// 		example3.appendChild(field);
 
-			var fieldname = "level";
-			var fieldname = fieldname.concat(i);
-			var value = row.cells[1].innerHTML;
-			var field = document.createElement("INPUT");
-			field.setAttribute("type", "hidden");
-			field.setAttribute("name", fieldname);
-			field.setAttribute("value", value);
-			example3.appendChild(field);
+	// 		var fieldname = "level";
+	// 		var fieldname = fieldname.concat(i);
+	// 		var value = row.cells[1].innerHTML;
+	// 		var field = document.createElement("INPUT");
+	// 		field.setAttribute("type", "hidden");
+	// 		field.setAttribute("name", fieldname);
+	// 		field.setAttribute("value", value);
+	// 		example3.appendChild(field);
 
-			var fieldname = "payment";
-			var fieldname = fieldname.concat(i);
-			var value = row.cells[2].innerHTML;
-			var field = document.createElement("INPUT");
-			field.setAttribute("type", "hidden");
-			field.setAttribute("name", fieldname);
-			field.setAttribute("value", value);
-			example3.appendChild(field);
+	// 		var fieldname = "payment";
+	// 		var fieldname = fieldname.concat(i);
+	// 		var value = row.cells[2].innerHTML;
+	// 		var field = document.createElement("INPUT");
+	// 		field.setAttribute("type", "hidden");
+	// 		field.setAttribute("name", fieldname);
+	// 		field.setAttribute("value", value);
+	// 		example3.appendChild(field);
 
-			var fieldname = "month";
-			var fieldname = fieldname.concat(i);
-			var value = row.cells[3].innerHTML;
-			var field = document.createElement("INPUT");
-			field.setAttribute("type", "hidden");
-			field.setAttribute("name", fieldname);
-			field.setAttribute("value", value);
-			example3.appendChild(field);
+	// 		var fieldname = "month";
+	// 		var fieldname = fieldname.concat(i);
+	// 		var value = row.cells[3].innerHTML;
+	// 		var field = document.createElement("INPUT");
+	// 		field.setAttribute("type", "hidden");
+	// 		field.setAttribute("name", fieldname);
+	// 		field.setAttribute("value", value);
+	// 		example3.appendChild(field);
 
-			var fieldname = "voucher";
-			var fieldname = fieldname.concat(i);
-			var value = row.cells[4].innerHTML;
-			var field = document.createElement("INPUT");
-			field.setAttribute("type", "hidden");
-			field.setAttribute("name", fieldname);
-			field.setAttribute("value", value);
-			example3.appendChild(field);
+	// 		var fieldname = "voucher";
+	// 		var fieldname = fieldname.concat(i);
+	// 		var value = row.cells[4].innerHTML;
+	// 		var field = document.createElement("INPUT");
+	// 		field.setAttribute("type", "hidden");
+	// 		field.setAttribute("name", fieldname);
+	// 		field.setAttribute("value", value);
+	// 		example3.appendChild(field);
 
-			var fieldname = "amount";
-			var fieldname = fieldname.concat(i);
-			var value = row.cells[5].innerHTML;
-			var field = document.createElement("INPUT");
-			field.setAttribute("type", "hidden");
-			field.setAttribute("name", fieldname);
-			field.setAttribute("value", value);
-			example3.appendChild(field);
+	// 		var fieldname = "amount";
+	// 		var fieldname = fieldname.concat(i);
+	// 		var value = row.cells[5].innerHTML;
+	// 		var field = document.createElement("INPUT");
+	// 		field.setAttribute("type", "hidden");
+	// 		field.setAttribute("name", fieldname);
+	// 		field.setAttribute("value", value);
+	// 		example3.appendChild(field);
 
-			var fieldname = "studentid";
-			var fieldname = fieldname.concat(i);
-			var value = row.cells[7].innerHTML;
-			var field = document.createElement("INPUT");
-			field.setAttribute("type", "hidden");
-			field.setAttribute("name", fieldname);
-			field.setAttribute("value", value);
-			example3.appendChild(field);
+	// 		var fieldname = "studentid";
+	// 		var fieldname = fieldname.concat(i);
+	// 		var value = row.cells[7].innerHTML;
+	// 		var field = document.createElement("INPUT");
+	// 		field.setAttribute("type", "hidden");
+	// 		field.setAttribute("name", fieldname);
+	// 		field.setAttribute("value", value);
+	// 		example3.appendChild(field);
 
-			recordnum = recordnum + 1;
-		}
+	// 		recordnum = recordnum + 1;
+	// 	}
 
-		var fieldname = "recordnum";
-		var field = document.createElement("INPUT");
-		field.setAttribute("type", "hidden");
-		field.setAttribute("name", fieldname);
-		field.setAttribute("value", recordnum);
-		example3.appendChild(field);
+	// 	var fieldname = "recordnum";
+	// 	var field = document.createElement("INPUT");
+	// 	field.setAttribute("type", "hidden");
+	// 	field.setAttribute("name", fieldname);
+	// 	field.setAttribute("value", recordnum);
+	// 	example3.appendChild(field);
 
-		var amount = document.getElementById("total").value.replace(/\./g, '');
-		amount = amount.replace("Rp ", "");
-		var paymentcut = document.getElementById("paymentcut").value.replace(/\./g, '');
-		paymentcut = paymentcut.replace("Rp ", "");
-		document.getElementById("total").value = parseInt(amount) - parseInt(paymentcut);
-		document.getElementById("total").value = "Rp " + FormatDuit(document.getElementById("total").value);
+	// 	var amount = document.getElementById("total").value.replace(/\./g, '');
+	// 	amount = amount.replace("Rp ", "");
+	// 	var paymentcut = document.getElementById("paymentcut").value.replace(/\./g, '');
+	// 	paymentcut = paymentcut.replace("Rp ", "");
+	// 	document.getElementById("total").value = parseInt(amount) - parseInt(paymentcut);
+	// 	document.getElementById("total").value = "Rp " + FormatDuit(document.getElementById("total").value);
+	// 	alert('Add regular payment successful.');
+	// });
+
+	$("#example3").submit(function(event) {
+		//event.preventDefault(); // Biarkan form dikirim secara normal
+
+		let $form = $(this);
+		let $paytab = $("#paytab");
+		let recordNum = 0;
+
+		$paytab.find("tbody tr").each(function(index) {
+			let $row = $(this);
+			recordNum++;
+
+			// Fungsi untuk membuat input tersembunyi
+			function createHiddenInput(name, value) {
+				$("<input>", {
+					type: "hidden",
+					name: name + recordNum,
+					value: value
+				}).appendTo($form);
+			}
+
+			// Menambahkan input tersembunyi untuk setiap kolom
+			createHiddenInput("name", $row.find("td:eq(0)").text());
+			createHiddenInput("level", $row.find("td:eq(1)").text());
+			createHiddenInput("payment", $row.find("td:eq(2)").text());
+			createHiddenInput("month", $row.find("td:eq(3)").text());
+			createHiddenInput("voucher", $row.find("td:eq(4)").text());
+			createHiddenInput("amount", $row.find("td:eq(5)").text());
+			createHiddenInput("studentid", $row.find("td:eq(7)").text());
+		});
+
+		// Menambahkan input tersembunyi untuk recordNum
+		$("<input>", {
+			type: "hidden",
+			name: "recordnum",
+			value: recordNum
+		}).appendTo($form);
+
+		// Memperbarui total pembayaran
+		let total = $("#total").val().replace(/[^\d]/g, ''); // Ambil hanya angka
+		let paymentcut = $("#paymentcut").val().replace(/[^\d]/g, '');
+
+		let updatedTotal = parseInt(total) - parseInt(paymentcut);
+		$("#total").val("Rp " + FormatDuit(updatedTotal));
+
 		alert('Add regular payment successful.');
+
+		// Form akan dikirim secara normal karena preventDefault dikomentari
 	});
 
 	var idprint = <?= $idprint; ?>;
