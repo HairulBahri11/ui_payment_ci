@@ -213,7 +213,7 @@ $url = base_url() . "cetak/printregular/";
 											<select class="form-control select2" style="width: 100%;" name="branch_id" id="branch_id" required>
 												<option selected="selected" disabled="disabled" value="">-- Choose Branch --</option>
 												<option value="1">Surabaya</option>
-												<option value="2">Bali</option>
+												<option value="2">Denpasar</option>
 											</select>
 										</div>
 									</div>
@@ -394,7 +394,7 @@ $url = base_url() . "cetak/printregular/";
 											<td id="name"><?= $row['name'] ?></td>
 											<td id="program"><?= $row['program'] ?></td>
 											<td id="course"><?= $row['course'] ?></td>
-											<td id="place"><?= $row['branch_id'] == "1" ? "Surabaya" : "Bali" ?></td>
+											<td id="place"><?= $row['branch_id'] == "1" ? "Surabaya" : "Denpasar" ?></td>
 											<td id="phone" style="display:none;"><?= $row['phone'] ?></td>
 										</tr>
 

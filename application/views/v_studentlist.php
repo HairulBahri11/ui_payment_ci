@@ -61,6 +61,7 @@
 										<th>Program</th>
 										<!--<th>Course Fee</th>-->
 										<th>Note</th>
+										<th>Branch</th>
 										<th>Status</th>
 										<th class="notPrintable" width="10%">Action</th>
 									</tr>
@@ -68,8 +69,8 @@
 								<tbody>
 									<?php
 
-
 									foreach ($listStudent->result() as $row) {
+
 
 									?>
 
@@ -103,6 +104,8 @@
 
 											?>
 											<td><?= $row->note ?></td>
+
+											<td><?= $row->branch_id == 1 ? "Surabaya" : "Denpasar" ?></td>
 
 
 											<?php
