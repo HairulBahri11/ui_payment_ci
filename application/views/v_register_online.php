@@ -143,7 +143,7 @@
 					<select name="branch_id" class="form-control select2" style="width: 100%;" id="">
 						<option value="">-- Choose Location --</option>
 						<option value="1">Surabaya</option>
-						<option value="2">Bali</option>
+						<option value="2">Denpasar</option>
 					</select>
 					<span class=" form-control-feedback"></span>
 				</div>
