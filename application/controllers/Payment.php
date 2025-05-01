@@ -586,9 +586,9 @@ class Payment extends CI_Controller
         $this->send_notif_wa(preg_replace("/[^0-9]/", "", $this->input->post('no_hp')), $latestRecord['id'], 'Regular');
         // redirect(base_url("payment/addregular"));
         sleep(2);
-        // redirect(base_url("payment/addregular?print=" . $latestRecord['id']));
+        redirect(base_url("payment/addregular?print=" . $latestRecord['id']));
         //redirect(base_url("escpos/example/printregular.php?id=".$latestRecord['id']));
-        redirect(base_url("dashboard"));
+        // redirect(base_url("dashboard"));
     }
 
     public function addPrivateDb()
