@@ -63,7 +63,7 @@ class OnlineRegistration extends CI_Controller
 				'is_complete' => '0',
 				'know' => $this->input->post('know') != 'Other' ? $this->input->post('know') : $this->input->post('others'),
 				'signature' => $file,
-				'branch_id' => $this->input->post('branch_id')
+				'branch_id' => $this->input->post('branch_id') ? $this->input->post('branch_id') : 1
 			);
 			$dataParent = [
 				'name' => $this->input->post('parent_name'),
