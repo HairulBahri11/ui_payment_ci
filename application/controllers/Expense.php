@@ -56,6 +56,8 @@ class Expense extends CI_Controller  {
 				);
 		$latestRecord = $this->mexpense->addExpense($data);
 
+		$branch = $this->input->post('branch_id') !== null ? $this->input->post('branch_id') : $this->session->userdata('branch');
+
 		$amount = $this->input->post('amount');
 		$order   = array("Rp ", ".");
 		$replace = "";
@@ -68,7 +70,7 @@ class Expense extends CI_Controller  {
 		if ($this->input->post('category') == "OTHER") {
 			$data = array(
 					'expenseid' => $latestRecord['id'],
-					'branch_id' => $this->input->post('branch_id'),
+					'branch_id' => $branch,
 					'id_akun' => $this->input->post('id_akun'),
 					'category' => $this->input->post('other'),
 					'explanation' => $this->input->post('explanation'),
@@ -79,7 +81,7 @@ class Expense extends CI_Controller  {
 		} else {
 			$data = array(
 					'expenseid' => $latestRecord['id'],
-					'branch_id' => $this->input->post('branch_id'),
+					'branch_id' => $branch,
 					'id_akun' => $this->input->post('id_akun'),
 					'category' => $this->input->post('category'),
 					'explanation' => $this->input->post('explanation'),
@@ -127,6 +129,8 @@ class Expense extends CI_Controller  {
 		$replace = "";
 		$amount = str_replace($order, $replace, $amount);
 
+		$branch = $this->input->post('branch_id') !== null ? $this->input->post('branch_id') : $this->session->userdata('branch');
+
 		$var = $this->input->post('expdate');
 		$parts = explode('/',$var);
 		$expdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
@@ -134,7 +138,7 @@ class Expense extends CI_Controller  {
 		if ($this->input->post('category') == "OTHER") {
 			$data = array(
 					'expenseid' => $id,
-					'branch_id' => $this->input->post('branch_id'),
+					'branch_id' => $branch,
 					'id_akun' => $this->input->post('id_akun'),
 					'category' => $this->input->post('other'),
 					'explanation' => $this->input->post('explanation'),
@@ -145,7 +149,7 @@ class Expense extends CI_Controller  {
 		} else {
 			$data = array(
 					'expenseid' => $id,
-					'branch_id' => $this->input->post('branch_id'),
+					'branch_id' => $branch,
 					'id_akun' => $this->input->post('id_akun'),
 					'category' => $this->input->post('category'),
 					'explanation' => $this->input->post('explanation'),
@@ -192,7 +196,7 @@ class Expense extends CI_Controller  {
 //			elseif ($this->session->userdata('branch') == NULL)
 //				echo 'asdfsf' . $this->input->post('branch_id');
 
-			$id_beban = $expense_detail->branch_id == 1 ? 17 : 18;
+			$id_beban = $expense_detail->branch_id == '1' ? 17 : 18;
 
 			$trx_akun = array(
 				'expense_id' => $id,
@@ -234,7 +238,7 @@ class Expense extends CI_Controller  {
 
 	public function deleteExpdetailDb($expenseid, $id)
 	{
-		$this->mexpdetail->deleteExpdetail($id); 
+		$this->mexpdetail->deleteExpdetail($id);
 		$nexturl = "expense/updateexpense/".$expenseid;
 		redirect(base_url($nexturl));
 	}

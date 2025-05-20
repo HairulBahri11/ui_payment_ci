@@ -368,6 +368,9 @@ class Report extends CI_Controller
 
 	public function deleteExpdetailDb($expenseid, $id)
 	{
+		$sql = "DELETE FROM tbl_trx_akuntansi WHERE expdetail_id = ?";
+		$this->db->query($sql, array($id));
+		
 		$this->mexpdetail->deleteExpdetail($id);
 		$nexturl = "report/showexpense";
 		redirect(base_url($nexturl));

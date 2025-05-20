@@ -46,6 +46,12 @@
         $this->db->delete('expdetail');
 	}
 
+	function deleteJournal($expdetail_id)
+	{
+		$this->db->where('expdetail_id', $expdetail_id);
+		$this->db->delete('tbl_trx_akuntansi');
+	}
+
 	function deleteExpdetailByExpenseId($id)
 	{
 		$this->db->where('expenseid', $id);
