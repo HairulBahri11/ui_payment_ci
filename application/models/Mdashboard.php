@@ -80,15 +80,35 @@ class Mdashboard extends CI_Model
 	}
 
 
+	// function getMonthlyExpense()
+	// {
+	// 	$query = $this->db->query("
+	//     SELECT 
+	//         SUM(total) AS totalexp, 
+	//         MONTHNAME(entrydate) AS nmonth 
+	//     FROM expense 
+	//     WHERE YEAR(entrydate) = YEAR(CURDATE()) 
+	//     GROUP BY MONTH(entrydate)
+	// ");
+	// 	return $query->result();
+	// }
+
 	function getMonthlyExpense()
 	{
 		$query = $this->db->query("
-        SELECT 
-            SUM(total) AS totalexp, 
-            MONTHNAME(entrydate) AS nmonth 
-        FROM expense 
-        WHERE YEAR(entrydate) = YEAR(CURDATE()) 
-        GROUP BY MONTH(entrydate)
+        SELECT
+            SUM(ed.amount) AS totalexp,
+            MONTHNAME(e.entrydate) AS nmonth
+        FROM
+            expdetail AS ed
+        JOIN
+            expense AS e ON ed.expenseid = e.id
+        WHERE
+            YEAR(e.entrydate) = YEAR(CURDATE())
+        GROUP BY
+            MONTH(e.entrydate)
+        ORDER BY
+            MONTH(e.entrydate)
     ");
 		return $query->result();
 	}
