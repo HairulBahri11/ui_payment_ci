@@ -98,17 +98,17 @@ class Mdashboard extends CI_Model
 		$query = $this->db->query("
         SELECT
             SUM(ed.amount) AS totalexp,
-            MONTHNAME(e.entrydate) AS nmonth
+            MONTHNAME(ed.expdate) AS nmonth
         FROM
             expdetail AS ed
         JOIN
             expense AS e ON ed.expenseid = e.id
         WHERE
-            YEAR(e.entrydate) = YEAR(CURDATE())
+            YEAR(ed.expdate) = YEAR(CURDATE())
         GROUP BY
-            MONTH(e.entrydate)
+            MONTH(ed.expdate)
         ORDER BY
-            MONTH(e.entrydate)
+            MONTH(ed.expdate)
     ");
 		return $query->result();
 	}
