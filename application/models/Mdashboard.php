@@ -29,7 +29,21 @@ class Mdashboard extends CI_Model
 
 	function getTotalExpense()
 	{
-		$query = $this->db->query("SELECT SUM(total) AS totalexp FROM expense WHERE YEAR(entrydate) = YEAR(now())");
+		// $query = $this->db->query("SELECT SUM(total) AS totalexp FROM expense WHERE YEAR(entrydate) = YEAR(now())");
+		// $result = $query->row_array();
+		// return $result;
+
+		$query = $this->db->query("
+		    SELECT
+		        SUM(ed.amount) AS totalexp,
+		        MONTHNAME(ed.expdate) AS nmonth
+		    FROM
+		        expdetail AS ed
+		    JOIN
+		        expense AS e ON ed.expenseid = e.id
+		    WHERE
+		        YEAR(ed.expdate) = YEAR(now())
+		");
 		$result = $query->row_array();
 		return $result;
 	}
