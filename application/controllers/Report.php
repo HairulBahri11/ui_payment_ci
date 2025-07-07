@@ -41,7 +41,7 @@ class Report extends CI_Controller
 			$enddate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 
 			$data['listExpdetail'] = $this->mreport->getExpense($startdate, $enddate);
-//			print_r($data['listExpdetail']);
+			//			print_r($data['listExpdetail']);
 			$this->load->view('v_header');
 			$this->load->view('v_reportexp', $data);
 			$this->load->view('v_footer');
@@ -370,7 +370,7 @@ class Report extends CI_Controller
 	{
 		$sql = "DELETE FROM tbl_trx_akuntansi WHERE expdetail_id = ?";
 		$this->db->query($sql, array($id));
-		
+
 		$this->mexpdetail->deleteExpdetail($id);
 		$nexturl = "report/showexpense";
 		redirect(base_url($nexturl));
@@ -383,7 +383,7 @@ class Report extends CI_Controller
 		$accounting_trx = $this->db->get_where('tbl_trx_akuntansi', ['payment_id' => $paymentid])->result();
 
 		// Store the IDs to delete details later
-		$trx_ids = array_map(function($trx) {
+		$trx_ids = array_map(function ($trx) {
 			return $trx->id_trx_akun;
 		}, $accounting_trx);
 
@@ -443,12 +443,11 @@ class Report extends CI_Controller
 		$this->load->view('v_exportexcel', $data);
 	}
 
-
 	public function eReceipt($transactionId, $program)
 	{
-
 		$phoneNumber = $this->input->get('phone_number');
 
+		// Normalize the program name
 		if (!empty($program)) {
 			if ($program == 'Private') {
 				$program = 'Private';
@@ -457,19 +456,15 @@ class Report extends CI_Controller
 			}
 		}
 
-		// Periksa apakah nomor telepon ada
+		// Check if phone number is provided
 		if (empty($phoneNumber)) {
-			// Set flashdata untuk alert gagal
 			$this->session->set_flashdata('alert', 'Phone number is required.');
-			// Redirect ke halaman sebelumnya
 			redirect($this->agent->referrer());
 			return;
 		}
 
-
-		// Cek apakah ID disediakan
+		// Check if transaction ID is provided
 		if (empty($transactionId)) {
-			// Return error response jika ID tidak disediakan
 			$response = [
 				'status' => false,
 				'message' => 'Payment ID is required.'
@@ -480,32 +475,37 @@ class Report extends CI_Controller
 			return;
 		}
 
-		// $base_url = base_url();
-		// Base URL untuk API
+		// Base URL for the API
 		$baseUrl = "https://ui-backoffice.primtechdev.com/api/";
 		$url = $baseUrl . "e-receipt/" . $transactionId . '/' . $phoneNumber . '?program=' . $program;
 
-		// Inisialisasi CURL dengan CodeIgniter
+		// Initialize CURL with CodeIgniter library
 		$this->load->library('curl');
 
 		// Set CURL options
 		$headers = [
 			'Content-Type: application/json',
-			'Authorization: Bearer ' .
-				'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo'
+			// IMPORTANT: This Bearer token is hardcoded and will expire.
+			// For production, consider storing this securely (e.g., in environment variables)
+			// and refreshing it if needed.
+			'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVlY2VpcHQtZnVuY3Rpb24tb3JnYW5pemF0aW9uLXBoYy1jb250cm9sbGVyLWNvcnJlY3RlZC12ZXJzaW9uLWluY2x1ZGluZy1lcnJvci1oYW5kbGluZz0xNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo'
 		];
 		$this->curl->create($url);
 		$this->curl->http_header($headers);
-		$this->curl->option(CURLOPT_RETURNTRANSFER, true);
+		$this->curl->option(CURLOPT_RETURNTRANSFER, true); // Return the transfer as a string
+		$this->curl->option(CURLOPT_TIMEOUT, 30); // Set a timeout for the cURL request (e.g., 30 seconds)
 
-		// Eksekusi CURL dan dapatkan hasilnya
+		// Execute CURL and get the result
 		$result = $this->curl->execute();
 
-		// Cek apakah terjadi kesalahan pada CURL
-		if ($this->curl->error_code) {
+		// Get HTTP status code
+		$http_status = $this->curl->info(CURLINFO_HTTP_CODE);
+
+		// Check for CURL errors using the library's methods
+		if ($this->curl->error_code()) { // Corrected: Call as a method
 			$response = [
 				'status' => false,
-				'message' => 'CURL Error: ' . $this->curl->error_string
+				'message' => 'CURL Error: ' . $this->curl->error_string() // Corrected: Call as a method
 			];
 			$this->output
 				->set_content_type('application/json')
@@ -513,25 +513,140 @@ class Report extends CI_Controller
 			return;
 		}
 
-		// Decode respon JSON
-		$decodedResult = json_decode($result, true);
-
-		// Kirim kembali respon
-		if (is_array($decodedResult)) {
-			// Set flashdata untuk alert sukses
-			$this->session->set_flashdata('alert', 'Success resend e-receipt.');
-
-			// Redirect ke halaman lain setelah menyimpan pesan dalam sesi
-			redirect(base_url('report/showTrans'));
-		} else {
-			// Handle kesalahan saat decode JSON
+		// Check if the HTTP status code indicates success (e.g., 200 OK)
+		if ($http_status !== 200) {
 			$response = [
 				'status' => false,
-				'message' => 'Failed to decode the API response.'
+				'message' => 'API returned non-200 status: ' . $http_status . ' - ' . $result
+			];
+			$this->output
+				->set_content_type('application/json')
+				->set_output(json_encode($response));
+			return;
+		}
+
+		// Decode the JSON response
+		$decodedResult = json_decode($result, true);
+
+		// Check for JSON decoding errors
+		if (json_last_error() !== JSON_ERROR_NONE) {
+			$response = [
+				'status' => false,
+				'message' => 'Failed to decode the API response. JSON Error: ' . json_last_error_msg() . '. Raw response: ' . $result
+			];
+			$this->output
+				->set_content_type('application/json')
+				->set_output(json_encode($response));
+			return; // Important: Add return here to stop further execution
+		}
+
+		// Send back the response based on the decoded result
+		// Assuming a successful API call means the e-receipt was processed/resent
+		if (isset($decodedResult['status']) && $decodedResult['status'] === true) {
+			$this->session->set_flashdata('alert', 'Success resend e-receipt.');
+			redirect(base_url('report/showTrans'));
+		} else {
+			// Handle cases where API response indicates an error, even if JSON decoded successfully
+			$errorMessage = isset($decodedResult['message']) ? $decodedResult['message'] : 'Unknown API error.';
+			$response = [
+				'status' => false,
+				'message' => 'API Response Error: ' . $errorMessage
 			];
 			$this->output
 				->set_content_type('application/json')
 				->set_output(json_encode($response));
 		}
 	}
+
+
+	// public function eReceipt($transactionId, $program)
+	// {
+
+	// 	$phoneNumber = $this->input->get('phone_number');
+
+	// 	if (!empty($program)) {
+	// 		if ($program == 'Private') {
+	// 			$program = 'Private';
+	// 		} else {
+	// 			$program = 'Regular';
+	// 		}
+	// 	}
+
+	// 	// Periksa apakah nomor telepon ada
+	// 	if (empty($phoneNumber)) {
+	// 		// Set flashdata untuk alert gagal
+	// 		$this->session->set_flashdata('alert', 'Phone number is required.');
+	// 		// Redirect ke halaman sebelumnya
+	// 		redirect($this->agent->referrer());
+	// 		return;
+	// 	}
+
+
+	// 	// Cek apakah ID disediakan
+	// 	if (empty($transactionId)) {
+	// 		// Return error response jika ID tidak disediakan
+	// 		$response = [
+	// 			'status' => false,
+	// 			'message' => 'Payment ID is required.'
+	// 		];
+	// 		$this->output
+	// 			->set_content_type('application/json')
+	// 			->set_output(json_encode($response));
+	// 		return;
+	// 	}
+
+	// 	// $base_url = base_url();
+	// 	// Base URL untuk API
+	// 	$baseUrl = "https://ui-backoffice.primtechdev.com/api/";
+	// 	$url = $baseUrl . "e-receipt/" . $transactionId . '/' . $phoneNumber . '?program=' . $program;
+
+	// 	// Inisialisasi CURL dengan CodeIgniter
+	// 	$this->load->library('curl');
+
+	// 	// Set CURL options
+	// 	$headers = [
+	// 		'Content-Type: application/json',
+	// 		'Authorization: Bearer ' .
+	// 			'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo'
+	// 	];
+	// 	$this->curl->create($url);
+	// 	$this->curl->http_header($headers);
+	// 	$this->curl->option(CURLOPT_RETURNTRANSFER, true);
+
+	// 	// Eksekusi CURL dan dapatkan hasilnya
+	// 	$result = $this->curl->execute();
+
+	// 	// Cek apakah terjadi kesalahan pada CURL
+	// 	if ($this->curl->error_code) {
+	// 		$response = [
+	// 			'status' => false,
+	// 			'message' => 'CURL Error: ' . $this->curl->error_string
+	// 		];
+	// 		$this->output
+	// 			->set_content_type('application/json')
+	// 			->set_output(json_encode($response));
+	// 		return;
+	// 	}
+
+	// 	// Decode respon JSON
+	// 	$decodedResult = json_decode($result, true);
+
+	// 	// Kirim kembali respon
+	// 	if (is_array($decodedResult)) {
+	// 		// Set flashdata untuk alert sukses
+	// 		$this->session->set_flashdata('alert', 'Success resend e-receipt.');
+
+	// 		// Redirect ke halaman lain setelah menyimpan pesan dalam sesi
+	// 		redirect(base_url('report/showTrans'));
+	// 	} else {
+	// 		// Handle kesalahan saat decode JSON
+	// 		$response = [
+	// 			'status' => false,
+	// 			'message' => 'Failed to decode the API response.'
+	// 		];
+	// 		$this->output
+	// 			->set_content_type('application/json')
+	// 			->set_output(json_encode($response));
+	// 	}
+	// }
 }
