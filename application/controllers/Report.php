@@ -488,7 +488,7 @@ class Report extends CI_Controller
 			// IMPORTANT: This Bearer token is hardcoded and will expire.
 			// For production, consider storing this securely (e.g., in environment variables)
 			// and refreshing it if needed.
-			'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVlY2VpcHQtZnVuY3Rpb24tb3JnYW5pemF0aW9uLXBoYy1jb250cm9sbGVyLWNvcnJlY3RlZC12ZXJzaW9uLWluY2x1ZGluZy1lcnJvci1oYW5kbGluZz0xNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo'
+			'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3VpLWJhY2tvZmZpY2UucHJpbXRlY2hkZXYuY29tL2FwaS9hdXRoZW50aWNhdGUiLCJpYXQiOjE3NTE4Nzk1NjgsImV4cCI6MTc4MzQxNTU2OCwibmJmIjoxNzUxODc5NTY4LCJqdGkiOiJkb3RVRlZIV0lVYkpuQ3NoIiwic3ViIjoiMTI3NCIsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.q8kvNIWXgVQeXoHJmQD3RgVX-t6_aBRgHF_BpBuoe-I'
 		];
 		$this->curl->create($url);
 		$this->curl->http_header($headers);
@@ -498,8 +498,8 @@ class Report extends CI_Controller
 		// Execute CURL and get the result
 		$result = $this->curl->execute();
 
-		// Get HTTP status code
-		$http_status = $this->curl->info(CURLINFO_HTTP_CODE);
+		// Get HTTP status code using the library's property
+		$http_status = $this->curl->http_code; // Corrected: Access as a property
 
 		// Check for CURL errors using the library's methods
 		if ($this->curl->error_code()) { // Corrected: Call as a method
