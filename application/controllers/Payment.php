@@ -1208,7 +1208,7 @@ class Payment extends CI_Controller
     function send_notif_wa($no_hp, $trans_id, $program)
     {
         $url = "https://ui-backoffice.primtechdev.com/api/e-receipt/$trans_id/$no_hp?program=$program";
-        $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo";
+        $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3VpLWJhY2tvZmZpY2UucHJpbXRlY2hkZXYuY29tL2FwaS9hdXRoZW50aWNhdGUiLCJpYXQiOjE3NTE4Nzk1NjgsImV4cCI6MTc4MzQxNTU2OCwibmJmIjoxNzUxODc5NTY4LCJqdGkiOiJkb3RVRlZIV0lVYkpuQ3NoIiwic3ViIjoiMTI3NCIsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.q8kvNIWXgVQeXoHJmQD3RgVX-t6_aBRgHF_BpBuoe-I";
 
         $ch = curl_init();
 
