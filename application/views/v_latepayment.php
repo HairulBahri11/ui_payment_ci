@@ -130,6 +130,8 @@ $(document).ready(function(){
 	$(document).ready(function() {
 		$("#btnSend").click(function() {
 			var listId = [];
+			console.log(listId);
+
 			$('input[name="listId[]"]:checked').each(function() {
 				var studentId = $(this).val();
 				var studentData = findStudentData(studentId); // Fungsi untuk mencari data siswa
@@ -169,6 +171,9 @@ $(document).ready(function(){
 				month: 'short',
 				year: 'numeric'
 			});
+
+			console.log(studentMonthPay);
+
 
 			return {
 				id: student.id,
