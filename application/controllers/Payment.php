@@ -1246,7 +1246,7 @@ class Payment extends CI_Controller
     function sendBroadCastWa($data)
     {
         $url = "https://ui-backoffice.primtechdev.com/api/send-payment-reminders/$data";
-        $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3VpLWJhY2tvZmZpY2UucHJpbXRlY2hkZXYuY29tL2FwaS9hdXRoZW50aWNhdGUiLCJpYXQiOjE3NTE5NDQ2MzMsImV4cCI6MTc4MzQ4MDYzMywibmJmIjoxNzUxOTQ0NjMzLCJqdGkiOiJ3NUEzZ3Z5enhJdHhETUo1Iiwic3ViIjoiMTI3NCIsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.VGaiaQUEKmZ7b0L20uRA1nerg1_W6toHGzhvbldCTxg";
+        $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3VpLWJhY2tvZmZpY2UucHJpbXRlY2hkZXYuY29tL2FwaS9hdXRoZW50aWNhdGUiLCJpYXQiOjE3NTE5NTYxNTksImV4cCI6MTc4MzQ5MjE1OSwibmJmIjoxNzUxOTU2MTU5LCJqdGkiOiIwQjNyOTBIMjRPY2h2Y0R5Iiwic3ViIjoiMTI3NCIsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.uAYLpngQKlWQTleesNNmi_wckujKyG3nA23NsNjasko";
 
         $ch = curl_init();
 
