@@ -1491,8 +1491,8 @@ class Accounting extends CI_Controller
 
 	public function sendBroadCastWa($data)
 	{
-		$url = "https://ui-backoffice.primtechdev.com/api/broadcast";
-		$token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcHJpbXRlY2gtc2lzdGVtLmNvbVwvdWktcGF5bWVudC1iYWNrb2ZmaWNlXC9wdWJsaWNcL2FwaVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNzIwMTc1MTczLCJleHAiOjE3NTE3MTExNzMsIm5iZiI6MTcyMDE3NTE3MywianRpIjoiQVN3RUphUVQ5SmJWRDlpMyIsInN1YiI6MTcsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.ld9GMtj1a59rSwZr0f2iw8IdIfqxU1F_Ot7XGaroUHo"; // Token Anda
+		$url = "https://ui-backoffice.primtechdev.com/api/send-payment-reminders";
+		$token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3VpLWJhY2tvZmZpY2UucHJpbXRlY2hkZXYuY29tL2FwaS9hdXRoZW50aWNhdGUiLCJpYXQiOjE3NTE5NTYxNTksImV4cCI6MTc4MzQ5MjE1OSwibmJmIjoxNzUxOTU2MTU5LCJqdGkiOiIwQjNyOTBIMjRPY2h2Y0R5Iiwic3ViIjoiMTI3NCIsInBydiI6IjJhZGY2ZDVkZmI2MmI4ODc3OTQ4YTAzMmQwYzc3Y2E2MjVhZDJkNzcifQ.uAYLpngQKlWQTleesNNmi_wckujKyG3nA23NsNjasko"; // Token Anda
 
 
 
