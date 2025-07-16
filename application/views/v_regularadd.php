@@ -785,40 +785,96 @@ $url = base_url() . "cetak/printregular/";
 					?>
 					// Ubah `monthpay` ke format baru
 					// var monthpay = "2022-12"; // Contoh nilai awal "YYYY-MM"
-					var parts = monthpay.split("-"); // Pisahkan string berdasarkan "-"
-					var lastBulan = parseInt(parts[1]); // Ambil bulan dari last payment
-					var lastTahun = parseInt(parts[0]); // Ambil tahun dari last payment
+					// var parts = monthpay.split("-"); // Pisahkan string berdasarkan "-"
+					// var lastBulan = parseInt(parts[1]); // Ambil bulan dari last payment
+					// var lastTahun = parseInt(parts[0]); // Ambil tahun dari last payment
 
-					// Ambil bulan dan tahun sekarang
+					// // Ambil bulan dan tahun sekarang
+					// var now = new Date();
+					// var currentBulan = now.getMonth() + 1; // Bulan saat ini (0-11, +1 untuk 1-12)
+					// var currentTahun = now.getFullYear(); // Tahun saat ini
+
+					// // Array nama bulan dalam bahasa Inggris
+					// var namaBulan = [
+					// 	"January", "February", "March", "April", "May", "June",
+					// 	"July", "August", "September", "October", "November", "December"
+					// ];
+
+					// // Elemen <select> dengan ID 'monthpay'
+					// var select = document.getElementById('monthpay');
+
+					// // Logika untuk menentukan titik awal
+					// var startBulan, startTahun;
+
+					// if (lastTahun < currentTahun - 1 || (lastTahun === currentTahun - 1 && lastBulan < currentBulan)) {
+					// 	// Jika tahun terakhir lebih dari 1 tahun sebelum tahun sekarang
+					// 	startBulan = currentBulan; // Mulai dari bulan ini
+					// 	startTahun = currentTahun;
+					// } else {
+					// 	// Jika tahun terakhir masih relevan
+					// 	startBulan = lastBulan + 1; // Mulai dari bulan berikutnya
+					// 	startTahun = lastTahun;
+					// 	if (startBulan > 12) {
+					// 		startBulan = 1; // Reset ke Januari jika bulan > 12
+					// 		startTahun++; // Tambah tahun
+					// 	}
+					// }
+
+					var parts = monthpay.split("-"); // Separate the string by "-"
+					var lastBulan = parseInt(parts[1]); // Get the month from the last payment
+					var lastTahun = parseInt(parts[0]); // Get the year from the last payment
+
+					// Get the current month and year
 					var now = new Date();
-					var currentBulan = now.getMonth() + 1; // Bulan saat ini (0-11, +1 untuk 1-12)
-					var currentTahun = now.getFullYear(); // Tahun saat ini
+					var currentBulan = now.getMonth() + 1; // Current month (0-11, +1 for 1-12)
+					var currentTahun = now.getFullYear(); // Current year
 
-					// Array nama bulan dalam bahasa Inggris
+					// Array of month names in English
 					var namaBulan = [
 						"January", "February", "March", "April", "May", "June",
 						"July", "August", "September", "October", "November", "December"
 					];
 
-					// Elemen <select> dengan ID 'monthpay'
+					// The <select> element with ID 'monthpay'
 					var select = document.getElementById('monthpay');
 
-					// Logika untuk menentukan titik awal
+					// Logic to determine the starting point for the options
 					var startBulan, startTahun;
 
-					if (lastTahun < currentTahun - 1 || (lastTahun === currentTahun - 1 && lastBulan < currentBulan)) {
-						// Jika tahun terakhir lebih dari 1 tahun sebelum tahun sekarang
-						startBulan = currentBulan; // Mulai dari bulan ini
+					// Calculate the 'last payment date' as a single comparable number (YYYYMM)
+					const lastPaymentDateNum = lastTahun * 100 + lastBulan;
+					// Calculate the 'current date minus 12 months' (or exactly a year ago)
+					// This is to determine if the last payment was truly "more than a year ago"
+					let oneYearAgoTahun = currentTahun;
+					let oneYearAgoBulan = currentBulan;
+
+					if (oneYearAgoBulan - 12 <= 0) { // If subtracting 12 months goes into the previous year(s)
+						oneYearAgoTahun--; // Go back one year
+						oneYearAgoBulan += 12; // Add 12 to the month to get the equivalent month in the previous year (e.g., July becomes July - 12 + 12 = July)
+					}
+					const oneYearAgoDateNum = oneYearAgoTahun * 100 + oneYearAgoBulan;
+
+					// --- REVISED LOGIC FOR startBulan AND startTahun ---
+					// If the last payment date is more than 12 months in the past relative to current date,
+					// or if the monthpay is empty/invalid (handled by initial parsing resulting in NaN)
+					if (isNaN(lastBulan) || isNaN(lastTahun) || lastPaymentDateNum < oneYearAgoDateNum) {
+						// If last payment is invalid or truly "too old" (more than 12 months ago),
+						// we start populating the dropdown from the current month and year.
+						startBulan = currentBulan;
 						startTahun = currentTahun;
 					} else {
-						// Jika tahun terakhir masih relevan
-						startBulan = lastBulan + 1; // Mulai dari bulan berikutnya
+						// If the last payment date is "recent" (within the last 12 months),
+						// we start populating the dropdown from the month *after* the last payment.
+						startBulan = lastBulan + 1;
 						startTahun = lastTahun;
+
+						// Handle month rollover (e.g., if lastBulan was 12, startBulan becomes 1, and year increments)
 						if (startBulan > 12) {
-							startBulan = 1; // Reset ke Januari jika bulan > 12
-							startTahun++; // Tambah tahun
+							startBulan = 1; // Reset to January if month > 12
+							startTahun++; // Increment year
 						}
 					}
+					// --- END REVISED LOGIC ---
 
 					// Fungsi untuk menghitung 12 bulan berikutnya dan menambahkannya ke <select>
 					function generateNextMonths(bulan, tahun) {
