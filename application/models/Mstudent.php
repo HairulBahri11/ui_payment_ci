@@ -249,7 +249,7 @@ class Mstudent extends CI_Model
       AND s.course_time IS NOT NULL
     GROUP BY s.id
     HAVING MAX(pd.monthpay) IS NULL
-        OR MAX(pd.monthpay) < CURDATE()
+        OR (YEAR(MAX(pd.monthpay)) < YEAR(CURDATE()) OR (YEAR(MAX(pd.monthpay)) = YEAR(CURDATE()) AND MONTH(MAX(pd.monthpay)) < MONTH(CURDATE())))
     ORDER BY `monthpay` ASC
     ");
 
