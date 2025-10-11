@@ -165,6 +165,8 @@
               </ul>
             </li>
           <?php } ?>
+          
+          
           <li class="<?= $this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'latepayment' ? 'active' : '' ?>">
             <a href="<?= base_url() ?>student/latepayment">
               <i class="fa fa-money"></i> <span>Late Payment</span>
@@ -214,6 +216,14 @@
               <i class="fa fa-user"></i> <span>Student</span>
             </a>
           </li>
+
+           <?php if ($this->session->userdata('level') == 1 || $this->session->userdata('level') == 2) { ?>
+           <li class="<?= $this->uri->segment(1) == 'PlacementDate' ? 'active' : '' ?>">
+            <a href="<?= base_url() ?>PlacementDate/">
+              <i class="fa fa-calendar-check-o"></i> <span>Placement Test Date</span>
+            </a>
+          </li>
+          <?php } ?>
 
           <li class="<?= $this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'studentOnline' ? 'active' : '' ?>">
             <a href="<?= base_url() ?>student/studentOnline">
