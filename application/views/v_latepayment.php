@@ -128,7 +128,8 @@ $(document).ready(function(){
 });
  </script> -->
 
-<script>
+ <!-- ini sebelumnya -->
+<!-- <script>
 	$(document).ready(function() {
 		$("#btnSend").click(function() {
 			var listId = [];
@@ -185,4 +186,79 @@ $(document).ready(function(){
 			};
 		}
 	});
+</script> -->
+<!-- ini terbaru -->
+<script>
+    $(document).ready(function() {
+        $("#btnSend").click(function() {
+            var listId = [];
+            console.log(listId);
+
+            $('input[name="listId[]"]:checked').each(function() {
+                var studentId = $(this).val();
+                var studentData = findStudentData(studentId); // Fungsi untuk mencari data siswa
+                listId.push(studentData);
+            });
+
+            if (listId.length > 0) {
+                // Kirimkan datanya ke controller menggunakan AJAX
+                $.ajax({
+                    url: "<?= base_url() ?>Accounting/broadcast",
+                    type: "POST",
+                    data: {
+                        listId: JSON.stringify(listId)
+                    },
+                    success: function(response) {
+                        console.log("Broadcast berhasil:", response);
+                        alert("Successfully sent broadcast messages");
+                        window.location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Terjadi kesalahan:", error);
+                    }
+                });
+            } else {
+                alert("Silakan pilih siswa");
+            }
+        });
+
+        // Fungsi untuk mencari data siswa berdasarkan id
+        function findStudentData(id) {
+            var listStudent = <?php echo json_encode($listStudent); ?>;
+            var student = listStudent.find(function(student) {
+                return student.id == id;
+            });
+            var updatedPhone = $('input[name="phone_' + id + '"]').val();
+
+            // --- PERBAIKAN DIMULAI DI SINI ---
+            var dateToFormat;
+
+            // Cek jika student.monthpay tidak ada (null, undefined, atau string kosong)
+            if (student.monthpay) {
+                // Jika ada data monthpay, gunakan data tersebut
+                dateToFormat = new Date(student.monthpay);
+            } else {
+                // Jika tidak ada data monthpay, gunakan tanggal hari ini
+                dateToFormat = new Date();
+                console.log("monthpay kosong. Menggunakan bulan saat ini:", dateToFormat);
+            }
+
+            // Format tanggal yang sudah ditentukan
+            var studentMonthPay = dateToFormat.toLocaleDateString('en-US', {
+                month: 'short',
+                year: 'numeric'
+            });
+            // --- PERBAIKAN BERAKHIR DI SINI ---
+
+            console.log(studentMonthPay);
+
+
+            return {
+                id: student.id,
+                name: student.name,
+                phone: updatedPhone, // Perbarui phone dengan input terbaru
+                lastpaydate: studentMonthPay,
+            };
+        }
+    });
 </script>
