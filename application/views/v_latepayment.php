@@ -47,7 +47,9 @@
 									?>
 										<tr>
 											<td><input type="checkbox" name="listId[]" value="<?= $row->id ?>"></td>
-											<td style=" font-weight: bold"><?= date_format(date_create($row->monthpay), "F Y") ?></td>
+											<td style=" font-weight: bold">
+												<?= $row->monthpay ? date_format(date_create($row->monthpay), "F Y") : '-(No Payment History)-' ?>
+											</td>
 											<td><?= $row->id ?></td>
 											<td><?= $row->name ?></td>
 											<td><?= $row->program ?></td>
