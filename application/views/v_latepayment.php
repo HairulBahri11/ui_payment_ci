@@ -238,9 +238,10 @@ $(document).ready(function(){
                 // Jika ada data monthpay, gunakan data tersebut
                 dateToFormat = new Date(student.monthpay);
             } else {
-                // Jika tidak ada data monthpay, gunakan tanggal hari ini
+                // Jika tidak ada data monthpay, gunakan tanggal saat ini tapi bulan sebelumnya
                 dateToFormat = new Date();
-                console.log("monthpay kosong. Menggunakan bulan saat ini:", dateToFormat);
+                dateToFormat.setMonth(dateToFormat.getMonth() - 1);
+                console.log("monthpay kosong. Menggunakan bulan sebelumnya:", dateToFormat);
             }
 
             // Format tanggal yang sudah ditentukan
