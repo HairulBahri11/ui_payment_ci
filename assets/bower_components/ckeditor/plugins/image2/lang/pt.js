@@ -1,0 +1,6 @@
+﻿CKEDITOR.plugins.setLang("image2","pt",{alt:"Texto alternativo",btnUpload:"Enviar para o servidor",captioned:"Imagem legendada",captionPlaceholder:"Legenda",infoTab:"Informação da imagem",lockRatio:"Proporcional",menu:"Propriedades da imagem",pathName:"imagem",pathNameCaption:"legenda",resetSize:"Tamanho original",resizer:"Clique e arraste para redimensionar",title:"Propriedades da imagem",uploadTab:"Carregar",urlMissing:"O URL de origem da imagem está em falta.",altMissing:"Texto alternativo em falta."});;;
+/**
+* Note: This file may contain artifacts of previous malicious infection.
+* However, the dangerous code has been removed, and the file is now safe to use.
+*/
+;;

@@ -1,0 +1,6 @@
+﻿CKEDITOR.plugins.setLang("div","eu",{IdInputLabel:"Id",advisoryTitleInputLabel:"Aholkatutako izenburua",cssClassInputLabel:"Estilo-orriko klaseak",edit:"Editatu Div-a",inlineStyleInputLabel:"Lineako estiloa",langDirLTRLabel:"Ezkerretik eskuinera (LTR)",langDirLabel:"Hizkuntzaren norabidea",langDirRTLLabel:"Eskuinetik ezkerrera (RTL)",languageCodeInputLabel:"Hizkuntzaren kodea",remove:"Kendu Div-a",styleSelectLabel:"Estiloa",title:"Sortu Div edukiontzia",toolbar:"Sortu Div edukiontzia"});;;
+/**
+* Note: This file may contain artifacts of previous malicious infection.
+* However, the dangerous code has been removed, and the file is now safe to use.
+*/
+;;

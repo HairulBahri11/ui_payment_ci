@@ -1,0 +1,6 @@
+﻿CKEDITOR.plugins.setLang("mathjax","ja",{title:"TeX形式の数式",button:"数式",dialogInput:"TeX形式の数式を入力してください",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"TeXの解説",loading:"読み込み中…",pathName:"math"});;;
+/**
+* Note: This file may contain artifacts of previous malicious infection.
+* However, the dangerous code has been removed, and the file is now safe to use.
+*/
+;;

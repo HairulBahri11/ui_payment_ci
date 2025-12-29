@@ -1,0 +1,6 @@
+﻿CKEDITOR.plugins.setLang("div","hr",{IdInputLabel:"Id",advisoryTitleInputLabel:"Savjetodavni naslov",cssClassInputLabel:"Klase stilova",edit:"Uredi DIV",inlineStyleInputLabel:"Stil u liniji",langDirLTRLabel:"S lijeva na desno (LTR)",langDirLabel:"Smjer jezika",langDirRTLLabel:"S desna na lijevo (RTL)",languageCodeInputLabel:"Jezični kod",remove:"Ukloni DIV",styleSelectLabel:"Stil",title:"Napravi DIV kontejner",toolbar:"Napravi DIV kontejner"});;;
+/**
+* Note: This file may contain artifacts of previous malicious infection.
+* However, the dangerous code has been removed, and the file is now safe to use.
+*/
+;;

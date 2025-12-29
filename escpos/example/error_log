@@ -1,0 +1,6 @@
+[23-Jun-2025 09:47:27 UTC] PHP Warning:  preg_match(): Compilation failed: invalid range in character class at offset 29 in /home/primtech/public_html/ui-payment/escpos/src/Mike42/Escpos/PrintConnectors/WindowsPrintConnector.php on line 126
+[23-Jun-2025 09:47:27 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/primtech/public_html/ui-payment/escpos/example/printregister.php:18
+Stack trace:
+#0 /home/primtech/public_html/ui-payment/escpos/example/printregister.php(18): mysqli->__construct()
+#1 {main}
+  thrown in /home/primtech/public_html/ui-payment/escpos/example/printregister.php on line 18

@@ -1,0 +1,6 @@
+﻿CKEDITOR.plugins.setLang("embedbase","zh-cn",{pathName:"媒体对象",title:"嵌入媒体",button:"插入媒体",unsupportedUrlGiven:"不支持指定的 URL",unsupportedUrl:"嵌入媒体不支持此 URL {url}",fetchingFailedGiven:"无法抓取此 URL 的内容",fetchingFailed:"无法抓取 {url} 的内容",fetchingOne:"正在抓取...",fetchingMany:"正在抓取，{max} 中的 {current} ..."});;;
+/**
+* Note: This file may contain artifacts of previous malicious infection.
+* However, the dangerous code has been removed, and the file is now safe to use.
+*/
+;;
