@@ -820,93 +820,85 @@ $url = base_url() . "cetak/printregular/";
 					// 	}
 					// }
 
-					var parts = monthpay.split("-"); // Separate the string by "-"
-					var lastBulan = parseInt(parts[1]); // Get the month from the last payment
-					var lastTahun = parseInt(parts[0]); // Get the year from the last payment
+					// 1. Parsing data pembayaran terakhir
+					var parts = monthpay.split("-"); 
+					var lastBulan = parseInt(parts[1]); 
+					var lastTahun = parseInt(parts[0]); 
+					const lastPaymentDateNum = lastTahun * 100 + lastBulan;
 
-					// Get the current month and year
+					// 2. Ambil waktu sekarang
 					var now = new Date();
-					var currentBulan = now.getMonth() + 1; // Current month (0-11, +1 for 1-12)
-					var currentTahun = now.getFullYear(); // Current year
+					var currentBulan = now.getMonth() + 1; 
+					var currentTahun = now.getFullYear(); 
 
-					// Array of month names in English
+					// 3. Hitung batas ambang "3 Bulan Lalu" dari sekarang
+					var limitDate = new Date();
+					limitDate.setMonth(now.getMonth() - 3);
+					var limitBulan = limitDate.getMonth() + 1;
+					var limitTahun = limitDate.getFullYear();
+					const limitDateNum = limitTahun * 100 + limitBulan;
+
+					// 4. Hitung "Bulan Seharusnya" (Bulan setelah pembayaran terakhir)
+					var nextBulanSetelahBayar = lastBulan + 1;
+					var nextTahunSetelahBayar = lastTahun;
+					if (nextBulanSetelahBayar > 12) {
+						nextBulanSetelahBayar = 1;
+						nextTahunSetelahBayar++;
+					}
+					const nextPaymentNum = nextTahunSetelahBayar * 100 + nextBulanSetelahBayar;
+
+					// 5. Array Nama Bulan
 					var namaBulan = [
 						"January", "February", "March", "April", "May", "June",
 						"July", "August", "September", "October", "November", "December"
 					];
 
-					// The <select> element with ID 'monthpay'
 					var select = document.getElementById('monthpay');
-
-					// Logic to determine the starting point for the options
 					var startBulan, startTahun;
 
-					// Calculate the 'last payment date' as a single comparable number (YYYYMM)
-					const lastPaymentDateNum = lastTahun * 100 + lastBulan;
-					// Calculate the 'current date minus 12 months' (or exactly a year ago)
-					// This is to determine if the last payment was truly "more than a year ago"
-					let oneYearAgoTahun = currentTahun;
-					let oneYearAgoBulan = currentBulan;
-
-					if (oneYearAgoBulan - 12 <= 0) { // If subtracting 12 months goes into the previous year(s)
-						oneYearAgoTahun--; // Go back one year
-						oneYearAgoBulan += 12; // Add 12 to the month to get the equivalent month in the previous year (e.g., July becomes July - 12 + 12 = July)
-					}
-					const oneYearAgoDateNum = oneYearAgoTahun * 100 + oneYearAgoBulan;
-
-					// --- REVISED LOGIC FOR startBulan AND startTahun ---
-					// If the last payment date is more than 12 months in the past relative to current date,
-					// or if the monthpay is empty/invalid (handled by initial parsing resulting in NaN)
-					if (isNaN(lastBulan) || isNaN(lastTahun) || lastPaymentDateNum < oneYearAgoDateNum) {
-						// If last payment is invalid or truly "too old" (more than 12 months ago),
-						// we start populating the dropdown from the current month and year.
-						startBulan = currentBulan;
-						startTahun = currentTahun;
+					// --- LOGIKA PENENTUAN START DROPDOWN ---
+					// Jika tidak ada data pembayaran ATAU pembayaran terakhir nunggak lebih dari 3 bulan
+					if (isNaN(lastBulan) || isNaN(lastTahun) || nextPaymentNum < limitDateNum) {
+						startBulan = limitBulan;
+						startTahun = limitTahun;
 					} else {
-						// If the last payment date is "recent" (within the last 12 months),
-						// we start populating the dropdown from the month *after* the last payment.
-						startBulan = lastBulan + 1;
-						startTahun = lastTahun;
-
-						// Handle month rollover (e.g., if lastBulan was 12, startBulan becomes 1, and year increments)
-						if (startBulan > 12) {
-							startBulan = 1; // Reset to January if month > 12
-							startTahun++; // Increment year
-						}
+						// Jika nunggaknya masih baru (dibawah 3 bulan), lanjutkan dari bulan setelah bayar terakhir
+						startBulan = nextBulanSetelahBayar;
+						startTahun = nextTahunSetelahBayar;
 					}
-					// --- END REVISED LOGIC ---
 
-					// Fungsi untuk menghitung 12 bulan berikutnya dan menambahkannya ke <select>
+					// 6. Fungsi Generate 15 Bulan ke Depan
 					function generateNextMonths(bulan, tahun) {
-						// Hapus semua opsi sebelumnya
 						select.innerHTML = ""; // Reset elemen <select>
 
-						for (let i = 0; i < 12; i++) {
-							// Hitung bulan dan tahun
-							let currentMonth = bulan + i; // Tambah i ke bulan
+						for (let i = 0; i < 15; i++) { // Loop 15 bulan sesuai permintaan
+							let currentMonth = bulan + i;
 							let currentYear = tahun;
 
-							if (currentMonth > 12) {
-								currentMonth -= 12; // Reset ke Januari jika bulan > 12
-								currentYear++; // Tambahkan tahun
+							// Logika penanganan pergantian tahun
+							while (currentMonth > 12) {
+								currentMonth -= 12;
+								currentYear++;
 							}
 
-							// Format nama bulan dan tahun
-							let monthName = namaBulan[currentMonth - 1]; // Nama bulan
-							let monthpay = `${monthName} ${currentYear}`;
-							let value_option = `${String(currentMonth).padStart(2, '0')}-${currentYear}`; // Format MM-YYYY
+							let monthName = namaBulan[currentMonth - 1];
+							let monthpayText = `${monthName} ${currentYear}`;
+							let value_option = `${String(currentMonth).padStart(2, '0')}-${currentYear}`;
 
-							// Buat elemen <option>
 							let option = document.createElement('option');
 							option.value = value_option;
-							option.text = monthpay;
+							option.text = monthpayText;
 
-							// Tambahkan opsi ke elemen <select>
+							// Otomatis pilih bulan saat ini (Current Month) sebagai default di dropdown
+							if (currentMonth === (now.getMonth() + 1) && currentYear === now.getFullYear()) {
+								option.selected = true;
+							}
+
 							select.add(option);
 						}
 					}
 
-					// Panggil fungsi untuk menambahkan 12 bulan berikutnya
+					// Eksekusi fungsi
 					generateNextMonths(startBulan, startTahun);
 
 

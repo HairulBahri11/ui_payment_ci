@@ -182,7 +182,7 @@
 																	<td><a data-toggle="modal" data-target="#delModal<?php echo $row->id; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
 																		<a data-toggle="modal" data-target="#showModal<?php echo $row->id; ?>" data-phone="<?= $value->phone ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
 
-																		<a data-toggle="modal" data-target="#showPhone<?php echo $row->id; ?>" data-phone="<?= $value->phone ?>" data-program="<?= $value->program ?>" href="#" class="btn btn-success btn-xs"><i class="fa fa-whatsapp"></i></a>
+																		<!-- <a data-toggle="modal" data-target="#showPhone<?php echo $row->id; ?>" data-phone="<?= $value->phone ?>" data-program="<?= $value->program ?>" href="#" class="btn btn-success btn-xs"><i class="fa fa-whatsapp"></i></a> -->
 
 
 																	</td>
@@ -233,7 +233,7 @@
 																	<td>Rp <?= number_format($row->total, 0, ".", ".") ?></td>
 																	<td><a data-toggle="modal" data-target="#delModal<?php echo $row->id; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
 																		<a data-toggle="modal" data-target="#showModal<?php echo $row->id; ?>" data-phone="<?= $value->phone ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
-																		<a data-toggle="modal" data-target="#showPhone<?php echo $row->id; ?>" data-phone="<?= $value->phone ?>" data-program="<?= $value->program ?>" href="#" class="btn btn-success btn-xs"><i class="fa fa-whatsapp"></i></a>
+																		<!-- <a data-toggle="modal" data-target="#showPhone<?php echo $row->id; ?>" data-phone="<?= $value->phone ?>" data-program="<?= $value->program ?>" href="#" class="btn btn-success btn-xs"><i class="fa fa-whatsapp"></i></a> -->
 																	</td>
 																</tr>
 
