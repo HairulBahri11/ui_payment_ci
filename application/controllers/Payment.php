@@ -583,7 +583,7 @@ class Payment extends CI_Controller
         }
 
 
-        $this->send_notif_wa(preg_replace("/[^0-9]/", "", $this->input->post('no_hp')), $latestRecord['id'], 'Regular');
+        // $this->send_notif_wa(preg_replace("/[^0-9]/", "", $this->input->post('no_hp')), $latestRecord['id'], 'Regular');
         // redirect(base_url("payment/addregular"));
         sleep(2);
         redirect(base_url("payment/addregular?print=" . $latestRecord['id']));
@@ -794,7 +794,7 @@ class Payment extends CI_Controller
         );
         $id_akun_trx_akuntansi_detail = $this->MTrxAkuntansiDetail->addTrxAkuntansiDetail($data_lawan_trx_akuntansi_detail);
 
-        $this->send_notif_wa(preg_replace("/[^0-9]/", "", $this->input->post('no_hp')), $latestRecord['id'], 'Private');
+        // $this->send_notif_wa(preg_replace("/[^0-9]/", "", $this->input->post('no_hp')), $latestRecord['id'], 'Private');
         // redirect(base_url("payment/addprivate"));
         sleep(2);
         redirect(base_url("payment/addprivate?print=" . $latestRecord['id']));
@@ -872,7 +872,7 @@ class Payment extends CI_Controller
             // redirect(base_url($nexturl));
         }
 
-        $this->send_notif_wa(preg_replace("/[^0-9]/", "", $this->input->post('no_hp')), $latestRecord['id'], 'Other');
+        // $this->send_notif_wa(preg_replace("/[^0-9]/", "", $this->input->post('no_hp')), $latestRecord['id'], 'Other');
         // redirect(base_url("payment/addregular"));
         sleep(2);
         redirect(base_url("payment/addother?print=" . $latestRecord['id']));
