@@ -820,25 +820,24 @@ $url = base_url() . "cetak/printregular/";
 					// 	}
 					// }
 
-					// 1. Parsing data pembayaran terakhir
-					var parts = monthpay.split("-"); 
-					var lastBulan = parseInt(parts[1]); 
-					var lastTahun = parseInt(parts[0]); 
-					const lastPaymentDateNum = lastTahun * 100 + lastBulan;
+					// 1. Parsing data pembayaran terakhir (Format: YYYY-MM)
+					var parts = monthpay.split("-");
+					var lastBulan = parseInt(parts[1]);
+					var lastTahun = parseInt(parts[0]);
 
 					// 2. Ambil waktu sekarang
 					var now = new Date();
-					var currentBulan = now.getMonth() + 1; 
-					var currentTahun = now.getFullYear(); 
+					var currentBulan = now.getMonth() + 1;
+					var currentTahun = now.getFullYear();
 
-					// 3. Hitung batas ambang "3 Bulan Lalu" dari sekarang
+					// 3. Hitung batas ambang "3 Bulan Lalu"
 					var limitDate = new Date();
 					limitDate.setMonth(now.getMonth() - 3);
 					var limitBulan = limitDate.getMonth() + 1;
 					var limitTahun = limitDate.getFullYear();
 					const limitDateNum = limitTahun * 100 + limitBulan;
 
-					// 4. Hitung "Bulan Seharusnya" (Bulan setelah pembayaran terakhir)
+					// 4. Hitung "Bulan Seharusnya" (H+1 dari bayar terakhir)
 					var nextBulanSetelahBayar = lastBulan + 1;
 					var nextTahunSetelahBayar = lastTahun;
 					if (nextBulanSetelahBayar > 12) {
@@ -847,50 +846,47 @@ $url = base_url() . "cetak/printregular/";
 					}
 					const nextPaymentNum = nextTahunSetelahBayar * 100 + nextBulanSetelahBayar;
 
-					// 5. Array Nama Bulan
-					var namaBulan = [
-						"January", "February", "March", "April", "May", "June",
-						"July", "August", "September", "October", "November", "December"
-					];
-
-					var select = document.getElementById('monthpay');
 					var startBulan, startTahun;
 
 					// --- LOGIKA PENENTUAN START DROPDOWN ---
-					// Jika tidak ada data pembayaran ATAU pembayaran terakhir nunggak lebih dari 3 bulan
 					if (isNaN(lastBulan) || isNaN(lastTahun) || nextPaymentNum < limitDateNum) {
+						// Jika nunggak parah (> 3 bulan) atau data kosong, mulai dari limit
 						startBulan = limitBulan;
 						startTahun = limitTahun;
 					} else {
-						// Jika nunggaknya masih baru (dibawah 3 bulan), lanjutkan dari bulan setelah bayar terakhir
+						// Jika nunggak baru, mulai dari bulan seharusnya
 						startBulan = nextBulanSetelahBayar;
 						startTahun = nextTahunSetelahBayar;
 					}
 
-					// 6. Fungsi Generate 15 Bulan ke Depan
-					function generateNextMonths(bulan, tahun) {
-						select.innerHTML = ""; // Reset elemen <select>
+					// 5. Fungsi Generate Dropdown
+					function generateNextMonths(sBulan, sTahun) {
+						var select = document.getElementById('monthpay');
+						var namaBulan = ["January", "February", "March", "April", "May", "June",
+							"July", "August", "September", "October", "November", "December"
+						];
 
-						for (let i = 0; i < 15; i++) { // Loop 15 bulan sesuai permintaan
-							let currentMonth = bulan + i;
-							let currentYear = tahun;
+						select.innerHTML = "";
 
-							// Logika penanganan pergantian tahun
-							while (currentMonth > 12) {
-								currentMonth -= 12;
-								currentYear++;
-							}
+						// Gunakan objek Date untuk mempermudah manipulasi bulan & tahun
+						let startDate = new Date(sTahun, sBulan - 1, 1);
 
-							let monthName = namaBulan[currentMonth - 1];
-							let monthpayText = `${monthName} ${currentYear}`;
-							let value_option = `${String(currentMonth).padStart(2, '0')}-${currentYear}`;
+						for (let i = 0; i < 15; i++) {
+							let tempDate = new Date(startDate.getFullYear(), startDate.getMonth() + i, 1);
+
+							let cMonth = tempDate.getMonth() + 1;
+							let cYear = tempDate.getFullYear();
+
+							let monthName = namaBulan[tempDate.getMonth()];
+							let value_option = `${String(cMonth).padStart(2, '0')}-${cYear}`;
 
 							let option = document.createElement('option');
 							option.value = value_option;
-							option.text = monthpayText;
+							option.text = `${monthName} ${cYear}`;
 
-							// Otomatis pilih bulan saat ini (Current Month) sebagai default di dropdown
-							if (currentMonth === (now.getMonth() + 1) && currentYear === now.getFullYear()) {
+							// LOGIKA AUTO-SELECT:
+							// Pilih bulan pertama di daftar (bulan paling nunggak) sebagai default
+							if (i === 0) {
 								option.selected = true;
 							}
 
@@ -898,7 +894,7 @@ $url = base_url() . "cetak/printregular/";
 						}
 					}
 
-					// Eksekusi fungsi
+					// Eksekusi
 					generateNextMonths(startBulan, startTahun);
 
 
