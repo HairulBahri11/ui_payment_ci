@@ -233,24 +233,60 @@ class Mstudent extends CI_Model
 	// 	return $query->result();
 	// }
 
+	// function getStudentLatePayment()
+	// {
+	// 	$query = $this->db->query("
+	// SELECT s.id, s.name, p.program, s.status, s.phone, t.name as teacher_name, pd.category,
+	//        pd.id AS id_detail_pd, 
+	//        MAX(pd.monthpay) AS monthpay, 
+	//        p.level
+	// FROM student s
+	// LEFT OUTER JOIN price p ON s.priceid = p.id
+	// LEFT OUTER JOIN paydetail pd ON s.id = pd.studentid AND pd.category = 'COURSE'
+	// LEFT OUTER JOIN teacher t ON s.id_teacher = t.id
+	// WHERE s.status = 'ACTIVE'
+	//   AND p.level <> 'Private'
+	//   AND s.course_time IS NOT NULL
+	// GROUP BY s.id
+	// HAVING MAX(pd.monthpay) IS NULL
+	//     OR (YEAR(MAX(pd.monthpay)) < YEAR(CURDATE()) OR (YEAR(MAX(pd.monthpay)) = YEAR(CURDATE()) AND MONTH(MAX(pd.monthpay)) < MONTH(CURDATE())))
+	// ORDER BY `monthpay` ASC
+	// ");
+
+	// 	return $query->result();
+	// }
+
 	function getStudentLatePayment()
 	{
 		$query = $this->db->query("
-    SELECT s.id, s.name, p.program, s.status, s.phone, t.name as teacher_name, pd.category,
-           pd.id AS id_detail_pd, 
-           MAX(pd.monthpay) AS monthpay, 
-           p.level
-    FROM student s
-    LEFT OUTER JOIN price p ON s.priceid = p.id
-    LEFT OUTER JOIN paydetail pd ON s.id = pd.studentid AND pd.category = 'COURSE'
-    LEFT OUTER JOIN teacher t ON s.id_teacher = t.id
-    WHERE s.status = 'ACTIVE'
-      AND p.level <> 'Private'
-      AND s.course_time IS NOT NULL
-    GROUP BY s.id
-    HAVING MAX(pd.monthpay) IS NULL
-        OR (YEAR(MAX(pd.monthpay)) < YEAR(CURDATE()) OR (YEAR(MAX(pd.monthpay)) = YEAR(CURDATE()) AND MONTH(MAX(pd.monthpay)) < MONTH(CURDATE())))
-    ORDER BY `monthpay` ASC
+        SELECT 
+            s.id, 
+            s.name, 
+            p.program, 
+            s.status, 
+            s.phone, 
+            t.name as teacher_name, 
+            pd_max.max_monthpay AS monthpay, 
+            p.level
+        FROM student s
+        JOIN price p ON s.priceid = p.id -- Gunakan JOIN biasa jika price wajib ada
+        LEFT JOIN teacher t ON s.id_teacher = t.id
+        LEFT JOIN (
+            -- Subquery untuk mencari pembayaran terakhir per siswa
+            SELECT studentid, MAX(monthpay) as max_monthpay 
+            FROM paydetail 
+            WHERE category = 'COURSE' 
+            GROUP BY studentid
+        ) pd_max ON s.id = pd_max.studentid
+        WHERE s.status = 'ACTIVE'
+          AND (p.level IS NULL OR p.level <> 'Private') -- Jaga-jaga jika p.level NULL
+          AND s.course_time IS NOT NULL
+          AND (
+                pd_max.max_monthpay IS NULL -- Belum pernah bayar sama sekali
+                OR 
+                pd_max.max_monthpay < DATE_FORMAT(CURDATE(), '%Y-%m-01') -- Bayaran terakhir di bawah bulan ini
+          )
+        ORDER BY pd_max.max_monthpay ASC
     ");
 
 		return $query->result();
