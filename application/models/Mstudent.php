@@ -307,4 +307,30 @@ class Mstudent extends CI_Model
 
 		return $query->result();
 	}
+
+	public function getStatusNotifyReguler($id)
+	{
+		// Kita ambil data student dan bandingkan dengan history-certificate terakhir
+		$this->db->select('student.*, history-certificate.date_certificate as history_date');
+		$this->db->from('student');
+		// Join ke tabel history untuk mengambil sertifikat terakhir siswa tersebut
+		$this->db->join('history-certificate', 'history-certificate.student_id = student.id', 'left');
+		$this->db->where('student.id', $id);
+		$this->db->order_by('history-certificate.id', 'DESC'); // Ambil yang terbaru
+		$this->db->limit(1);
+
+		return $this->db->get()->row();
+	}
+
+	public function checkPaymentBookOrBooklet($id)
+	{
+		// Cek apakah siswa sudah pernah melakukan pembayaran untuk buku atau booklet
+		$this->db->select('pd.*');
+		$this->db->from('paydetail pd');
+		$this->db->join('student st', 'pd.studentid = st.id', 'inner');
+		$this->db->where('pd.studentid', $id);
+		$this->db->where('pd.price_id = st.priceid');
+		$this->db->where('(pd.category = "BOOK" OR pd.category = "BOOKLET")');
+		return $this->db->get()->num_rows() > 0; // Kembalikan true jika ada pembayaran untuk buku atau booklet
+	}
 }

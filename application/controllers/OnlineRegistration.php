@@ -69,6 +69,7 @@ class OnlineRegistration extends CI_Controller
 			$dataParent = [
 				'name' => $this->input->post('parent_name'),
 				'no_hp' => $this->input->post('phone'),
+				'aggreement' => 1,
 			];
 			$this->db->insert('student', $data);
 			$lastIdData = $this->db->insert_id();

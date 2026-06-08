@@ -34,6 +34,12 @@ $url = base_url() . "cetak/printregular/";
 					<div class="box-header with-border">
 						<h3 class="box-title">Payment System (Regular)</h3>
 					</div>
+					<div id="book-warning" style="display:none; background: rgba(255, 243, 205, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); color: #856404; padding: 12px 20px; border-radius: 12px; font-family: 'Inter', sans-serif; box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1); margin: 15px 0;">
+						<p style="margin: 0; display: flex; align-items: center; font-weight: 500;">
+							<i class="fa fa-info-circle" style="margin-right: 10px; font-size: 1.2em;"></i>
+							Attention: Dont forget to pay book and booklet.
+						</p>
+					</div>
 					<!-- /.box-header
 
             <!-- /.box-header -->
@@ -73,7 +79,7 @@ $url = base_url() . "cetak/printregular/";
 										<option value="BOOK">Text-book</option>
 										<!-- <option value="AGENDA">Agenda</option> -->
 										<option value="REGISTRATION">Registration</option>
-										<option value="EXERCISE">Exercise Book</option>
+										<!-- <option value="EXERCISE">Exercise Book</option> -->
 										<option value="BOOKLET">Booklet</option>
 										<option value="OTHER">Other</option>
 									</select>
@@ -704,7 +710,7 @@ $url = base_url() . "cetak/printregular/";
 	});
 
 	$("#example2").on('click', 'tr', function() {
-		// alert('<?php echo "hi"; ?>');
+		// alert('<?php echo "hi"; ?> ' + $(this).find("#id").text());
 		document.getElementById("studentid").value = $(this).find("#id").text();
 		document.getElementById("spriceid").value = $(this).find("#priceid").text();
 		document.getElementById("sname").value = $(this).find("#name").text();
@@ -715,7 +721,40 @@ $url = base_url() . "cetak/printregular/";
 		//         document.getElementById("sname").value = t.row( this ).data().name;
 		//         document.getElementById("level").value = t.row( this ).data().program;
 		fillAmount();
+
+
+		// --- TAMBAHAN LOGIKA NOTIFIKASI ---
+		$.ajax({
+			url: "<?php echo base_url('Payment/getNotifyReguler/'); ?>" + $(this).find("#id").text(),
+			type: "GET",
+			dataType: "JSON",
+			success: function(data) {
+				// Reset peringatan setiap kali ganti baris (row)
+				$("#book-warning").hide();
+
+				if (data) {
+					if (data.should_notify === true) {
+						// Tampilkan peringatan dengan animasi
+						$("#book-warning").fadeIn();
+
+						// Opsional: Berikan efek visual tambahan pada form agar user lebih aware
+						$("#studentid").addClass('is-invalid'); // Jika pakai Bootstrap
+					} else {
+						$("#book-warning").hide();
+						$("#studentid").removeClass('is-invalid');
+					}
+				}
+			},
+			error: function(xhr, status, error) {
+				console.error("AJAX Error Status: " + status);
+				console.error("Error Detail: " + error);
+				console.error("Response Text: " + xhr.responseText);
+			}
+		});
+		// ----------------------------------
 		$("#voucherdiv").show(750);
+
+
 	});
 
 	$("#studentid").on('keyup', function(e) {

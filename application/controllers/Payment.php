@@ -19,6 +19,52 @@ class Payment extends CI_Controller
 
     public function index() {}
 
+    // get data student yang belum membayar book and booklet
+    public function getNotifyReguler($id)
+    {
+        // 1. Cek dulu apakah sudah bayar
+        $already_paid = $this->mstudent->checkPaymentBookOrBooklet($id);
+
+        // 2. Jika BELUM BAYAR, baru ambil data status reguler
+        $student = $this->mstudent->getStatusNotifyReguler($id);
+
+        if ($student) {
+            $dataArray = (array) $student;
+            $cleanData = array_map(function ($value) {
+                return $value === null ? "" : $value;
+            }, $dataArray);
+
+            $cleanData['should_notify'] = false;
+
+            $isFailed = ($cleanData['is_failed_promoted'] == 1);
+            $dateMatched = ($cleanData['date_certificate'] != "" &&
+                $cleanData['date_certificate'] == $cleanData['history_date']);
+
+            if ($isFailed) {
+                $cleanData['should_notify'] = true;
+            } else if ($dateMatched && $already_paid == false) {
+                $cleanData['should_notify'] = true;
+            }
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($cleanData));
+        }
+
+
+
+        if ($already_paid) {
+            // Jika SUDAH BAYAR, langsung kirim should_notify = false agar tidak muncul notif
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['should_notify' => false, 'message' => 'already_paid']));
+        }
+
+        // Jika student tidak ditemukan
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(null));
+    }
+
     public function addRegular()
     {
         $listLateStudent = $this->mstudent->getLatePaymentStudent();
@@ -320,6 +366,7 @@ class Payment extends CI_Controller
                             'category' => $this->input->post('payment' . $i),
                             'monthpay' => $monthpay,
                             'amount' => $amount,
+                            'price_id' => $this->input->post('spriceid'),
                         );
 
                         // Tambahkan nilai 'other_detail' jika kategori adalah "OTHER"
@@ -344,6 +391,7 @@ class Payment extends CI_Controller
                             'category' => $this->input->post('payment' . $i),
                             'monthpay' => $monthpay,
                             'amount' => $amount,
+                            'price_id' => $this->input->post('spriceid'),
 
                         );
                         // Tambahkan nilai 'other_detail' jika kategori adalah "OTHER"
@@ -387,7 +435,7 @@ class Payment extends CI_Controller
                         'category' => $this->input->post('payment' . $i),
                         'monthpay' => $monthpay,
                         'amount' => $amount,
-
+                        'price_id' => $this->input->post('spriceid'),
                     );
 
                     // Tambahkan nilai 'other_detail' jika kategori adalah "OTHER"
@@ -430,6 +478,7 @@ class Payment extends CI_Controller
                     'voucherid' => $this->input->post('voucher' . $i),
                     'category' => $this->input->post('payment' . $i),
                     'amount' => $amount,
+                    'price_id' => $this->input->post('spriceid'),
                 );
 
                 // Tambahkan nilai 'other_detail' jika kategori adalah "OTHER"
